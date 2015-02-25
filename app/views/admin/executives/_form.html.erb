@@ -1,0 +1,26 @@
+<ul class="executive">
+				<li><label for="name" >*Name:</label>
+				<%= f.text_field :name %></li>
+				<li><label for="address" >*Address:</label>
+				<%= f.text_field :address %></li>
+				<li><label for="city" >City:</label>
+				<%= f.text_field :city%></li>
+				<li><label for="state" >State:</label>
+				<%= f.text_field :state%></li>
+				<li><label for="account_name" >*ACH Account Name:</label>
+				<%= f.text_field :account_name %></li>
+				<li><label for="account_type" >*Account Type:</label>
+				<%= f.select :account_type, [["Savings", "savings"], ["Checking", "checking"]], :selected =>  @executive.account_type %></li>
+				<li><label for="account_holder_type" >*Account Holder Type:</label>
+				<%= f.select :account_holder_type, [["Business", "business"], ["Personal", "personal"]], :selected => @executive.account_holder_type %></li>
+				<li><label for="account_number" >*Account Number:</label>
+				<%= f.text_field :account_number%></li>
+				<li><label for="routing_number" >*Routing Number:</label>
+				<%= f.text_field :routing_number %></li>
+				<br/>
+				<li>
+				<%= image_submit_tag(button_img) %>
+				<%= link_to(image_tag("cancel.png"), "/admin/executives") %>
+				</li>
+</ul>
+<br/>

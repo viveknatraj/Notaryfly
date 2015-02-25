@@ -1,0 +1,296 @@
+
+<%= render :partial => "/notary/header" %>
+<%= stylesheet_link_tag "dhtmlwindow" %>
+<%= javascript_include_tag "prototype"  %>
+<%= javascript_include_tag "form_validation" %>
+<%= javascript_include_tag "dhtmlwindow"%>
+<%= javascript_include_tag "jquery.maskedinput" %>
+<%= javascript_include_tag "file_tags" %>
+<%= javascript_include_tag "notaryfly" %>
+
+<%= render :partial => "navigation" %>
+<script type="text/javascript">
+
+  function signing_complete_popup(order_id){
+    x=window.confirm("Are you sure you want to hit the Signing Completed button?")
+    if(x)
+    {
+      var order=order_id;
+      dhtmlwindow.open('divbox', 'div', 'complete_order_'+order, '', 'width=600px,height=600px,left=200px,top=150px,resize=0,titlebar=0,scrolling=0');
+    }
+  }
+</script>
+
+<% if flash[:notice] %><div class="success clr"><%= flash[:notice] %></div><% end %>
+<div class="span-12 content_container">
+  <h2 class="notary_order_heading">Order Details </h2>
+  <%= link_to "Back to Open Orders", { :action => "index", :tab => params[:tab] } , :style => "color:#154B66; font-weight:bold; font-size:12px;" %>
+</div>
+<div class="xsnazzy">
+
+  <div class="container">
+
+    <div class="table-view">
+
+      <div class="box-list">
+        <p style="font-size:20px;"><strong><span>NF# <%= @order.id %></span><span style="padding-left:20px;">Escrow# <%= @order.loan_number %></span><span style="padding-left:20px;"><%= @order.borrower_1_last_name %></span></strong></p>
+        <div id="tabs">
+
+          <ul class="list-arrow-menu">
+            <% if (@order.status_timeline == "Notary Assigned" || @order.status_timeline == "Time/Date Signing Set" || @order.status_timeline == "Documents Received by Notary" || @order.status_timeline == "Signing Completed" || @order.status_timeline == 'Notary Paid in Full' || @order.status == 'Refuse to Sign') %>
+              <li class="active-first"><a href="javascript:void(0)" style="cursor:not-allowed;">Notary <br>Assigned</a></li>
+            <% else %>
+              <li class="active-not"><a href="javascript:void(0)" style="cursor:not-allowed;">Notary <br>Assigned</a></li>
+            <% end %>
+            <% if (@order.status_timeline == "Time/Date Signing Set") || (@order.status == "filled" && @order.status_timeline == "Signing Completed") || (@order.status == 'Refuse to Sign' && @order.status_timeline == 'Notary Assigned') || @order.status_timeline == "Documents Received by Notary" || @order.status_timeline == 'Notary Paid in Full' %>
+              <li class="active-second"><a href="javascript:void(0)" style="cursor:not-allowed;">Appt <br>Confirmed</a></li>
+            <% else %>
+              <li class="active-not"><%= link_to "Appt <br>Confirmed", "javascript:void(0)" ,:onClick=> remote_function(:url => { :controller => "notary/orders",:action=> "send_mail_for_date_confirmed",:id => @order.id, :display => "1"},:confirm => "Are you sure you want to confirm the date/time for the signing?")%></li>
+            <% end %>
+            <% if (@order.status == "filled" && @order.status_timeline == "Signing Completed") || (@order.status_timeline == 'Notary Paid in Full')  %>
+              <li class="active-third"><a href="javascript:void(0)" style="cursor:not-allowed;">Signing <br>Completed</a></li>
+            <% else %>
+              <li class="active-not"><%= link_to "Signing <br>Completed", "javascript:void(0)", :onClick=> "signing_complete_popup('#{@order.id}');" %></li>
+            <% end %>
+            <% if @order.status_timeline == 'Notary Paid in Full' %>
+              <li class="active-four"><a href="javascript:void(0)" style="cursor:not-allowed;">Order<br> Completed</a></li>
+            <% else %>
+              <li class="active-not"><a href="javascript:void(0)" style="cursor:not-allowed;">Order<br> Completed</a></li>
+            <% end %>
+
+          </ul>
+
+        </div>
+        <% if !@order.borrower_1_last_name.blank? and !@order.borrower_2_last_name.blank? %>
+          <div class="list-details">
+            <label>Signer #1:</label><p><%= @order.borrower_1_last_name %>&nbsp;<%= @order.borrower_1_first_name %><br>
+              <%if @order.borrower_1_work_phone.length!=0%><%= @order.borrower_1_work_phone %><%end%> <% if @order.borrower_1_extension.length!=0%>- Ext  <%= @order.borrower_1_extension %><br/><%end%>
+              <%if @order.borrower_1_home_phone.length!=0%><%= @order.borrower_1_home_phone %><br/><%end%>
+              <%if @order.borrower_1_mobile_phone.length!=0%><%= @order.borrower_1_mobile_phone %><br/><%end%></p>
+          </div>
+          <div class="list-details">
+            <label>Signer #2:</label><p><%= @order.borrower_2_last_name %>&nbsp;<%= @order.borrower_2_first_name %><br>
+              <%if @order.borrower_2_work_phone.length!=0%><%= @order.borrower_2_work_phone %><%end%> <% if @order.borrower_2_extension.length!=0%>- Ext  <%= @order.borrower_2_extension %><br/><%end%>
+              <%if @order.borrower_2_home_phone.length!=0%><%= @order.borrower_2_home_phone %><br/><%end%>
+              <%if @order.borrower_2_mobile_phone.length!=0%><%= @order.borrower_2_mobile_phone %><br/><%end%></p>
+          </div>
+        <% else %>
+          <div class="list-details">
+            <label>Signer :</label><p><%= @order.borrower_1_last_name %>&nbsp;<%= @order.borrower_1_first_name %><br>
+              <%if @order.borrower_1_work_phone.length!=0%><%= @order.borrower_1_work_phone %><%end%> <% if @order.borrower_1_extension.length!=0%>- Ext  <%= @order.borrower_1_extension %><br/><%end%>
+              <%if @order.borrower_1_home_phone.length!=0%><%= @order.borrower_1_home_phone %><br/><%end%>
+              <%if @order.borrower_1_mobile_phone.length!=0%><%= @order.borrower_1_mobile_phone %><br/><%end%></p>
+          </div>
+        <%end%>
+        <div class="list-details">
+          <label>Customer:</label><p><%= @order.client.client_name %><a href="#" onClick="divwin=dhtmlwindow.open('divbox', 'div', 'customer_info_<%= @client.id %>', '', 'width=830px,height=780px,left=200px,top=150px,resize=0,scrolling=0'); return false">(details)</a>/<%= link_to "(send message)", { :controller => "messages", :action => "new", :id => @order.id}, :class => "send_msg_link" %><br /><a href="mailto:<%= @client.user.email %>"><%= @client.user.email  %></a></p>
+        </div>
+        <div id="customer_info_<%=@client.id%>" style="display:none;">
+          <h2 class="notary_info">Customer Details</h2>
+          <div class="span-8">
+            <ul class="notary_info">
+              <li><strong>Customer ID:</strong> <%= @client.id  %></li>
+              <li><strong>Company Name:</strong> <%= @client.company_name %></li>
+              <li><strong>Name:</strong> <%= @client.client_name %></li>
+              <li><strong>Title:</strong><% if @client.title.length!=0 %> <%= @client.title %><%else%> Not Provided<%end%></li>
+            </ul>
+
+            <h3 class="notary_info">Contact Information</h3>
+            <ul class="notary_info">
+              <% if @client.address.length!=0 or @client.city.length!=0 or @client.state.length!=0 or @client.zip_code.length!=0  %>
+                <li>
+                  <strong>Address:</strong><br />
+                  <%= @client.address %><br />
+                  <%= @client.city %><% if @client.city.length!=0 and @client.state.length!=0 %>,<%end%> <%= @client.state %> <%= @client.zip_code %>
+
+                </li>
+              <%else%>
+                <li><strong>Address:</strong><br/>
+                  Not Provided
+                </li>
+              <%end%>
+              <li><strong>Day Phone:</strong><% if @client.direct_phone.length!=0%>  <%= @client.direct_phone %> <%else%> Not Provided<%end%></li>
+              <li><strong>Work Phone:</strong><% if @client.home_phone.length!=0%> <%= @client.home_phone %><%else%> Not Provided<%end%> Ext. <% if @client.home_extension.length!=0%><%= @client.home_extension %><%else%> Not Provided<%end%></li>
+              <li><strong>Mobile Phone:</strong><% if @client.mobile_phone.length!=0%> <%= @client.mobile_phone %><%else%> Not Provided<%end%></li>
+              <li><strong>Email:</strong> <%= link_to @client.user.email, "mailto:#{@client.user.email}", :class => "small_link", :style => "color:#154B66;" %></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="list-details">
+          <label>Signing Location:</label>
+          <p>
+            <%= @order.signing_location_address %><br>
+            <%= @order.signing_location_city %>, <%= @order.signing_location_state %> <%= @order.signing_location_zip_code %>     <br>
+            <%if @order.borrower_1_work_phone.length!=0%><%= @order.borrower_1_work_phone %><%end%> <% if @order.borrower_1_extension.length!=0%>- Ext  <%= @order.borrower_1_extension %><br/><%end%>
+            <%if @order.borrower_1_home_phone.length!=0%><%= @order.borrower_1_home_phone %><br/><%end%>
+            <%if @order.borrower_1_mobile_phone.length!=0%><%= @order.borrower_1_mobile_phone %><br/><%end%>
+
+            <a href="http://maps.google.com/?q=loc%3A<%= @order.signing_location_address %>+<%= @order.signing_location_city %>+<%= @order.signing_location_state %>+<%= @order.signing_location_zip_code %>" target="_blank">Show Map</a></p>
+        </div>
+
+        <div class="list-details">
+          <label>Signing Date:  </label><p><%= @order.signing_date.strftime("%B %d, %Y") %></p>
+        </div>
+
+        <div class="list-details">
+          <label>Signing Time:  </label>
+          <p>
+            <%= @order.signing_time %> &nbsp;&nbsp;
+            <% if @order.status_timeline=="Notary Assigned"%>
+              <%= link_to "Edit Time", {:action => "edit", :id => @order.id, :redirect_to => request.url}, :style => "font-size:11px;"  %>
+            <%else%>
+              <A HREF="javascript:void(0)" onClick="alert('The Time for this signing has already been confirmed.&nbsp;&nbsp;Contact hiring company and/or add note to Order with any adjustments.')">Edit Time</A>
+            <%end%>
+          </p>
+        </div>
+        <div class="list-details">
+          <label>Notary Fee: </label><p>$<%= number_with_precision((@order.notary.nil? ? "" : @order.notary.fee).to_f, :precision => 2)%> </p>
+        </div>
+        <div class="list-details">
+          <label>Order Specific Instructions:</label>
+          <% if @order.special_instructions.length!=0 %>
+            <p class="customer-notes"><span style="background-color:#9CB6C5; padding: 2px 5px;"><%= @order.special_instructions %></span></p>
+          <%else%>
+            <p>Not Provided</p>
+          <%end%>
+        </div>
+        <div class="list-details">
+          <label>Customer Notes: </label>
+          <% customer_note = Notes.view_notes(@order.client.user.id, @order.id) %>
+          <% unless customer_note.blank? %>
+            <% customer_note.each do |note| %>
+              <% unless note.notes.empty? %>
+                <p class="customer-notes">
+                  <label><%= note.created_at.strftime("%B %d, %Y at %I:%M%p")%></label><br/>
+                  <span style="background-color:#9CB6C5; padding: 2px 5px;"><%= note.notes%></span>
+                </p><br/>
+              <%else%>Not provided<% end %>
+            <% end %>
+
+          <% else %>
+            Not provided
+          <% end %>
+        </div>
+        <div style="clear:both"></div>
+        <% if @order.notary %>
+          <div class="list-details">
+            <label>Notary Notes: </label>
+            <% notary_notes = Notes.view_notes(@order.notary.user.id, @order.id) %>
+            <% unless notary_notes.blank? %>
+              <p  class="customer-notes">
+                <% notary_notes.each do |note| %>
+                  <% unless note.notes.empty? %>
+                    <label><%= note.created_at.strftime("%B %d, %Y at %I:%M%p")%></label><br/>
+                    <span style="background-color:#F2DBDB; padding: 2px 5px;"><%= note.notes%></span><br/>
+                  <% end %>
+                <% end %>
+              </p>
+            <% else %>
+              Not Provided
+            <% end %>
+          </div>
+        <% end %>
+        <% if @order.cancel_order.nil? %>
+          <% if @order.status_timeline=="Notary Assigned"%>
+            <p><a href="#" onClick="divwin=dhtmlwindow.open('divbox', 'div', 'add_note_<%=@order.id%>', '', 'width=480px,height=250px,left=200px,top=150px,resize=0,scrolling=0'); return false"><strong>Add Note to Order</strong></a></p>
+          <% else %>
+            <p><A HREF="javascript:void(0)" onClick="alert('The Time for this signing has already been confirmed.&nbsp;&nbsp;Contact hiring company and/or add note to Order with any adjustments.')"><strong>Send Note to NotaryFly</strong></A></p>
+          <% end %>
+        <%end%>
+				<p><a href="mailto:support@notaryfly.com?subject=NF Order#<%= @order.id%>"><strong>Send Message to NotaryFly</strong></a></p>
+        <div id="add_note_<%=@order.id%>" style="display:none">
+          <p style="padding-left:40px"><b>Add Note</b></p>
+          <% form_for :order, :url => "/notary/orders/add_notes/#{@order.id}?redirect_to=#{request.url}" do |f| -%>
+            <p>
+            <div style="padding-left: 40px;"> <%= text_area :notes,:notes,:onKeyDown=>"textCounter(500)", :onKeyUp=>"textCounter(500)" %> </div>
+            </p>
+            <p align="right">
+              <input type="hidden" id="hcharLen" name="charLenths" value="500"/>
+            <div id="charLen" class="maximum_char">500 characters left</div>
+            <div class="add_note"><%=submit_tag "Save",:class=>'save_button'%> | <a href="javascript:void(0)" onClick="cancelWindow()" class='cancel_button' style="text-decoration: none">Cancel</a></div>
+            </p>
+          <%  end %>
+        </div>
+
+        <% if @order.agent_id  %>
+          <% @agent = Agent.find_by_id(@order.agent_id) %>
+          <% unless @agent.nil? %>
+            <div class="list-details">
+              <label>Loan Officer</label><p><%= @agent.broker_name %> <a href="#" onClick="divwin=dhtmlwindow.open('divbox', 'div', 'agent_info_<%= @agent.id %>', '', 'width=830px,height=780px,left=200px,top=150px,resize=0,scrolling=0'); return false">(details)</a>/<a href="mailto:<%= @agent.email %>?subject=Order Detail NF#<%= @order.id%> ">(send message)</a></p>
+            </div>
+            <div id="agent_info_<%=@agent.id%>" style="display:none;">
+              <h2 class="notary_info">Agent Details</h2>
+              <div class="span-8">
+                <ul class="notary_info">
+                  <li><strong>Agent ID:</strong> <%= @agent.id %></li>
+                  <li><strong>Company Name:</strong> <%= @agent.company_name %></li>
+                  <li><strong>Name:</strong> <%= @agent.broker_name %></li>
+                  <li><strong>Title:</strong><% if @agent.title.length!=0 %> <%= @agent.title %><%else%> Not Provided<%end%></li>
+
+                </ul>
+
+                <h3 class="notary_info">Contact Information</h3>
+                <ul class="notary_info">
+                  <% if @agent.address.length!=0 or @agent.city.length!=0 or @agent.state.length!=0 or @agent.zip_code.length!=0  %>
+                    <li>
+                      <strong>Address:</strong><br />
+                      <%= @agent.address %><br />
+                      <%= @agent.city %><% if @agent.city.length!=0 and @agent.state.length!=0 %>,<%end%> <%= @agent.state %> <%= @agent.zip_code %>
+
+                    </li>
+                  <%else%>
+                    <li><strong>Address:</strong><br/>
+                      Not Provided
+                    </li>
+                  <%end%>
+                  <li><strong>Day Phone:</strong><% if @agent.direct_phone.length!=0%>  <%= @agent.direct_phone %> <%else%> Not Provided<%end%></li>
+                  <li><strong>Work Phone:</strong><% if @agent.home_phone.length!=0%> <%= @agent.home_phone %><%else%> Not Provided<%end%> Ext. <% if @agent.home_extension.length!=0%><%= @agent.home_extension %><%else%> Not Provided<%end%></li>
+                  <li><strong>Mobile Phone:</strong><% if @agent.mobile_phone.length!=0%> <%= @agent.mobile_phone %><%else%> Not Provided<%end%></li>
+                  <li><strong>Email:</strong> <%= link_to @agent.email, "mailto:#{@agent.email}", :class => "small_link", :style => "color:#154B66;" %></li>
+                </ul>
+              </div>
+            </div>
+          <%end%>
+        <% end %>
+
+        <div class="frm-up">
+          <%= render :partial => "attachments" %>
+          <div class="clearfix"></div>
+          <p class="link-style"><%= link_to "PDF Format", {:action => "details", :id => @order.id }, :target=>'_blank' %>
+            <!--<a href="#" onClick="divwin=dhtmlwindow.open('divbox', 'div', 'order_summary<%=@order.id%>', '', 'width=830px,height=780px,left=200px,top=150px,resize=0,scrolling=0'); return false">Order Details</a>-->
+            <%# if @order.status_timeline == "Notary Assigned" || @order.status_timeline == "Time/Date Signing Set"%>
+              <%#= link_to "Cancel Order", "javascript:void(0)" , :onClick=> remote_function(:url => { :controller => "notary/orders",:action=> "refuse_to_sign",:id => @order.id, :redirect_to => request.url},:confirm => "Are you sure you want to REFUSE TO SIGN this order?"), :class=>"rft_btn"%>
+            <%# end %>
+          </p>
+          <%= render :partial => 'order_summary'%>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+  <div id="complete_order_<%= @order.id %>" style="display:none; width:700px;">
+    <p style="float: right;margin-left: 569px; margin-top: -11px;position: absolute;z-index: 3;"><%= link_to image_tag "closebox.gif" %></p>
+    <h2>Signing Complete</h2>
+    <% if @order.signing_date > Date.today %>
+                  <!--<p class="form_error">The Signing Date for the order you are completing is <%#= order.signing_date.strftime("%B %d, %Y") %>, today is <%#= Date.today.strftime("%B %d, %Y") %>. Please make sure you want to complete this order now.</p> --> <!-- client request changed -->
+    <% end %>
+    <h5 style="margin-bottom:0px;"><strong><%= @order.borrower_1_first_name.capitalize %>&nbsp;<%= @order.borrower_1_last_name.capitalize %></strong></h5>
+    <h5 style="margin-bottom:0px;"><strong>Escrow #: <%= @order.loan_number %></strong></h5>
+    <p style="margin-bottom:0px;">NF Order #: <%= @order.id %></p>
+    <p style="margin-bottom:0px;">Signing date: <%= @order.signing_date.strftime("%B %d, %Y") %></p>
+    <hr style="margin-top:10px;"/>
+    <% form_for :order, :url => "/notary/orders/complete_order/#{@order.id}?redirect_to=#{request.url}" do |f| -%>
+      <p style="margin:0px;">
+        <label for="closed_carrier">Documents Shipped Via :</label>
+        <%= select_tag "order_closed_carrier", options_for_select([["Select one" , "Select one" ],["FedEx" , "FedEx" ], ["UPS" , "UPS" ], ["GSO" , "GSO" ], ["OnTrac" , "OnTrac" ]],@order.return_shipping_courier), {:name => "order[return_shipping_courier]", :style => "width:210px; margin-right:244px;"} %>
+      </p>
+      <p><label for="closed_tracking_number">Tracking Number #: </label>
+        <%= f.text_field :return_account_number,:value=>@order.return_account_number %></p>
+      <p style="margin:0px;"><label for="closed_comments">Comments:</label></p><p style="margin-top:0px;"><%= f.text_area :signing_comments, :style=> "height:100px; margin:0px;" %></p>
+      <%= image_submit_tag("buttons/complete_signing_button.jpg") %>
+    <% end %>
+
+  </div>
+</div>

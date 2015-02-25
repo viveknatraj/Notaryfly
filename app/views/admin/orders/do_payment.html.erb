@@ -1,0 +1,38 @@
+<style>
+								div ul {
+																list-style: none;
+								}
+</style>
+<div id='pay_details' style='margin-left:5%;'>
+								<h2>Payment Details</h2>
+								<% @orders.each{|order| %>
+																<ul>
+																								<li><label>Order Id:</label>
+																								<%= order.id %>
+																								</li>
+																								<li><label>Notary Name:</label> <%= "#{order.notary.first_name} #{order.notary.last_name}"%>
+																								<li><label>Notary Fee:</label> <%= "#{order.notary_fee}"%>
+																								<% if order.executives.present? %>
+																																<li><label>Executives cost per head:</label><% client_exe=order.client.client_executives.first; share_value=client_exe.share_value.present? ? client_exe.share_value : (order.signing_fee*client_exe.share_percentage/100.0) %><%= share_value %>
+																																</li>
+																								<% end %>
+																								<li>
+																								<label>Executives:</label>
+																								<% if order.executives.present? %>
+																																<ul style='margin-left: 70px;list-style:circle;'>
+																																								<% order.executives.each{|ce| %>
+																																																<li><%= ce.name %></li>
+																																								<%		} %>
+																																</ul>
+																								<% else %>
+																																<label>No Executives mapped</label>
+																								<% end %>
+																</ul>
+																<br/>
+																<hr style='border: 1px solid #ababab;width:35%'/>
+																<br/>
+								<% }	%>
+								<%= button_to "Click to Pay", { :action => "make_payment", :order_ids => @orders.map(&:id)}, :method => :post %>
+								<br/>
+								<br/>
+</div>

@@ -1,0 +1,107 @@
+<%= render :partial => "/client/header" %>
+<%= render :partial => "navigation" %>
+
+<div id="order_summary" class="content_container span-24 last">
+	<h2 style="margin-bottom:0px;">Filling Notary</h2>
+	<h3 style="margin-bottom:10px; margin-top:0px;">Order Summary</h3>
+	<div id="order_details" class="border span-18 last">
+		<div class="span-9">
+			<p><label for="loan_number">Loan/Escrow Number: </label><%= @order.loan_number %></p>
+			<p><label for="signing_date">Signing Date: </label><%= @order.signing_date.strftime("%B %d, %Y") %></p>
+			<p><label for="signing_time">Signing Time: </label><%= @order.signing_time %></p>
+			<p><label for="required_language">Required Language: </label><%= @order.required_language %></p>
+		</div>
+		<div class="span-9 last">
+			<p><label for="loan_type">Loan Type: </label><%= @order.loan_type %></p>
+			<p><label for="sets_of_docs">How Many Sets of Documents: </label><%= @order.sets_of_docs %></p>
+			<p><label for="shipped_via">How Will Documents Be Delivered: </label><%= @order.shipped_via %></p>
+		</div>
+		<div class="clear"></div>
+		<h3><strong>Borrower Contact(s)</strong></h3>
+
+		<div class="span-9">
+			<p class="strong" style="text-decoration:underline; margin:0px 0px 5px 0px;">Borrower #1</p>
+			<p><label for="borrower_1_first_name">Name: </label><%= @order.borrower_1_first_name %> <%= @order.borrower_1_last_name %></p>
+			<p><label for="borrower_1_work_phone">Work Phone: </label><%= @order.borrower_1_work_phone %> - Ext </label><%= @order.borrower_1_extension %></p>
+			<p><label for="borrower_1_home_phone">Home Phone: </label><%= @order.borrower_1_home_phone %></p>
+			<p><label for="borrower_1_mobile_phone">Mobile Phone: </label><%= @order.borrower_1_mobile_phone %></p>	
+		</div>
+
+		<div class="span-9 last ">
+			<p class="strong" style="text-decoration:underline; margin:0px 0px 5px 0px;">Borrower #2</p>
+			<p><label for="borrower_2_first_name">Name: </label><%= @order.borrower_2_first_name %> <%= @order.borrower_2_last_name %></p>
+			<p><label for="borrower_2_work_phone">Work #: </label><%= @order.borrower_2_work_phone %> - Ext </label><%= @order.borrower_2_extension %></p>
+			<p><label for="borrower_2_home_phone">Home #: </label><%= @order.borrower_2_home_phone %></p>
+			<p><label for="borrower_2_mobile_phone">Mobile #: </label><%= @order.borrower_2_mobile_phone %></p>
+		</div>
+		<div class="clear"></div>
+		
+		<div class="span-9 last">
+			<h3><strong>Signing Location</strong></h3>
+			<p><%= @order.signing_location_address %></p>
+			<p><%= @order.signing_location_city %>, <%= @order.signing_location_state %> <%= @order.signing_location_zip_code %> </p>
+		</div>
+		<div class="clear"></div>		
+		
+		<div class="span-18 last">
+			<h3><strong>Special Instructions</strong></h3>
+			<p><%= @order.special_instructions %></p>
+		</div>
+	</div>
+	
+	<div class="clear"></div>
+	
+	<h2>Search Results</h2>
+	<h3><strong>Available Notaires</strong></h3>
+	<hr>
+	
+	<ol>
+	<% for notary in @notaries %>
+		<li>
+			<p><label for="name">Name: </label><%= notary.first_name %> <%= notary.last_name %></p>
+			<p><label for="company">Company: </label><%= notary.company_name %></p>
+			<p><a href="#select_notary_<%= notary.id %>" class="fancyzoom">Select this notary for your order</a>
+			<div id="select_notary_<%=notary.id %>" style='display:none; width:600px;'>
+				<h3>Notary Details</h3>
+				<p style="margin:0px;">Notary ID: <%= notary.id %></p>
+				<p style="margin:0px;"><%= notary.first_name %> <%= notary.last_name %></p>
+				<p style="margin:0px;"><%= notary.company_name %></p>
+				<hr>
+				<p style="margin:0px;"><strong>Delivery Address:</strong></p>
+				<p style="margin:0px;">1588 Smart Street</p>
+				<p style="margin:0px;">Denver, Co 92588</p>
+				<hr>
+				<p style="margin:0px;"><strong>Contact Information:</strong></p>
+				<p style="margin:0px;">Tel: 949-233-3333</p>
+				<p style="margin:0px;">Mobile: 949-233-3333</p>
+				<p style="margin:0px;">Fax: 949-233-3333</p>
+				<p style="margin:0px;">Email: bhorti@notaryfly.com</p>
+				<hr>
+				<p style="margin:0px;"><strong>Payment Address:</strong></p>
+				<p style="margin:0px;">PO Box 2599</p>
+				<p style="margin:0px;">Denver, CO 92588</p>
+				
+				<h4 style="margin-top:10px; color:green;">Notary Fee = 1 credit</h4>
+				<p>By clicking the box below, you agree to be charged 1 credit to your account. The credit will be automatically deducted. After the transaction, your order information will be sent to the notary above to begin processing.</p>
+				<style type="text/css" media="screen">
+					.button {
+						padding:5px;
+						margin:3px;
+						background:#999;
+						color:#fff;
+						border: 1px solid #999;
+					}
+				</style>
+				<p><input type="checkbox" name="agree" value="" id="agree"> I have read and agree to the terms of conditions</p>
+				<p><%= link_to "Confirm Notary", {:action => "confirm_notary", :id => notary.id, :order_id => params[:id]}, :class => "button" %></p>
+			</div>
+		</li>
+	<% end %>
+	</ol>
+	
+</div>
+
+<div id="test" style="display:none;">
+	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+	
+</div>

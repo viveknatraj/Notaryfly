@@ -1,0 +1,62 @@
+<%= stylesheet_link_tag "dhtmlwindow" %>
+<%= javascript_include_tag "dhtmlwindow"%>
+<div id="client_header" class="span-24 last">
+  <div class="span-5">
+    <%= link_to image_tag("logo.jpg"),'/' %>
+  </div>
+  <div id="client_id" class="span-11" style="width:450px; float:left;">
+    <p><strong><%=Client.user_name(self.current_user.id)%> - Client ID#</strong><% if logged_in? %><%= self.current_user.id %><% end %></p>
+    <div class="span-11 last client_navigation" style="width:450px; margin-bottom:7px;">
+      <ul class="inline_list">
+			  <li><a href="/client/orders" <% if params[:controller] == "client/orders" and params[:action] == "index" %> class="active" <% end %>>My Orders</a></li>
+        <li><a href="/client/profile" <% if params[:controller] == "client/profile" %> class="active" <% end %>>My Profile</a></li>
+        <li><%= link_to "Email Support", "mailto:support@notaryfly.com" %></li>
+        <li><%= link_to "Log Out", :controller => "/sessions", :action => "destroy" %></li>
+        
+      
+        <!--<li><a href="/client/orders/history" <% if params[:controller] == "client/orders" and params[:action] == "history" %> class="active" <% end %>>View Order History</a></li>
+        <li><a href="/client/messages" <% if params[:controller] == "client/messages" and params[:action] == "index" %> class="active" <% end %>>My Messages (<%= @unread_messages.size %>)</a></li>-->
+
+      </ul>
+    </div>
+		<p class="place_new_order_btn"><a href="/client/orders/new" <% if params[:controller] == "client/orders" and params[:action] == "new" %> class="active" <% end %>>Place New Order</a></p>
+  </div>
+  <div id="credits_header" class="span-8 last" style="float:right; width:275px;">
+    <div class="span-5" style="width:150px;">
+      <h3>Active Orders </h3>
+      <h4>Currently in Process.</h4>
+      <p><%#= link_to "Buy More", :controller => "profile", :action => "buy_credits" %> <a href="#" onClick="divwin=dhtmlwindow.open('divbox', 'div', 'credit_info', '', 'width=690px,height=650px,left=200px,top=150px,resize=0,scrolling=0'); return false">What is an Order?</a> </p>
+    </div>
+    <div id="credit_info" style="display:none;width:550px;height:600px;">
+
+      <p style="font-size:18px;color:#0099CC;"><b><u>What Are Orders?</u></b></p>
+      <h4><p><strong>1 Order = 1 document signing.</strong> An "Order" is <strong>activated</strong> each time you place an Order for a document signing.</p>
+
+        <p>Pricing per "Order" is as follows:</p>
+
+        <p style="padding-left:35px"><b>Email Signing*</b><br/>
+          Email (One Set of Docs) = TBD<br/>
+          Email (Two Sets of Docs) = TBD<br/>
+          *Docs are emailed to Notary.  Notary prints and signing is within 30 driving miles of Notary</p>
+					
+					<p style="padding-left:35px"><b>Overnight Signing*</b><br/>
+          Overnight (One Set of Docs) = TBD<br/>
+          Overnight (Two Sets of Docs) = TBD<br/>
+          *Docs are shipped to Notary and signing is within 30 driving miles of Notary</p>
+
+        <p style="padding-left:35px"><b>Commercial Loan Signing*</b><br/>
+          One set of Docs (1st T.D.) = TBD<br/>
+          Two Sets of Docs (1st T.D. & 2nd T.D.) = TBD<br/>
+          *This pricing is an estimate and each signing will be subject to review to get accurate price for signing</p>
+
+        <p style="font-size:18px;color:#0099CC;"><b><u>Other Fees</u></b></p>
+        <p style="padding-left:35px">Extra Travel Fee (Outside of 30 miles)</p>
+        <p style="padding-left:35px">Multiple Signing Fee (ie:  Two borrowers is 2 different locations)</p>
+        <p style="padding-left:35px">Other</h4>
+    </div>
+    <div class="span-3 last">
+      <h1><% if @credits %><%= @credits.credits %><% else %>0<% end %> </h1>
+      <p class="credits">Orders</p>
+    </div>
+  </div>
+</div>

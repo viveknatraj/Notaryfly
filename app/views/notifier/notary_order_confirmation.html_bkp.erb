@@ -1,0 +1,53 @@
+
+<% @notary = Notary.find(@order.notary_id) %>
+<% @client = Client.find(@order.client_id) %>
+<% @user = User.find(@notary.user_id) %>
+<p><strong>This message was sent from a notification-only email address that does not accept incoming email. Please do not reply to this message.</strong></p>
+
+<p>Dear <%= @notary.first_name.capitalize %>&nbsp;<%= @notary.last_name.capitalize %>,</p>
+
+<p>The following NotaryFly Order has been ASSIGNED to you:</p>  
+
+<ul class="email_alignment">
+  <li style="line-height: 1.6em;list-style: square outside none;"><strong style="padding-right: 5px;">Signer/Client:</strong> <%= @order.borrower_1_first_name.capitalize %> <%= @order.borrower_1_last_name.capitalize%></li>
+	<li style="line-height: 1.6em;list-style: square outside none;"><strong style="padding-right: 5px;">NF Order #:</strong> <%= @order.id %></li>
+	<li style="line-height: 1.6em;list-style: square outside none;"><strong style="padding-right: 5px;">Escrow/Transaction #:</strong> <%= @order.loan_number %></li>
+	<li style="line-height: 1.6em;list-style: square outside none;"><strong style="padding-right: 5px;">Signing Date:</strong> <%= @order.signing_date.strftime("%B %d, %Y") %></li>
+	<li style="line-height: 1.6em;list-style: square outside none;"><strong style="padding-right: 5px;">Signing Time:</strong> <%= @order.signing_time %></li>
+	<li style="line-height: 1.6em;list-style: square outside none;"><strong style="padding-right: 5px;">Type of Signing:</strong> <%= @order.delivery_options %></li>
+        <li style="line-height: 1.6em;list-style: square outside none;"><strong style="padding-right: 5px;">Docs Sent via:</strong> <%= @order.shipped_via %></li>
+	 <li style="line-height: 1.6em;list-style: square outside none;"><strong style="padding-right: 5px;">Set of Documents:</strong> <%= @order.sets_of_docs %></li>
+	<li style="line-height: 1.6em;list-style: square outside none;"><strong style="padding-right: 5px;">Notary Fee:</strong> $ <%= number_with_precision(@order.notary_fee.to_f,:precision=>2) %></li>
+	<li style="line-height: 1.6em;list-style: square outside none;"><strong style="padding-right: 5px;">Other Fee:</strong> <%if @order.travel_fee!=nil%> $ <%= number_with_precision(@order.travel_fee.to_f,:precision=>2) %><%else%> <%="N/A"%><%end%></li>
+        <li style="line-height: 1.6em;list-style: square outside none;"><strong style="padding-right: 5px;">Signing Location:</strong> <%=@order.signing_location_address%></li>
+<span  style="margin-left: 128px;"><%=@order.signing_location_city%>,<%=@order.signing_location_state%>,<%=@order.signing_location_zip_code%></span>
+</ul>
+
+
+
+<div style="float:right;width:200px;border:2px solid #000">
+<strong>Docs Sent to Notary Via:</strong><%=@order.shipped_via%><br/>
+<strong>Tracking #:</strong><%=@order.tracking_number%>
+</div>
+
+
+<div style="float:left">
+<p>This Order was filled through NotaryFly.com.  The work order and any applicable instructions for the signing are attached</p>
+<p>If you have trouble viewing the work order you can go to <a href="http://www.notaryfly.com">NotaryFly.com</a> and view order details by logging with your username and password.</p>
+</div>
+
+
+ <div style="float:left">
+<ul>
+  <li>Username: <%=@user.email%></li>
+  <li>Password: <%=@user.user_password%></li>
+
+</ul>
+<p>
+	
+	<%= @client.company_name %><br/>
+	<%= @client.client_name %><br/>
+	<%= @client.home_phone %><br/>
+</p>
+</div>
+

@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Notary Fly Admin</title>
+        <%= stylesheet_link_tag "admin/base", "admin/style", "dhtmlwindow" %>
+
+        <%= javascript_include_tag "jquerycommon" %>
+        <%= javascript_include_tag "form_validation", "dhtmlwindow","sorting", "file_tags" %>
+
+        <style type="text/css">
+	#ad{
+		margin-top:30px;
+
+	}
+	img{
+		border:0px;
+	}
+	h1{
+		font-size:1.3em;
+	}
+	strong{
+		color:red;
+	}
+	body{
+		font-size:0.8em;
+		font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;
+		margin:0px;
+		padding:0px;
+	}
+	table,#ad,p,h1{
+		margin-left:10px;
+	}
+	table thead td{
+		font-weight:bold;
+		cursor:pointer;
+	}
+	/* If you wish to highlight current sortable column, add layout effects below */
+	.highlightedColumn{
+		background-color:#EEE;
+	}
+	</style>
+
+<!-- Right Click Disabled Function -->
+<!--<script language=JavaScript>
+var message="Function Disabled!";
+
+function clickIE4(){
+if (event.button==2){
+alert(message);
+return false;
+}
+}
+
+function clickNS4(e){
+if (document.layers||document.getElementById&&!document.all){
+if (e.which==2||e.which==3){
+alert(message);
+return false;
+}
+}
+}
+
+if (document.layers){
+document.captureEvents(Event.MOUSEDOWN);
+document.onmousedown=clickNS4;
+}
+else if (document.all&&!document.getElementById){
+document.onmousedown=clickIE4;
+}
+
+document.oncontextmenu=new Function("return false")
+</script>-->
+</head>
+<body>
+  <div id="container">
+    <div id="header">
+       <div id="logout">Welcome <%=session[:admin_user].capitalize%>, <a class="linktxt" href="/admin/logout">Log out</a></div>
+      <h1><a href="index">Notary Fly Admin</a></h1>
+
+     
+      
+      <div id="main-navigation">
+        <ul>
+          <li <% if params["controller"]=="admin/orders"%>class="active" <%end%>><a href="/admin/orders/index">Orders</a></li>
+          <li <% if params["controller"]=="admin/notaries"%>class="active" <%end%>><a href="/admin/notaries/index">Notaries</a></li>
+          <li <% if params["controller"]=="admin/executives"%>class="active" <%end%>><a href="/admin/executives/index">Executives</a></li>
+          <li <% if params["controller"]=="admin/clients" and params["action"]=="index"%>class="active" <%end%>><a href="/admin/clients/index">Customers</a></li>
+          <li <% if params["controller"]=="admin/clients" and params["action"]=="promocode"%>class="active" <%end%>><a href="/admin/clients/promocode">Promo Code</a></li>
+          <li <% if params["controller"]=="admin/clients" and params["action"]=="settings"%>class="active" <%end%>><a href="/admin/clients/settings">Settings</a></li>
+        </ul>
+        <div class="clear"></div>
+      </div>
+    </div>
+    <div id="wrapper">
+      <div id="main">
+
+		<%= yield %>
+		
+        <div id="footer">
+          <div class="block">
+            <p>Copyright &copy; Copyright 2012-2014 NotaryFly</p>
+          </div>
+        </div>
+      </div>
+      <div id="sidebar">
+
+        <div class="block">
+          <h3>Sidebar</h3>
+          <ul class="navigation">
+            <li><a href="/admin/orders/index">Orders</a></li>
+            <li><a href="/admin/clients/index">Clients</a></li>
+            <li><a href="/admin/notaries/index">Notaries</a></li>
+            <li><a href="/admin/executives/index">Executives</a></li>
+            <li><a href="/admin/clients/promocode">Promo Code</a></li>
+            <li><a href="/admin/clients/settings">Settings</a></li>
+          </ul>
+        </div>
+
+      </div>
+      <div class="clear"></div>
+    </div>
+    <div id="notary_profile"></div>
+    <div id="lightbox-bg"></div>
+
+
+  </div>
+</body>
+</html>
+

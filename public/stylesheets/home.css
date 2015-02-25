@@ -1,0 +1,217 @@
+body {
+    background: #f4f3ed url(../images/home_bg.png) repeat-x;
+    font-family: "Trebuchet MS", "MS Trebuchet", Helvetica, Arial, sans-serif;
+}
+
+#home_header {
+    background-color:#252423;
+    color:#FFF;
+    padding-top:15px;
+}
+ul.inline_list {
+    margin:0px 0px 10px 0px;
+}
+ul.inline_list li {
+    list-style:none;
+    display:inline;
+    margin:0px 25px 0px 0px;
+}
+#home_navigation {
+    text-align:right;
+    margin-top:60px;
+}
+#home_navigation ul li a {
+    color:#f5e8c0;
+    font-size:15px;
+    text-decoration:none;
+}
+#home_navigation ul li a:hover {
+    text-decoration:underline;
+}
+#callout {
+    margin-top:20px;
+}
+#search_and_sign h1 {
+    margin:0px;
+}
+#search_and_sign p {
+    font-size:16px;
+    font-style: italic;
+}
+div#callout div#register {
+    background: #FFF url(../images/register_bg.png) no-repeat;
+    height:214px;
+}
+div#callout div#register h2 {
+    font-style:italic;
+    font-size:22px;
+    color:#FFF;
+    padding:30px 0px 0px 200px;
+    margin:0px;
+}
+div#callout div#register p {
+    color:#262423;
+    font-size:15px;
+    font-style:italic;
+    padding:0px 0px 0px 200px;
+    margin:0px;
+}
+div#callout div#register p.register {
+    padding: 0 20px 0 216px;
+    margin:0px;
+}
+div#callout div#register p.register_test{
+    color: white;
+    float: left;
+    font-size: 13px;
+    margin: -18px 0 0 217px;
+}
+div#callout div#register p.register img {
+    margin-top:10px;
+}
+div#callout div#register p.member {
+    text-align:right;
+    margin:50px 35px 0px 0px;
+}
+#check_status{position: absolute;
+    height: 200px;
+    width: 400px;
+    margin: -100px 0 0 -200px;
+    top: 50%;
+    left: 50%;
+background-color: red;}
+div#callout div#register p.member a {
+    text-decoration:none;
+    color:#16516e;
+    font-size:10px;
+    font-weight:bold;
+}
+
+div#callout div#register p.member a:hover {
+    text-decoration:underline;
+}
+div#columns {
+    margin-top:45px;
+}
+div#columns label {
+    color:#4c4c4b;
+    font-size:11px;
+}
+div#columns div#info, div#columns div#search {
+    border-right:1px dotted #cdccc7;
+}
+div#columns div#info h3 {
+    color:#4788a9;
+    font-size:22px;
+    font-family:Georgia;
+    font-style:italic;
+    font-weight:bold;
+    margin:0px 20px 0px 0px;
+    padding:0px 0px 8px 5px;
+    border-bottom: 1px solid #cdccc7;
+}
+div#columns div#info p {
+    color:#252422;
+    font-size:12px;
+    margin:0px 20px 0px 0px;
+    padding:10px 0px 8px 7px;
+}
+div#columns div#search h3, div#columns div#login h3 {
+    color:#a0522d;
+    font-size:22px;
+    font-family:Georgia;
+    font-style:italic;
+    font-weight:bold;
+    margin:0px 20px 0px 5px;
+    padding:0px 0px 8px 5px;
+    border-bottom: 1px solid #cdccc7;
+}
+div#columns div#search form {
+    margin:15px 0px 0px 10px;
+}
+div#columns input.text_field {
+    height:20px;
+    width:180px;
+    margin:3px 0px 10px 0px;
+}
+div#columns div#search p {
+    color:#b1b0ac;
+    font-size:11px;
+    margin:5px 5px 0px 10px;
+}
+div#columns div#search p a{
+    color:#0e7192;
+    text-decoration:none;
+}
+div#columns div#search p a:hover {
+    text-decoration:underline;
+}
+div#columns div#login div#form {
+    background:url(../images/login_form_bg.png) no-repeat;
+    margin-top:8px;
+    margin-left:2px;
+    height:176px;
+}
+div#columns div#login div#form form {
+    padding:6px 0px 10px 13px;
+}
+.accept_order {
+    float: left;
+    height: 123px;
+    position: relative;
+    width: 321px;
+}
+.accept_button
+{
+    bottom: 0;
+    position: absolute;
+}
+#footer {
+    margin-top:55px;
+}
+#footer ul li{
+    margin:0px 3px 0px 3px;
+}
+#copyright p {
+    text-align:right;
+    margin:0px 25px 0px 0px;
+}
+/* Footer */
+ul.footer li a {
+    color:#696969;
+    text-decoration:none;
+    margin-right:3px;
+    margin-left:0px;
+}
+
+ul.footer li a:hover {
+    text-decoration:underline;
+}
+.homepage_icon{
+    float:left;
+    width:50px;
+}
+.homepage_icon .facebook{
+    background:url(../images/facebook.png) no-repeat;
+    width:44px;
+    height:46px;
+    text-indent:100px;
+    float:left;
+    margin:50px 0px 5px 0px;
+}
+.homepage_icon .twitter{
+    background:url(../images/twitter_icon.png) no-repeat;
+    width:47px;
+    height:45px;
+    text-indent:100px;
+    float:left;
+    margin:5px 0px 5px 0px;
+}
+.homepage_icon .linkedin{
+    background:url(../images/linkedin_icon.png) no-repeat;
+    width:45px;
+    height:45px;
+    text-indent:100px;
+    float:left;
+    margin:5px 0px 5px 0px;
+}

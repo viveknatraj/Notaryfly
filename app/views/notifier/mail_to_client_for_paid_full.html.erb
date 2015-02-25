@@ -1,0 +1,36 @@
+<p style="margin-bottom:6px;">This message was sent from a notification-only email address that does not accept incoming email. Please do not reply to this message.</p>
+<% @client = Client.find(@order.client_id) %>
+
+<p style="margin-bottom:6px;">Dear <%= @client.client_name %>,</p>
+<p style="margin-bottom:6px;">The following Order has been COMPLETED:</p>
+<ul>
+  	<li><strong>Signer/Client:</strong> <%= @order.borrower_1_first_name %> <%= @order.borrower_1_last_name %></li>
+	<li><strong>NF Order #:</strong> <%= @order.id %></li>
+	<li><strong>Escrow/Transaction #:</strong> <%= @order.loan_number %></li>
+	<li><strong>Signing Date:</strong> <%= @order.signing_date.strftime("%B %d, %Y") %></li>
+	<li><strong>Signing Time:</strong> <%= @order.signing_time %></li>
+	<li><strong>Type of Signing:</strong><%=@order.loan_type%></li>
+	<li><strong>Docs Sent via:</strong><%=@order.delivery_options%></li>
+	<li><strong>Set of Documents:</strong><%=@order.sets_of_docs%></li>
+	<%if @order.travel_fee!=nil%>
+	<li><strong>Other Fee: </strong>$<%=number_with_precision(@order.travel_fee.to_f,:precision=>2)%></li>
+	<%else%>
+	<li><strong>Other Fee: </strong>$<%='0.00'%>
+	<%end%>
+	<%if @order.travel_fee!=nil && @order.signing_fee!=nil%>
+	<%total_fee=(@order.signing_fee.to_f)+(@order.travel_fee.to_f)%>
+	<li><strong>Total Fee Paid in Full:</strong>$<%=number_with_precision(total_fee,:precision=>2)%></li>
+	<%elsif @order.signing_fee!=nil%>
+	<li><strong>Total Fee Paid in Full: </strong>$<%=number_with_precision(@order.signing_fee,:precision=>2)%></li>
+	<%else%>
+	<li><strong>Total Fee Paid in Full: </strong>$0.00</li>
+	<%end%>
+	<li><strong>Signing Location:</strong><%=@order.signing_location_address%>&nbsp;<%=@order.signing_location_city%></li><br><br/>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=@order.signing_location_state%><%=@order.signing_location_zip_code%>
+
+        </ul>
+
+
+<p style="margin-bottom:6px;">This order was filled through NotaryFly.com.   As always, we appreciate your business and if there is anything we can do better, please let us know.</p>
+
+<p style="margin-bottom:6px;">If there is anyone you know who could benefit from NotaryFly, please forward their contact information to:  <a href='mailto:ReferAFriend@notaryfly.com'>ReferAFriend@notaryfly.com</a></p>

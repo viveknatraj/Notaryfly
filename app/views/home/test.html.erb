@@ -1,0 +1,8 @@
+<style type="text/css" media="screen">
+	body {background:none;}
+</style>
+<% res=GeoKit::Geocoders::GoogleGeocoder.geocode('92116')  %>
+<% @notaries = Notary.find(:all, :origin => '92116', :within=> 50 ) %>
+<%= res.lat %> <%= res.lng %><br />
+<%= @notaries.size %>
+

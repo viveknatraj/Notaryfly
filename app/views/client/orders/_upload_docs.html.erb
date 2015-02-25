@@ -1,0 +1,229 @@
+<% form_for :order, :url => "/client/orders/update/#{@order.id}?redirect_to=#{request.url}",:html => {:multipart => true,:name=>"new_order_form",:onSubmit=>"return client_order_edit()"} do |f| -%>
+    <% totfile=""
+       filecnt = -1
+       att_cnt = 0
+       attachments_count = 6
+    %>
+
+    <% if filecnt!=6 %>
+
+        <div class="btn-link fileUpload btn btn-primary">
+          <a href="Javascript:addFileForOrdersEdit();" class="upload"><span>Upload Docs</span></a>
+        </div>
+
+    <% end %>
+
+    <p class="formright"  style="text-align:left">
+      <!--(If uploading more than one attachment, <b>please label</b> 1 of 3, 2 of 3, etc)<br/>-->
+      <span id="attachment_count-error" style="color:#FF0000"></span>
+    </p>
+    <div class="clearfix"></div>
+
+    <div class="upload-list">
+      <% if @order.order_attachment_1_file_name%>
+          <span>
+            <% if @order.order_attachment_1_file_name %>
+                <% totfile="1" %>
+                <%  filecnt=filecnt+1 %>
+            <% else %>
+                Add: <%= f.file_field :order_attachment_1 %>
+            <% end %>
+            <% if @order.order_attachment_1_file_name %>
+                <%= @order.order_attachment_1_file_name %>
+                <%= link_to "(view)", @order.order_attachment_1.url, :target => "blank" %>
+                <%= link_to "(delete)", :action => "delete_attachment", :id => "1_"+@order.id.to_s, :redirect_to => request.url%>  (<%=filecnt+1%> of <%= attachments_count %>)
+                <br/>
+            <% end %>
+          </span>
+
+      <%elsif @order.attachment_1_file_name!=nil and @order.attachment_1_file_name.length!=0%>
+          <span id="order[order_attachment_1]">
+            <% if @order.attachment_1_file_name %>
+                <% totfile="1" %>
+                <%  filecnt=filecnt+1 %>
+            <% else %>
+                Add: <%= f.file_field :order_attachment_1 %>
+            <% end %>
+            <% if @order.attachment_1_file_name %>
+                <%= @order.attachment_1_file_name %>
+                <%= link_to "(view)", @order.attachment_1_file_url, :target => "blank" %>
+                <a href="javascript:void(0)" onclick="javascript:removeFile('order[order_attachment_1]','1'); return false;">(delete)</a> (<%=filecnt+1%> of <%= attachments_count %>)
+                <br/>
+            <% end %>
+          </span>
+      <% end %>
+
+      <% if @order.order_attachment_2_file_name %>
+          <span>
+            <% if @order.order_attachment_2_file_name %>
+                <% totfile=totfile+",2" %>
+                <%  filecnt=filecnt+1 %>
+            <% else %>
+                Add: <%= f.file_field :order_attachment_2 %>
+            <% end %>
+            <% if @order.order_attachment_2_file_name %>
+                <%= @order.order_attachment_2_file_name %>
+                <%= link_to "(view)", @order.order_attachment_2.url, :target => "blank" %>
+                <%= link_to "(delete)", :action => "delete_attachment", :id => "2_"+@order.id.to_s, :redirect_to => request.url %> (<%=filecnt+1%> of <%= attachments_count %>)
+                <br/>
+            <% end %>
+          </span>
+      <%elsif @order.attachment_2_file_name!=nil and @order.attachment_2_file_name.length!=0%>
+          <span id="order[order_attachment_2]">
+            <% if @order.attachment_2_file_name %>
+                <% totfile=totfile+",2" %>
+                <%  filecnt=filecnt+1 %>
+            <% else %>
+                Add: <%= f.file_field :order_attachment_2 %>
+            <% end %>
+            <% if @order.attachment_2_file_name %>
+                <%= @order.attachment_2_file_name %>
+                <%= link_to "(view)", @order.attachment_2_file_url, :target => "blank" %>
+                <a href="javascript:void(0)" onclick="javascript:removeFile('order[order_attachment_2]','2'); return false;">(delete)</a> (<%=filecnt+1%> of <%= attachments_count %>)
+                <br/>
+            <% end %>
+          </span>
+      <% end %>
+      <% if @order.order_attachment_3_file_name %>
+          <span>
+            <% if @order.order_attachment_3_file_name %>
+                <% totfile=totfile+",3" %>
+                <%  filecnt=filecnt+1 %>
+            <% else %>
+                Add: <%= f.file_field :order_attachment_3 %>
+            <% end %>
+            <% if @order.order_attachment_3_file_name %>
+                <%= @order.order_attachment_3_file_name %>
+                <%= link_to "(view)", @order.order_attachment_3.url, :target => "blank" %>
+                <%= link_to "(delete)", :action => "delete_attachment", :id => "3_"+@order.id.to_s, :redirect_to => request.url %> (<%=filecnt+1%> of <%= attachments_count %>)
+                <br/>
+            <% end %>
+          </span>
+      <%elsif @order.attachment_3_file_name!=nil and @order.attachment_3_file_name.length!=0%>
+          <span id="order[order_attachment_3]">
+            <% if @order.attachment_3_file_name %>
+                <% totfile=totfile+",3" %>
+                <%  filecnt=filecnt+1 %>
+            <% else %>
+                Add: <%= f.file_field :order_attachment_3 %>
+            <% end %>
+            <% if @order.attachment_3_file_name %>
+                <%= @order.attachment_3_file_name %>
+                <%= link_to "(view)", @order.attachment_3_file_url, :target => "blank" %>
+                <a href="javascript:void(0)" onclick="javascript:removeFile('order[order_attachment_3]','3'); return false;">(delete)</a> (<%=filecnt+1%> of <%= attachments_count %>)
+                <br/>
+            <% end %>
+          </span>
+      <% end %>
+      <% if @order.order_attachment_4_file_name %>
+          <span>
+            <% if @order.order_attachment_4_file_name %>
+                <% totfile=totfile+",4" %>
+                <%  filecnt=filecnt+1 %>
+            <% else %>
+                Add: <%= f.file_field :order_attachment_4 %>
+            <% end %>
+            <% if @order.order_attachment_4_file_name %>
+                <%= @order.order_attachment_4_file_name %>
+                <%= link_to "(view)", @order.order_attachment_4.url, :target => "blank" %>
+                <%= link_to "(delete)", :action => "delete_attachment", :id => "4_"+@order.id.to_s, :redirect_to => request.url %> (<%=filecnt+1%> of <%= attachments_count %>)
+                <br/>
+            <% end %>
+          </span>
+      <%elsif @order.attachment_4_file_name!=nil and @order.attachment_4_file_name.length!=0%>
+          <span id="order[order_attachment_4]">
+            <% if @order.attachment_4_file_name %>
+                <% totfile=totfile+",4" %>
+                <%  filecnt=filecnt+1 %>
+            <% else %>
+                Add: <%= f.file_field :order_attachment_4 %>
+            <% end %>
+            <% if @order.attachment_4_file_name %>
+                <%= @order.attachment_4_file_name %>
+                <%= link_to "(view)", @order.attachment_4_file_url, :target => "blank" %>
+                <a href="javascript:void(0)" onclick="javascript:removeFile('order[order_attachment_4]','4'); return false;">(delete)</a> (<%=filecnt+1%> of <%= attachments_count %>)
+                <br/>
+            <% end %>
+          </span>
+      <% end %>
+      <% if @order.order_attachment_5_file_name %>
+        <span>
+          <% if @order.order_attachment_5_file_name %>
+              <% totfile=totfile+",5" %>
+              <%  filecnt=filecnt+1 %>
+          <% else %>
+              Add: <%= f.file_field :order_attachment_5 %>
+          <% end %>
+          <% if @order.order_attachment_5_file_name %>
+              <%= @order.order_attachment_5_file_name %>
+              <%= link_to "(view)", @order.order_attachment_5.url, :target => "blank" %>
+              <%= link_to "(delete)", :action => "delete_attachment", :id => "5_"+@order.id.to_s, :redirect_to => request.url %> (<%=filecnt+1%> of <%= attachments_count %>)
+              <br/>
+          <% end %>
+        </span>
+      <%elsif @order.attachment_5_file_name!=nil and @order.attachment_5_file_name.length!=0%>
+          <span id="order[order_attachment_5]">
+            <% if @order.attachment_5_file_name %>
+                <% totfile=totfile+",5" %>
+                <%  filecnt=filecnt+1 %>
+            <% else %>
+                Add: <%= f.file_field :order_attachment_5 %>
+            <% end %>
+            <% if @order.attachment_5_file_name %>
+                <%= @order.attachment_5_file_name %>
+                <%= link_to "(view)", @order.attachment_5_file_url, :target => "blank" %>
+                <a href="javascript:void(0)" onclick="javascript:removeFile('order[order_attachment_5]','5'); return false;">(delete)</a> (<%=filecnt+1%> of <%= attachments_count %>)
+                <br/>
+            <% end %>
+          </span>
+      <% end %>
+      <% if @order.order_attachment_6_file_name %>
+        <span>
+          <% if @order.order_attachment_6_file_name %>
+              <% totfile=totfile+",6" %>
+              <%  filecnt=filecnt+1 %>
+          <% else %>
+              Add: <%= f.file_field :order_attachment_6 %>
+          <% end %>
+          <% if @order.order_attachment_6_file_name %>
+              <%= @order.order_attachment_6_file_name %>
+              <%= link_to "(view)", @order.order_attachment_6.url, :target => "blank" %>
+              <%= link_to "(delete)", :action => "delete_attachment", :id => "6_"+@order.id.to_s, :redirect_to => request.url %> (<%=filecnt+1%> of <%= attachments_count %>)
+              <br/>
+          <% end %>
+        </span>
+      <%elsif @order.attachment_6_file_name!=nil and @order.attachment_6_file_name.length!=0%>
+          <span id="order[order_attachment_6]">
+            <% if @order.attachment_6_file_name %>
+                <% totfile=totfile+",6" %>
+                <%  filecnt=filecnt+1 %>
+            <% else %>
+                Add: <%= f.file_field :order_attachment_6 %>
+            <% end %>
+            <% if @order.attachment_6_file_name %>
+                <%= @order.attachment_6_file_name %>
+                <%= link_to "(view)", @order.attachment_6_file_url, :target => "blank" %>
+                <a href="javascript:void(0)" onclick="javascript:removeFile('order[order_attachment_6]','6'); return false;">(delete)</a> (<%=filecnt+1%> of <%= attachments_count %>)
+                <br/>
+            <% end %>
+          </span>
+      <% end %>
+
+      <input type="hidden" name="fileName1" value="<%=@order.attachment_1_file_name %>"/>
+      <input type="hidden" name="fileUrl1" value="<%=@order.attachment_1_file_url %>"/>
+      <input type="hidden" name="fileName2" value="<%=@order.attachment_2_file_name %>"/>
+      <input type="hidden" name="fileUrl2" value="<%=@order.attachment_2_file_url %>"/>
+      <input type="hidden" name="fileName3" value="<%=@order.attachment_3_file_name %>"/>
+      <input type="hidden" name="fileUrl3" value="<%=@order.attachment_3_file_url %>"/>
+      <input type="hidden" name="fileName4" value="<%=@order.attachment_4_file_name %>"/>
+      <input type="hidden" name="fileUrl4" value="<%=@order.attachment_4_file_url %>"/>
+      <input type="hidden" name="fileName5" value="<%=@order.attachment_5_file_name %>"/>
+      <input type="hidden" name="fileUrl5" value="<%=@order.attachment_5_file_url %>"/>
+      <input type="hidden" name="fileName6" value="<%=@order.attachment_6_file_name %>"/>
+      <input type="hidden" name="fileUrl6" value="<%=@order.attachment_6_file_url %>"/>
+      <div id="ItemFiles" ></div>
+    </div>
+    <input type="hidden" name="totfile" id="totfile" value="<%=totfile%>"/>
+    <div style="clear:both;"></div>
+    <%= image_submit_tag("buttons/update_order.jpg") %>
+<% end %>

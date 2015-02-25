@@ -1,0 +1,67 @@
+<% if !params[:page_name] %>
+  <% if !@pending_orders.empty? %>
+    <div id="tabs1" class="default-tabs" style="display:none">
+    <%else%>
+      <div id="tabs1" class="default-tabs">
+      <%end%>
+    <%elsif params[:page_name] == "All orders"%>
+      <div id="tabs1" class="default-tabs">
+      <%else %>
+        <div id="tabs1" class="default-tabs" style="display:none">
+        <%end%>
+        <div class="span-26 last">
+          <% form_tag '/notary/orders/index' do %>
+            <label class="sort_by">Filter by: </label>
+            <select name="filter" id="filter" onchange="this.form.submit()" style="display: inline; vertical-align: middle">
+              <option <% if params[:filter] == 'NF #' %>selected <% end %>>NF #</option>
+              <option <% if params[:filter] == 'Signer Name' %>selected <% end %>>Signer Name</option>
+              <option <% if params[:filter] == 'Order Opened' %>selected <% end %>>Order Opened</option>
+              <option <% if params[:filter] == 'Appointment Scheduled' %>selected <% end %>>Appointment Scheduled</option>
+            </select>
+            <%= hidden_field_tag "page_name", "All orders" %>
+          <% end %>
+        </div>
+        <table width="100%" border="0" cellspacing="10" cellpadding="10">
+          <tr class="white-bg">
+            <td>NF#</td>
+            <td>SIGNER NAME</td>
+            <td>ORDER OPENED</td>
+            <td>APPOINTMENT SCHEDULED</td>
+            <td>SIGNING LOCATION</td>
+            <td>CUSTOMER NAME</td>
+            <td>DOCS?</td>
+          </tr>
+          <% if @orders.blank? %>
+            <tr class="white-bg">
+              <td colspan='7' style="text-align: center">You currently have no open orders. </td>
+            </tr>
+          <% else %>
+            <% @orders.each do |order| %>
+              <% order_status_class = if order.status == "need notary"
+                "light-blue"
+              elsif (order.status_timeline == "Notary Assigned" && order.status_timeline != "Time/Date Signing Set"  &&  order.status != "Refuse To Sign")
+                "mid-light-blue"
+              elsif order.status_timeline == "Time/Date Signing Set" &&  order.status != "Refuse To Sign"
+                "dark-blue"
+              elsif order.status == "Refuse To Sign"
+                "light-green"
+              elsif order.status == "filled" && order.status_timeline == "Signing Completed"
+                "mid-light-green"
+              elsif order.status_timeline == 'Notary Paid in Full'
+                "dark-light-green"
+              else
+                "light-blue"
+              end
+            %>
+              <tr class='<%= order_status_class%>'>
+                <%= client_order_table_data(order, 'tabs1') %>
+              </tr>
+            <% end %>
+          <% end %>
+        </table>
+        <div id="pagination_1" class="<%= params[:tab] && params[:tab] != 'tabs1' ? 'open_order-page' : '' %>">
+          <%= (will_paginate @orders).to_s.gsub(/<a(.*?)href="(.+?)"(.*?)>/i, '<a\1href="\2"\3>').gsub(/<a(.*?)href="([^"]+)"/, '<a\1href="\2&' + {:tab => "tabs1"}.to_query + '"') %>
+        </div>
+        <div class="clearfix"></div>
+
+      </div>

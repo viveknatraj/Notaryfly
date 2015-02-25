@@ -1,0 +1,9 @@
+<div id="profile_navigation" class="tab_navigation span-24 last client_tab">
+	<ul class="inline_list">
+		<li class="tab"><a href="/client/profile" <% if params[:controller] == "client/profile" and params[:action] == "index" %> class="active" <% end %>><span>Contact Information</span></a></li>
+		</li>
+		<li class="tab"><a href="/client/profile/instructions" <% if params[:controller] == "client/profile" and params[:action] == "instructions" %> class="active" <% end %>><span>Special Instructions</span></a></li>
+		<li class="tab"><a href="/client/profile/shipping" <% if params[:controller] == "client/profile" and params[:action] == "shipping" %> class="active" <% end %>><span>Shipping Information</span></a></li>
+		<li class="tab"><a href="/client/brokers/new" <% if params[:controller] == "client/brokers" %> class="active" <% end %>><span>Add Broker/Loan Officer </span></a></li>
+	</ul>		
+</div>

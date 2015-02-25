@@ -1,0 +1,206 @@
+<%= render :partial => "/client/header" %>
+<%= render :partial => "navigation" %>
+<%= javascript_include_tag "file_tags" %>
+<%= stylesheet_link_tag "global" %>
+	<%= javascript_include_tag "form_validation"%>
+        <%= javascript_include_tag "jquery_tween"%>
+        <%= javascript_include_tag "tweenbox"%>
+        <%= javascript_include_tag "site"%>
+<div id="order_summary" class="content_container span-24 last">
+	
+	<div class="span-24 last" style="margin-bottom:25px;">
+		<h2 style="margin-bottom:0px; margin-top:10px;">Find Notary</h2>
+		<h3 style="margin-top:0px;">Notary Locator</h3> <br />
+
+                <div class="xsnazzy_2" style="width: 740px">
+          <b class="xtop_2"><b class="xb1_2"></b><b class="xb2_2 color_a">
+          </b><b class="xb3_2 color_a"></b><b class="xb4_2 color_a"></b></b>
+          <div class="xboxcontent_2" style="padding:10px;">
+		<div id="notary_search" class="last" style="padding:0px">
+			<% form_for :notary_search ,:url => {:action => "find_notary", :id => @order.id},:html => {:name=>"find_notary" } do |f| -%>
+
+                  <% if @notaries.size==0%>
+                  <p><label style="padding-left:270px;padding-bottom:10px;font-weight: bold;color:#FF0000"><%= pluralize(@notaries.size, "notary") %>  within <%=@miles%> miles</label></p>
+                  <%else%>
+                  <p><label style="padding-left:270px;padding-bottom:10px;font-weight: bold;color:green"><%= pluralize(@notaries.size, "notary") %>  within <%=@miles%> miles</label></p>
+                  <%end%>
+
+                    <p><label>Zip Code:</label> <%= text_field :notary_search, :zip_code, :style => "width:50px;", :disabled => 'disabled', :value => @order.signing_location_zip_code  %>  within: <%= select_tag "notary_search_radius", options_for_select([["10" , "10" ], ["25" , "25"], ["50" , "50" ], ["75" , "75" ], ["100" , "100" ]],@miles), {:name => "order[search_radius]", :style => "width:75px; margin-right:10px;"} %> <label>Mile Radius</label> <a href="#" id="search_button"  style="color:white; padding:5px; margin-left:10px;"><%= submit_tag("Find Notary!") %></a></p>
+				<ul id="zip_form" style="list-style:none; display:inline;">
+					<style type="text/css" media="screen">
+						ul#zip_form {margin:0px;}
+						ul#zip_form li {display:inline; margin:0px 10px 0px 0px; font-size:11px;}
+					</style>
+                                 
+					
+				</ul>
+                                <div class="wholeform" style="margin-left:0px">
+                                    <div class="formclient">Additional Criteria:</div>
+                                    <div class="formright" style="width:480px">
+                                    <ul id="zip_form" style="list-style:none; display:inline;">
+                                       <li><%= check_box :notary_search, :additional_language,:onClick=>"find_note_add_lang()",:checked=> @check_additional_language %> Additional Language</li>
+					<li id="languages" style="<%=@dropdown_language%>">
+						<%= select_tag "order_required_language", options_for_select([["English" , "English" ], ["Spanish" , "Spanish" ], ["Arabic" , "Arabic" ], ["Armenian" , "Armenian" ], ["ASL" , "ASL" ], ["Dutch" , "Dutch" ], ["Chinese" , "Chinese" ], ["French" , "French" ], ["Filipino" , "Filipino" ], ["German" , "German" ], ["Greek" , "Greek" ], ["Herbrew" , "Hebrew" ], ["Hindu" , "Hindu" ], ["Italian" , "Italian" ], ["Japanese" , "Japanese" ], ["Korean" , "Korean" ], ["Manderin" , "Manderin" ], ["Persian" , "Persian" ], ["Polish" , "Polish"], ["Portugese" , "Portugese" ], ["Romanian" , "Romanian" ], ["Russian" , "Russian" ], ["Swedish" , "Swedish" ], ["Thai" , "Thai" ], ["Turkish" , "Turkish" ], ["Vietnamese" , "Vietnamese" ]],@selected_lang), {:name => "order[required_language]", :style => ""} %>
+					</li>
+					<li><%= check_box :notary_search, :attorney, :checked=> @check_attorney %> Attorney</li>
+					<li><%= check_box :notary_search, :title_producer, :checked=>@check_title_producer %> Title Producer</li>
+					
+                                        <div class="clr"></div>
+                                    </ul>
+                                       <ul id="zip_form" style="list-style:none; display:inline;">
+                                       <li><%= check_box :notary_search, :reverse_mortgage, :checked=> @check_reverse_mortgage %> Reverse Mortgage</li>
+                                        <li><%= check_box :notary_search, :life_settlement_experience, :checked=> @check_life_settlement %> Life Settlement</li>
+                                        <li><%= check_box :notary_search, :enotarization_capability, :checked=> @check_enotification %> e-Notarization</li>
+                                        <li><%= check_box :notary_search, :email_capable, :checked=> @check_email_capable %> Email Capability</li>
+				</ul>
+                                  </div>
+                                     
+                                  </div>
+			<% end %>
+                                <div class="clr"></div>
+			<div id="results" style="margin-top:20px;">
+				<div class="span-5">
+					<style type="text/css" media="screen">
+						#results div.notary_details {padding:2px 3px 2px 5px; margin:5px 0px 5px 0px;}
+						#results div.notary_details:hover {background-color:#999;}
+						#results div.odd {background-color:#333;}
+						#results div.notary_details ul {list-style:none; margin:0px;}
+						#results div.notary_details li {font-size:11px; margin:0px; line-height:11px;}
+					</style>
+                                       
+					<div style="height:300px; overflow:auto;" class="colborder">
+						<% count = 0
+                                                for notary in @notaries
+                                                count = count+1
+                                                %>
+                                          <div class="notary_details" onmouseover="jQuery('#notary_info').html('<%= escape_javascript(render(:partial => "notary_results", :locals => {:notary => notary })) %>')">
+								<ul>
+									<li><%= notary.first_name %> <%= notary.last_name %></li>
+									<% notary_total_orders = Order.find(:all, :conditions => ["notary_id = ?", notary.id]) %>									
+									<li>Distance: <%if notary.distance!=nil%> <%=sprintf("%.02f",notary.distance)%> <%end%> miles</li>
+									<li>
+										<% @orders = Order.find_all_by_notary_id(notary.id)%>
+										<% number_of_signings = @orders.size %>
+										<%= pluralize(number_of_signings, "signing") %> on NotaryFly
+									</li>
+									<li><%=OrderFeedback.feedback_percentage(notary.id)%>% positive feedback </li>
+									<!-- <li style="margin-top:5px;"><a href=#select_notary_<%=notary.id %> class=fancyzoom style='color:#154B66'>Use this notary</a></li>-->
+                                                                        <li style="margin-top:5px;"><%= link_to image_tag("use_notary.jpg"), { :action => "use_notary",:id=>notary.id,:order_id=>params[:id]},:class=>"tweenbox",:style=>'color:#154B66',:id=> "use_notary_focus"+count.to_s%></li>
+							</div>
+								
+							
+						<% end %>
+					</div>
+				</div>
+				<style type="text/css" media="screen">
+					#notary_info h4, #notary_info h5 {text-align:center;}
+					#notary_info ul {list-style:none;}
+					
+					#notary_info {padding-left:10px;}
+				</style>
+                                <% if @notaries.size==0%>
+                                <div style="padding-left:270px;padding-bottom:10px;font-weight: bold;color:#FF0000">Sorry,we were unable to locate any notaries matching your search criteria. Please change the search criteria and try again.</div>
+                               <%else%>
+                               
+                         
+                                <div id="notary_info" class="span-11 last">
+                                  <h5 style="color: #FF0000">Drag mouse on the notary to view their details</h5>
+				</div>
+                                <%end%>
+			</div>
+                                
+		</div>
+            <div class="clr"></div>
+
+        </div>
+<b class="xbottom_2"><b class="xb4_2"></b><b class="xb3_2"></b>
+<b class="xb2_2"></b><b class="xb1_2"></b></b>
+</div>
+	</div>
+	
+	<h2 style="margin-bottom:0px;">Filling Notary</h2>
+	<h3 style="margin-bottom:10px; margin-top:0px;">Order Summary</h3>
+         <div class="xsnazzy" style="width: 740px">
+          <b class="xtop"><b class="xb1"></b><b class="xb2 color_a">
+          </b><b class="xb3 color_a"></b><b class="xb4 color_a"></b></b>
+          <div class="xboxcontent" style="padding:10px;">
+            <div id="order_details" class="span-18 last" style="padding:0px">
+		<div class="span-9">
+			<p><label for="loan_number">Loan/Escrow Number: </label><%= @order.loan_number %></p>
+			<p><label for="signing_date">Signing Date: </label><%= @order.signing_date.strftime("%B %d, %Y") if @order.signing_date %></p>
+			<p><label for="signing_time">Signing Time: </label><%= @order.signing_time if @order.signing_time %></p>
+			<p><label for="required_language">Required Language: </label><%= @order.required_language %></p>
+		</div>
+		<div class="span-9 last">
+			<p><label for="loan_type">Loan Type: </label><%= @order.loan_type %></p>
+			<p><label for="sets_of_docs">How Many Sets of Documents: </label><%= @order.sets_of_docs %></p>
+			<p><label for="delivery_options">How Will Documents Be Delivered: </label><%= @order.delivery_options %></p>
+			<% if @order.shipped_via.size > 0 %><p><label for="shipped_via">Shipped Via: </label><%= @order.shipped_via %></p><% end %>
+			<% if @order.tracking_number.size > 0 %><p><label for="tracking_number">Tracking Number: </label><%= @order.tracking_number %></p><% end %>
+			
+		</div>
+		<div class="clear"></div>
+		<h3><strong>Signer Contact(s)</strong></h3>
+
+		<div class="span-9">
+			<p class="strong" style="text-decoration:underline; margin:0px 0px 5px 0px;">Signer #1</p>
+			<p><label for="borrower_1_first_name">Name: </label><%= @order.borrower_1_first_name %> <%= @order.borrower_1_last_name %></p>
+			<p><label for="borrower_1_work_phone">Work Phone: </label><%if @order.borrower_1_work_phone.length!=0%><%= @order.borrower_1_work_phone %><%else%> Not Provided<%end%> - Ext </label><% if @order.borrower_1_extension.length!=0%> <%= @order.borrower_1_extension %><%else%> Not Provided<%end%></p>
+			<p><label for="borrower_1_home_phone">Home Phone: </label><%if @order.borrower_1_home_phone.length!=0%><%= @order.borrower_1_home_phone %><%else%> Not Provided<%end%></p>
+			<p><label for="borrower_1_mobile_phone">Mobile Phone: </label><%if @order.borrower_1_mobile_phone.length!=0%><%= @order.borrower_1_mobile_phone %><%else%> Not Provided<%end%></p>
+		</div>
+
+		<div class="span-9 last ">
+			<p class="strong" style="text-decoration:underline; margin:0px 0px 5px 0px;">Signer #2</p>
+			<p><label for="borrower_2_first_name">Name: </label><%if @order.borrower_2_first_name.length!=0 or @order.borrower_2_last_name.length!=0%><%= @order.borrower_2_first_name %> <%= @order.borrower_2_last_name %><%else%> Not Provided<%end%></p>
+			<p><label for="borrower_2_work_phone">Work #: </label><%if @order.borrower_2_work_phone.length!=0 %><%= @order.borrower_2_work_phone %><%else%> Not Provided<%end%> - Ext </label><% if @order.borrower_2_extension.length==0%> Not Provided<%else%> <%= @order.borrower_2_extension %> <%end%></p>
+			<p><label for="borrower_2_home_phone">Home #: </label><%if @order.borrower_2_home_phone.length!=0%><%= @order.borrower_2_home_phone %><%else%> Not Provided<%end%></p>
+			<p><label for="borrower_2_mobile_phone">Mobile #: </label><% if @order.borrower_2_mobile_phone.length!=0%> <%= @order.borrower_2_mobile_phone %><%else%> Not Provided<%end%></p>
+		</div>
+		<div class="clear"></div>
+		
+		<div class="span-9 last">
+			<h3><strong>Signing Location</strong></h3>
+			<p><%= @order.signing_location_address %></p>
+			<p><%= @order.signing_location_city %>, <%= @order.signing_location_state %> <%= @order.signing_location_zip_code %> </p>
+		</div>
+		<div class="clear"></div>		
+		
+		<div class="span-18 last">
+			<h3><strong>Special Instructions</strong></h3>
+			 <% if @order.special_instructions.length!=0 %>
+			<p><%= @order.special_instructions %></p>
+                        <%else%>
+                        <p>Not Provided</p>
+                        <%end%>
+			
+			<h3><strong>Attachments</strong></h3>
+                         <% if (@order.order_attachment_1_file_name==nil or @order.order_attachment_1_file_name.length==0) and (@order.order_attachment_2_file_name==nil or @order.order_attachment_2_file_name.length==0) and (@order.order_attachment_3_file_name==nil or @order.order_attachment_3_file_name.length==0) and (@order.order_attachment_4_file_name==nil or @order.order_attachment_4_file_name.length==0) and (@order.order_attachment_5_file_name==nil or @order.order_attachment_5_file_name.length==0) and (@order.order_attachment_6_file_name==nil or @order.order_attachment_6_file_name.length==0) and (@order.attachment_1_file_name==nil or @order.attachment_1_file_name.length==0) and (@order.attachment_2_file_name==nil or @order.attachment_2_file_name.length==0) and (@order.attachment_3_file_name==nil or @order.attachment_3_file_name.length==0) and (@order.attachment_4_file_name==nil or @order.attachment_4_file_name.length==0) and (@order.attachment_5_file_name==nil or @order.attachment_5_file_name.length==0) and (@order.attachment_6_file_name==nil or @order.attachment_6_file_name.length==0) %>
+                         <p>No attachment</p>
+                        <%else%>
+			<!-- <ul style="list-style:none; margin:0px; font-size:11px;"> </ul>-->
+                          <p><%=@order.order_attachment_1_file_name%></p>
+                          <p><%=@order.attachment_1_file_name%></p>
+                          <p><%=@order.order_attachment_2_file_name%></p>
+                          <p><%=@order.attachment_2_file_name%></p>
+                          <p><%=@order.order_attachment_3_file_name%></p>
+                          <p><%=@order.attachment_3_file_name%></p>
+                          <p><%=@order.order_attachment_4_file_name%></p>
+                          <p><%=@order.attachment_4_file_name%></p>
+                          <p><%=@order.order_attachment_5_file_name%></p>
+                          <p><%=@order.attachment_5_file_name%></p>
+                          <p><%=@order.order_attachment_6_file_name%></p>
+                          <p><%=@order.attachment_6_file_name%></p>
+			<%end%>
+		</div>
+		
+		
+	</div>
+            <div class="clr"></div>
+
+        </div>
+<b class="xbottom"><b class="xb4"></b><b class="xb3"></b>
+<b class="xb2"></b><b class="xb1"></b></b>
+</div>
+</div>
+

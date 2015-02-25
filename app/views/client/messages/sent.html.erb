@@ -1,0 +1,41 @@
+<%= render :partial => "/client/header" %>
+<%= render :partial => "/client/orders/navigation" %>
+
+<div id="messages" class="span-16 last content_container">
+	<% if flash[:notice] %><div class="success"><%= flash[:notice] %></div><% end %>		
+	<div class="span-16 last">
+		<div class="span-12 last">
+			<h2>My Sent Messages</h2>
+		</div>
+		<div class="span-16 last">
+			<p style="color:#154b66; font-weight:bold; margin-top:10px;">NotaryFly Messages is a place for you to send and receive NotaryFly-related communications. Messages from NotaryFly.com are shown in purple. Unread messages are shown in pink. You can delete a message at anytime.</p>
+			
+			<%= render :partial => "/client/messages/navigation" %>
+			
+			
+			<% if @messages.size > 0 %>
+			<table border="0" cellspacing="5" cellpadding="5">
+				<tr>
+					<th>View</th>
+					<th>Sent to</th>
+					<th>NF Order #</th>
+					<th>Sent at:</th>
+					<th>Mark as read</th>
+				</tr>
+				<% for message in @messages %>
+				<tr <% if message.is_unread == false %><% end %>>
+					<% @notary = Notary.find_by_user_id(message.recipient_id) %>
+					<td><%= link_to "View message", :action => "sent_detail", :id => message.id %></td>
+					<td><%if @notary!=nil%><%= @notary.first_name + " " + @notary.last_name %><%end%> </td>
+					<td><%= message.order_id %></td>
+					<td><%= message.created_at.strftime("%B %d, %Y at %I:%M %p") %></td>
+					<td><%= link_to "Remove", :action => "mark_sent_as_read", :id => message.id %></td>
+				</tr>
+				<% end %>
+			</table>
+			<% else %>
+			<p class="notice">You currently have no sent messages</p>
+			<% end %>
+		</div>
+	</div>
+</div>

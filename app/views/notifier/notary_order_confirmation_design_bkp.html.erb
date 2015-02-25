@@ -1,0 +1,126 @@
+<script></script>
+<% @notary = Notary.find(@order.notary_id) %>
+<% @client = Client.find(@order.client_id) %>
+<% @user = User.find(@notary.user_id) %>
+<p style="margin-bottom:6px;"><strong>This message was sent from a notification-only email address that does not accept incoming email. Please do not reply to this message.</strong></p>
+
+<p style="margin-bottom:6px;">Dear <%= @notary.first_name.capitalize %>&nbsp;<%= @notary.last_name.capitalize %>,</p>
+
+<p style="margin-bottom:6px;">The following NotaryFly Order has been ASSIGNED to you:</p>  
+
+
+
+<div style="float:left; width:60%; background:#ddd;">
+
+<table width="100%">
+
+<tr>
+	<td>
+		<div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;">
+		</div>
+		<div class="title1" style="font-weight:bold;">Signer/Client:
+		</div>
+	</td>
+	
+	<td>
+		<div class="title2"><%= @order.borrower_1_first_name.capitalize %> <%= @order.borrower_1_last_name.capitalize %>
+		</div>
+	</td>
+</tr>
+
+
+
+<tr>
+	<td>
+	<div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div>
+<div class="title1" style="font-weight:bold;">NF Order #:</div></td>
+	<td><div class="title2"><%= @order.id %></div>
+	</td>
+</tr>
+
+
+
+<tr>
+	<td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;">
+	</div>
+	<div class="title1" style="font-weight:bold;">Escrow/Transaction #:</div></td>
+	<td><div class="title2"><%= @order.loan_number %></div></td>
+</tr>
+
+<tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signing Date:</div></td><td><div class="title2"> <%= @order.signing_date.strftime("%B %d, %Y") %></div></td></tr>
+<tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signing Time:</div></td><td><div class="title2"> <%= @order.signing_time %></div></td></tr>
+
+
+<tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Type of Signing:</div></td><td><div class="title2"> <%=@order.loan_type%></div></td></tr>
+
+
+<tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Docs Sent via:</div></td><td><div class="title2"><%=@order.delivery_options%></div></td></tr>
+
+
+ 
+<tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Notary Fee:</div></td><td><div class="title2">$ <%= number_with_precision(@order.notary_fee.to_f,:precision=>2) %></div></td></tr>
+
+
+<tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Other Fee:</div></td><td><div class="title2"> <%if !@order.travel_fee.blank?%> $ <%= number_with_precision(@order.travel_fee.to_f,:precision=>2) %><%else%> $ 0.00<%end%></div></td></tr>
+
+
+<tr><td>
+<div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div>
+<div class="title1" style="font-weight:bold;">Signing Location:</div></td>
+<td><span class="title2"> <%=@order.signing_location_address%></div></td>
+
+</tr>
+
+<tr>
+	<td>
+	<div class="title1" style="font-weight:bold;">&nbsp;</div>
+	</td>
+	<td>
+	<div class="title2"><%=@order.signing_location_city%>,&nbsp;&nbsp;<%=@order.signing_location_state%>&nbsp;&nbsp;<%=@order.signing_location_zip_code%></div>
+	</td>
+</tr>
+
+</table>
+
+</div>
+
+
+
+
+
+<div style="float:left; border:2px solid #000; padding: 10px; width: 25%;">
+<strong>Docs Sent to Notary Via:</strong><%=@order.shipped_via%><br/>
+<strong>Tracking #:</strong><%=@order.tracking_number%>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div style="float:left; width:100%;">
+<p style="margin-bottom:6px;">This Order was filled through NotaryFly.com.  The work order and any applicable instructions for the signing are attached</p>
+<p style="margin-bottom:6px;">If you have trouble viewing the work order you can go to <a href="http://www.notaryfly.com">NotaryFly.com</a> and view order details by logging with your username and password.</p>
+</div>
+
+
+ <div style="float:left; width:100%">
+<ul>
+  <li style="list-style:square;">Username: <%=@user.email%></li>
+  <li style="list-style:square;">Password: <%=@user.user_password%></li>
+
+</ul>
+</div>
+
+<p style="margin-bottom:6px;">
+	
+	<%= @client.company_name %><br/>
+	<%= @client.client_name %><br/>
+	<%= @client.home_phone %><br/>
+</p>
+

@@ -1,0 +1,2 @@
+module Notary::ProfileHelper
+end

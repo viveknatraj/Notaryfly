@@ -1,0 +1,129 @@
+
+
+<style type="text/css">
+
+	.executive_list {
+		float: left;
+		width: 50px;
+	}
+
+	.center_head  h1
+	{
+		color: #567789;
+		font-size: 24px;
+
+	}
+	.center_head  h1 span
+	{
+		color:#222f54;
+	}
+	.center_subhead
+	{
+		color: #2475AC;
+		font-weight: bold;
+		margin: 0 auto;
+		width: 100%;
+	}
+
+	/* tr.even {
+		background-color: #efefef;
+	} */
+</style>
+
+<%= javascript_include_tag "prototype"  %>
+
+<script>
+
+
+
+	function show_executive_details(executive_id,executive_id_arr){
+
+
+		for(i=0;i<executive_id_arr.length;i++)
+		{
+			if (executive_id_arr[i]!=executive_id)
+			document.getElementById('client_executive_rightcnt_'+executive_id_arr[i]).hide();
+			else
+			document.getElementById('client_executive_rightcnt_'+executive_id_arr[i]).show();
+		}
+
+
+	}
+	function showfirstdiv(executiveid){
+
+		document.getElementById('client_executive_rightcnt_'+executiveid).show();
+	}
+
+</script>
+
+<div class="block" id="block-tables" style="border:0px solid #fff;">
+	<div style="padding-left:538px;">
+		<% form_for :executives, :url => "/admin/executives/index/",:html=>{:method=>'get'} do %>
+						<input type="text" name="keyword" style="vertical-align: middle" value='<%= params[:keyword] %>'/><%=image_submit_tag("search.png",:style=>"vertical-align: middle;")%>
+						<%= link_to(image_tag("/images/new_executive.png", :style => 'vertical-align:bottom' ), :action => "new")%>
+		<% end %>
+	</div>
+	<br/>
+	<div class="content" id="counter">
+					<form name="test" method="post">
+									<div class="inner" >
+													<table class="table" id="myTable">
+																	<!--<thead bgcolor='gray'>-->
+																	<thead bgcolor='lightgray'>
+																					<tr>
+																									<td style="width: 30px;">ID #</td>
+																									<td>Executive Name</td>
+																									<td><div style="width: 200px;">Address</div></td>
+																									<td>City</td>
+																									<td>State</td>
+																									<td>Action</td>
+																					</tr>
+																	</thead>
+																	<tbody>
+																					<% @executives.each{|e| %>
+																									<!--<tr class="<%= cycle('even','odd') %>">-->
+																									<tr>
+																													<td><a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'show_executive_<%= e.id %>', '', 'width=720px,height=230px,left=200px,top=150px,resize=0,scrolling=0');" title="View Executive details" style="color: #000;font-size: 12px;"><%= e.id %></a></td>
+																													<td><%= e.name %></td>
+																													<td><div style="width: 200px;"><%= e.address %></div></td>
+																													<td><%= e.city %></td>
+																													<td><%= e.state %></td>
+																													<td><a href="/admin/executives/edit/<%= e.id %>">Edit</a></td>
+																									</tr>
+																									<div class="view_det" id="show_executive_<%= e.id %>" style="display:none;">
+																													<div class="view_det_left1">
+																																	<span>Contact Information:</span>
+																																	<ul>
+																																					----------------------------------------------------<br/>
+																																					<li> <label style="color:#00008B;">ID:</label><%= e.id %></li>
+																																					<li><label style="color:#00008B;">Executive Name: </label><%=  e.name %></li>
+																																					<li><label style="color:#00008B;">Address: </label><%= e.address.blank? ? "Not Provided" : e.address %> </li>
+																																					<li><label style="color:#00008B;">City: </label><%= e.city.blank? ? "Not Provided" : e.city %> </li>
+																																					<li><label style="color:#00008B;">State: </label><%= e.state.blank? ? "Not Provided" : e.state %> </li>
+
+																																	</ul>
+																													</div>
+																													<div class="view_det_right1" >
+																																	<span>Bank Details:</span>
+																																	<ul>
+																																					----------------------------<br/>
+																																					<li><label style="color:#00008B;">Account Name: </label><%= e.account_name.blank? ? "Not Provided" : e.account_name %> </li>
+																																					<li><label style="color:#00008B;">Account Type: </label><%= e.account_type.blank? ? "Not Provided" : e.account_type %> </li>
+																																					<li><label style="color:#00008B;">Account Holder Type: </label><%= e.account_holder_type.blank? ? "Not Provided" : e.account_holder_type %> </li>
+																																					<li><label style="color:#00008B;">Account Number: </label><%= e.account_number.blank? ? "Not Provided" : e.account_number %> </li>
+																																					<li><label style="color:#00008B;">Routing Number: </label><%= e.routing_number.blank? ? "Not Provided" : e.routing_number %> </li>
+																																	</ul>
+																													</div>
+																									</div>
+																					<% } %>
+																	</tbody>
+													</table>
+													<script type="text/javascript">
+																	initSortTable('myTable',Array('N','S','S','S','N'));
+																	</script>
+																	<%= will_paginate @executives %>
+																	<div style=" margin-top: 20px; clear:both;"></div>
+													</div>
+									</form>
+	</div>
+</div>

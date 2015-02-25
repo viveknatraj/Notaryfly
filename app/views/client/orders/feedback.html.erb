@@ -1,0 +1,91 @@
+<%= render :partial => "/client/header" %>
+<%= render :partial => "navigation" %>
+
+
+<div id="order_history" class="span-18 last content_container">
+	
+	<div class="span-16 last">
+		<div class="span-16 last">
+			<h2>Leave Order Feedback</h2>
+			<h3>Order History</h3>
+		</div>
+	</div>
+	
+  <div class="span-16 last dashboard_order feedback_form" style="border: none; padding: 0px">
+           <div class="xsnazzy">
+<b class="xtop"><b class="xb1"></b><b class="xb2 color_a">
+</b><b class="xb3 color_a"></b><b class="xb4 color_a"></b></b>
+<div class="xboxcontent" style="padding:10px;">
+		<% form_for :order_feedback, :url => "/client/orders/create_feedback" do |f| -%>
+		<%= f.hidden_field :order_id, :value => params[:id] %>
+		<h5><strong>Feedback for Order#: <%= @order.id %></strong></h5>
+		<p style="color:#154b66; font-weight:bold; margin-top:10px;">Remember - These detailed notary ratings are anonymous, so please feel free to
+		leave honest ratings about your experience with the notary.</p>
+		
+		<h3 style="color:#154b66;">1.) Rate this notary</h3>
+		<%= f.radio_button :overall, "positive"%> Positive
+		<%= f.radio_button :overall, "neutral"%> Neutral
+		<%= f.radio_button :overall, "negative"%> Negative
+		
+		<p><label>Please explain</label></p>
+		<p><%= f.text_area :comments, :style => "width:600px; height:30px;" %></p>
+		
+		<h3 style="color:#154b66;">2.) Were the documents executed accurately?</h3>
+		<p>
+			<%= f.radio_button :accuracy, "1", :class => "star", :title=> "Very inaccurate" %>
+			<%= f.radio_button :accuracy, "2", :class => "star", :title=> "Inaccurate" %>
+			<%= f.radio_button :accuracy, "3", :class => "star", :title=> "Neither inaccurate nor accurate" %>
+			<%= f.radio_button :accuracy, "4", :class => "star", :title=> "Accurate" %>
+			<%= f.radio_button :accuracy, "5", :class => "star", :title=> "Very accurate" %>
+		</p>
+		<div style="clear:both;"></div>
+		<h3 style="color:#154b66;">3.) Was the Notary professional?</h3>
+		<p>
+			<%= f.radio_button :professionalism, "1", :class => "star", :title=> "Very unsatisfied" %>
+			<%= f.radio_button :professionalism, "2", :class => "star", :title=> "Unsatisfied" %>
+			<%= f.radio_button :professionalism, "3", :class => "star", :title=> "Neither unsatisfied nor satisfied" %>
+			<%= f.radio_button :professionalism, "4", :class => "star", :title=> "Satisfied" %>
+			<%= f.radio_button :professionalism, "5", :class => "star", :title=> "Very satisfied" %>
+		</p>
+		<div style="clear:both;"></div>
+		
+		<h3 style="color:#154b66;">4.) How as the promptness of the Notary’s updates on the Timeline.</h3>
+		<p>
+			<%= f.radio_button :punctuality, "1", :class => "star", :title=> "Very unsatisfied"%>
+			<%= f.radio_button :punctuality, "2", :class => "star", :title=> "Unsatisfied"%>
+			<%= f.radio_button :punctuality, "3", :class => "star", :title=> "Neither unsatisfied nor satisfied"%>
+			<%= f.radio_button :punctuality, "4", :class => "star", :title=> "Satisfied"%>
+			<%= f.radio_button :punctuality, "5", :class => "star", :title=> "Very satisfied"%>
+		</p>
+		<div style="clear:both;"></div>
+		
+		<h3 style="color:#154b66;">5.) How satisfied were you of the notary's communication?</h3>
+		<p>
+			<%= f.radio_button :communication, "1", :class => "star", :title=> "Very unsatisfied"%>
+			<%= f.radio_button :communication, "2", :class => "star", :title=> "Unsatisfied"%>
+			<%= f.radio_button :communication, "3", :class => "star", :title=> "Neither unsatisfied nor satisfied"%>
+			<%= f.radio_button :communication, "4", :class => "star", :title=> "Satisfied"%>
+			<%= f.radio_button :communication, "5", :class => "star", :title=> "Very satisfied"%>
+		</p>
+		<div style="clear:both;"></div>
+		<h3 style="color:#154b66;">6.) Would you use this notary again?</h3>
+		<p>
+			<%= f.radio_button :fees, "1", :class => "star", :title=> "Very unreasonable" %>
+			<%= f.radio_button :fees, "2", :class => "star", :title=> "Unreasonable" %>
+			<%= f.radio_button :fees, "3", :class => "star", :title=> "Neither unreasonable nor reasonable" %>
+			<%= f.radio_button :fees, "4", :class => "star", :title=> "Reasonable" %>
+			<%= f.radio_button :fees, "5", :class => "star", :title=> "Very reasonable" %>
+		</p>
+		
+		<div style="clear:both;"></div>
+		
+		<%= image_submit_tag("buttons/save_button.jpg", :style => "margin-top:25px;") %>
+		<% end %>
+	
+                     <div class="clr"></div>
+        </div>
+           <div class="clr"></div>
+<b class="xbottom"><b class="xb4"></b><b class="xb3"></b>
+<b class="xb2"></b><b class="xb1"></b></b>
+</div> 
+</div></div>

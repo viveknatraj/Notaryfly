@@ -1,0 +1,80 @@
+<p style="margin-bottom:6px;"><strong>This message was sent from a notification-only email address that does not accept incoming email. Please do not reply to this message.</strong></p>
+<p style="margin-bottom:6px;">Dear <%= link_to "#{@notary.first_name.capitalize} #{@notary.last_name.capitalize}", "javascript:void(0)" %>,</p>
+<p style="margin-bottom:6px;">The following Order has been PAID:</p>
+<table width="60%" style="float:left;">
+  <tr>
+    <td>
+      <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div>
+      <div class="title1" style="font-weight:bold;">Order #:</div>
+    </td>
+    <td>
+      <div class="title2"><strong>NF</strong># <%= @order.id %> <strong>Escrow</strong># <%= @order.loan_number %></div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div>
+      <div class="title1" style="font-weight:bold;">Signer/Client:</div>
+    </td>
+    <td>
+      <div class="title2"><%= link_to "#{@order.borrower_1_first_name.capitalize} #{@order.borrower_1_last_name.capitalize}", "javascript:void(0)" %></div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div>
+      <div class="title1" style="font-weight:bold;">Signing Location:</div>
+    </td>
+    <td>
+      <div class="title2"><%= "#{@order.signing_location_address} #{@order.signing_location_city}, #{@order.signing_location_state} #{@order.signing_location_zip_code}" %></div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div>
+      <div class="title1" style="font-weight:bold;">Signing Date:</div>
+    </td>
+    <td>
+      <div class="title2"><%= @order.signing_date.strftime("%B %d, %Y") %></div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div>
+      <div class="title1" style="font-weight:bold;">Signing Time:</div>
+    </td>
+    <td>
+      <div class="title2"><%= @order.signing_time %></div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div>
+      <div class="title1" style="font-weight:bold;">Signing Type:</div>
+    </td>
+    <td>
+      <div class="title2"><%= @order.loan_type %></div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div>
+      <div class="title1" style="font-weight:bold;">Notary Fee:</div>
+    </td>
+    <td>
+      <div class="title2">$ <%= number_with_precision((@order.notary_fee.to_i).to_f,:precision=>2) %></div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div>
+      <div class="title1" style="font-weight:bold;">ACH #/Check #</div>
+    </td>
+    <td>
+      <div class="title2">$ <%= @order.notary.account if @order.notary && @order.notary.account %></div>
+    </td>
+  </tr>
+</table>
+
+<p style="margin-bottom:6px;"><strong>Payment is typically received by Notary within 2-7 days of receipt of this email.  If you have not been paid within this time frame, please contact <a href="mailto:accounting@notaryfly.com">accounting@notaryfly.com</a></strong></p>
+<p style="margin-bottom:6px;">If there are any title/escrow companies or lenders who could benefit from using NotaryFly, please forward their contact information to:  <a href="mailto:ReferAFriend@notaryfly.com">ReferAFriend@notaryfly.com</a></p>

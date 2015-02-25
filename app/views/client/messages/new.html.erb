@@ -1,0 +1,52 @@
+<%= render :partial => "/client/header" %>
+<%= render :partial => "/client/orders/navigation" %>
+<%= javascript_include_tag "file_tags" %>
+<div id="messages" class="span-16 last content_container">
+  
+	<% if flash[:notice] %><div class="success"><%= flash[:notice] %></div><% end %>		
+	<div class="span-16 last">
+		<div class="span-12 last">
+			<h2>New Message</h2>
+		</div>
+          <%= link_to(image_tag("back_to_open_order.jpg"), { :controller => "orders", :action => "index"}, :style => "color:#154B66; font-size:12px; font-weight:bold;") %>
+			<div id="contact_information" class="span-16 last" style="padding:20px 70px 20px 0px; border: none">
+                          <div class="xsnazzy">
+<b class="xtop"><b class="xb1"></b><b class="xb2 color_a">
+</b><b class="xb3 color_a"></b><b class="xb4 color_a"></b></b>
+<div class="xboxcontent" style="padding:10px;">
+				<h3>New message for <%= @order.notary.first_name %> <%= @order.notary.last_name %>  - Order #<%= @order.id %></h3>
+				<% form_for :message, :url => "/client/messages/create", :html => {:multipart => true}  do |f| -%>
+					<p><%= f.text_area :body, :style => "width:98%;  height:75px;" %></p>
+					<%= f.hidden_field :order_id, :value => @order.id %>
+						 <% totfile=""
+                            filecnt = 0
+                      %>
+
+
+
+			<p style="width:425px">Add :<%= f.file_field :attachment_1 %></p>
+
+
+
+
+
+                  <div id="ItemFiles" ></div>
+
+                    <div class="photoheadmore" id="uploadlink"><span style="margin-right:5px;"><%= image_tag("pin_im.gif") %></span><a href="Javascript:addFileForMessage();"><span>Attach Files</span></a></div>
+
+					<input type="hidden" name="totfile" id="totfile" value="<%=totfile%>"/>
+					
+				<div id="submit_button" class="span-18 last">
+					<p><%= image_submit_tag("buttons/send_message.jpg")%> <%= image_submit_tag("buttons/cancel_button.jpg")%></p>
+					<% end %>
+				</div>
+                            <div class="clr"></div>
+        </div>
+<b class="xbottom"><b class="xb4"></b><b class="xb3"></b>
+<b class="xb2"></b><b class="xb1"></b></b>
+</div> 
+		</div>
+
+	</div>
+       
+</div>

@@ -1,0 +1,72 @@
+
+
+Processing ServersController#device (for 119.82.114.194 at 2013-03-18 11:40:37) [GET]
+  Parameters: {"id"=>"3abe4b3aacdb2ded93f6d8ad0fa949c13530a882", "lat"=>"13.123020", "long"=>"80.187485", "action"=>"device", "controller"=>"servers", "udid"=>"3abe4b3aacdb2ded93f6d8ad0fa949c13530a882"}
+Completed in 249ms (View: 0, DB: 233) | 200 OK [http://54.243.252.190/servers/3abe4b3aacdb2ded93f6d8ad0fa949c13530a882/device?udid=3abe4b3aacdb2ded93f6d8ad0fa949c13530a882&lat=13.123020&long=80.187485]
+
+Processing JobsController#documents (for 119.82.114.194 at 2013-03-18 11:41:26) [GET]
+  Parameters: {"id"=>"105556", "lat"=>"13.123020", "long"=>"80.187485", "action"=>"documents", "controller"=>"jobs", "udid"=>"3abe4b3aacdb2ded93f6d8ad0fa949c13530a882"}
+Completed in 52ms (View: 0, DB: 43) | 200 OK [http://54.243.252.190/jobs/105556/documents?udid=3abe4b3aacdb2ded93f6d8ad0fa949c13530a882&lat=13.123020&long=80.187485]
+
+Processing JobsController#show (for 119.82.114.194 at 2013-03-18 11:41:27) [GET]
+  Parameters: {"id"=>"105556", "lat"=>"13.123020", "long"=>"80.187485", "action"=>"show", "controller"=>"jobs", "udid"=>"3abe4b3aacdb2ded93f6d8ad0fa949c13530a882"}
+Completed in 681ms (View: 0, DB: 670) | 200 OK [http://54.243.252.190/jobs/105556?udid=3abe4b3aacdb2ded93f6d8ad0fa949c13530a882&lat=13.123020&long=80.187485]
+
+
+Processing DescriptionsController#show (for 119.82.114.194 at 2013-03-18 11:43:31) [GET]
+  Parameters: {"lat"=>"13.123020", "attempt_id"=>"138498", "long"=>"80.187485", "action"=>"show", "controller"=>"descriptions", "udid"=>"3abe4b3aacdb2ded93f6d8ad0fa949c13530a882"}
+Completed in 114ms (View: 0, DB: 103) | 200 OK [http://54.243.252.190/attempts/138498/description?udid=3abe4b3aacdb2ded93f6d8ad0fa949c13530a882&lat=13.123020&long=80.187485]
+
+Processing RecipientsController#update (for 119.82.114.194 at 2013-03-18 11:52:19) [PUT]
+  Parameters: {"recipient"=>"Son", "lat"=>"13.123022", "attempt_id"=>"138498", "long"=>"80.187447", "recipient_id"=>"19", "subcategory"=>"Son", "action"=>"update", "controller"=>"recipients", "udid"=>"3abe4b3aacdb2ded93f6d8ad0fa949c13530a882"}
+[paperclip] Saving attachments.
+[paperclip] Saving attachments.
+[paperclip] Saving attachments.
+[paperclip] Saving attachments.
+Completed in 106ms (View: 0, DB: 79) | 200 OK [http://54.243.252.190/attempts/138498/recipient]
+
+Processing DescriptionsController#update (for 119.82.114.194 at 2013-03-18 11:52:19) [PUT]
+  Parameters: {"description"=>{"weight"=>"0", "hair_color"=>"4", "glasses"=>"1", "eye_color"=>"4", "age"=>"2", "race"=>"4", "height"=>"72", "gender"=>"0"}, "lat"=>"13.123022", "attempt_id"=>"138498", "long"=>"80.187447", "action"=>"update", "controller"=>"descriptions", "udid"=>"3abe4b3aacdb2ded93f6d8ad0fa949c13530a882"}
+Completed in 328ms (View: 0, DB: 316) | 200 OK [http://54.243.252.190/attempts/138498/description]
+
+Processing CommentsController#update (for 119.82.114.194 at 2013-03-18 11:52:20) [PUT]
+  Parameters: {"lat"=>"13.123022", "comments"=>"All details completed by hari", "attempt_id"=>"138498", "long"=>"80.187447", "action"=>"update", "controller"=>"comments", "udid"=>"3abe4b3aacdb2ded93f6d8ad0fa949c13530a882"}
+[paperclip] Saving attachments.
+[paperclip] Saving attachments.
+Completed in 41ms (View: 0, DB: 26) | 200 OK [http://54.243.252.190/attempts/138498/comments]
+
+Processing DescriptionsController#update (for 119.82.114.194 at 2013-03-18 11:52:19) [PUT]
+  Parameters: {"description"=>{"middle_name"=>"nil", "last_name"=>"Krishnan", "first_name"=>"Hair"}, "lat"=>"13.123022", "attempt_id"=>"138498", "long"=>"80.187447", "action"=>"update", "controller"=>"descriptions", "udid"=>"3abe4b3aacdb2ded93f6d8ad0fa949c13530a882"}
+Completed in 606ms (View: 0, DB: 267) | 200 OK [http://54.243.252.190/attempts/138498/description]
+
+Processing LocationsController#update (for 119.82.114.194 at 2013-03-18 11:52:19) [PUT]
+  Parameters: {"location"=>{"zip"=>"632512", "city"=>"chennai", "street_1"=>"nil", "street_2"=>"nil", "state_id"=>"14"}, "lat"=>"13.123022", "attempt_id"=>"138498", "long"=>"80.187447", "action"=>"update", "controller"=>"locations", "udid"=>"3abe4b3aacdb2ded93f6d8ad0fa949c13530a882"}
+[paperclip] Saving attachments.
+[paperclip] Saving attachments.
+Completed in 1382ms (View: 0, DB: 1144) | 200 OK [http://54.243.252.190/attempts/138498/location]
+
+Processing AttemptsController#save (for 119.82.114.194 at 2013-03-18 11:52:20) [PUT]
+  Parameters: {"id"=>"138498", "lat"=>"13.123022", "long"=>"80.187447", "document_served"=>"true", "action"=>"save", "controller"=>"attempts", "udid"=>"3abe4b3aacdb2ded93f6d8ad0fa949c13530a882"}
+[paperclip] Saving attachments.
+[paperclip] Saving attachments.
+Completed in 361ms (View: 0, DB: 338) | 200 OK [http://54.243.252.190/attempts/138498/save]
+
+
+Processing AttemptsController#upload_audio (for 119.82.114.194 at 2013-03-18 11:52:20) [POST]
+  Parameters: {"id"=>"138498", "action"=>"upload_audio", "controller"=>"attempts", "upload"=>{"file"=>#<File:/tmp/RackMultipart20130318-11347-1m8n3df-0>}}
+[paperclip] Saving attachments.
+[paperclip] saving /home/ec2-user/ROR/public/system/audio_clips/138498/original/audio.caf
+[paperclip] Saving attachments.
+Completed in 369ms (View: 0, DB: 286) | 200 OK [http://54.243.252.190/attempts/138498/upload_audio]
+
+
+Processing AttemptsController#save (for 119.82.114.194 at 2013-03-18 11:52:20) [PUT]
+  Parameters: {"id"=>"138498", "lat"=>"13.123022", "long"=>"80.187447", "action"=>"save", "controller"=>"attempts", "udid"=>"3abe4b3aacdb2ded93f6d8ad0fa949c13530a882"}
+Completed in 19ms (View: 0, DB: 8) | 200 OK [http://54.243.252.190/attempts/138498/save]
+
+Processing EmployersController#update (for 119.82.114.194 at 2013-03-18 11:52:21) [PUT]
+  Parameters: {"lat"=>"13.123022", "attempt_id"=>"138498", "employer"=>{"name"=>"nil", "zip"=>"521458", "city"=>"Delhi", "street_1"=>"nil", "street_2"=>"nil", "state_id"=>"13"}, "long"=>"80.187447", "action"=>"update", "controller"=>"employers", "udid"=>"3abe4b3aacdb2ded93f6d8ad0fa949c13530a882"}
+
+
+
+

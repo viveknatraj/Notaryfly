@@ -1,0 +1,22 @@
+<% @client = Client.find(@order.client_id) %>
+
+<p><strong>This message was sent from a notification-only email address that does not accept incoming email. Please do not reply to this message.</strong></p>
+<br/>
+<p>Dear <%= @client.client_name.capitalize %>, </p>
+<br/>
+<p>Please leave feedback</p>
+
+<ul>
+	<li>Signer/Client: <%= @order.borrower_1_first_name %> <%= @order.borrower_1_last_name %></li>
+	<li>NF Order #:
+<%= @order.id %></li>
+	<li>Escrow/Transaction #: <%= @order.loan_number %></li>
+	<li>Signing Date: 
+<%= @order.signing_date.strftime("%B %d, %Y") %></li>
+	<li>Signing Time: <%= @order.signing_time %></li>
+</ul>
+
+<p>Attached is a detailed confirmation form that you can print for your records.</p>
+
+
+<p>This order was filled through NotaryFly.com</p>

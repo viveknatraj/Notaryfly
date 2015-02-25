@@ -1,0 +1,543 @@
+<%= javascript_include_tag "defaults"  %>
+<%= javascript_include_tag "prototype"  %>
+
+<%= render :partial => "/client/header" %>
+<%= render :partial => "navigation" %>
+
+
+
+
+
+
+<script type="text/javascript">
+ 
+ function otherFeeEnableDisable(status,id){
+   
+   var notary_id=id;
+    status=!status;
+document.getElementById("notary_fee"+notary_id).disabled = status;
+if(status==false)
+  {
+   
+    document.getElementById("other_fee"+notary_id).style.display="block";
+    document.getElementById("other_fee_reason"+notary_id).style.display="block";
+  }
+else
+{
+    document.getElementById("other_fee"+notary_id).style.display="none";
+    document.getElementById("other_fee_reason"+notary_id).style.display="none";
+  }
+  }
+  </script>
+<div id="order_summary" class="content_container span-24 last">
+  <div class="span-24 last" style="margin-bottom:25px;">
+    <h2 style="margin-bottom:0px; margin-top:10px;">Find Notary</h2>
+    <h3 style="margin-top:0px;">Notary Locator</h3> <br />
+    <div class="xsnazzy_2" style="width: 740px">
+      <b class="xtop_2"><b class="xb1_2"></b><b class="xb2_2 color_a">
+        </b><b class="xb3_2 color_a"></b><b class="xb4_2 color_a"></b></b>
+      <div class="xboxcontent_2" style="padding:10px;">
+        <div id="notary_search" class="last" style="padding:0px">
+          
+          <% form_for :notary_search ,:url => {:action => "find_notary", :id => @order.id},:html => {:name=>"find_notary" } do |f| -%>
+            <% if @notaries.size==0%>
+              <p><label style="padding-left:270px;padding-bottom:10px;font-weight: bold;color:#FF0000"><%= pluralize(@notaries.size, "notary") %>  within <%=@miles%> miles</label></p>
+            <%else%>
+              <p><label style="padding-left:270px;padding-bottom:10px;font-weight: bold;color:green"><%= pluralize(@notaries.size, "notary") %>  within <%=@miles%> miles</label></p>
+            <%end%>
+            <p><label>Zip Code:</label><%= text_field :notary_search, :zip_code, :style => "width:50px;", :disabled => 'disabled', :value => @order.signing_location_zip_code  %>  within: <%= select_tag "notary_search_radius", options_for_select([["10" , "10" ], ["25" , "25"], ["50" , "50" ], ["75" , "75" ], ["100" , "100" ]],@miles), {:name => "order[search_radius]", :style => "width:75px; margin-right:10px;"} %> <label>Mile Radius</label> <a href="#" id="search_button"  style="color:white; padding:5px; margin-left:10px;"><%= submit_tag("Find Notary!") %></a> </p>
+            <ul id="zip_form" style="list-style:none; display:inline;">
+              <style type="text/css" media="screen">
+                ul#zip_form {margin:0px;}
+                ul#zip_form li {display:inline; margin:0px 10px 0px 0px; font-size:11px;}
+              </style>
+            </ul>
+            
+            <div class="wholeform" style="margin-left:0px">
+              <div class="formclient">Additional Criteria:</div>
+              <div class="formright" style="width:480px">
+                <ul id="zip_form" style="list-style:none; display:inline;">
+                  <li><%= check_box :notary_search, :additional_language,:onClick=>"find_note_add_lang()",:checked=> @check_additional_language %> Additional Language</li>
+                  <li id="languages" style="<%=@dropdown_language%>">
+                    <%= select_tag "order_required_language", options_for_select([["English" , "English" ], ["Spanish" , "Spanish" ], ["Arabic" , "Arabic" ], ["Armenian" , "Armenian" ], ["ASL" , "ASL" ], ["Dutch" , "Dutch" ], ["Chinese" , "Chinese" ], ["French" , "French" ], ["Filipino" , "Filipino" ], ["German" , "German" ], ["Greek" , "Greek" ], ["Herbrew" , "Hebrew" ], ["Hindu" , "Hindu" ], ["Italian" , "Italian" ], ["Japanese" , "Japanese" ], ["Korean" , "Korean" ], ["Manderin" , "Manderin" ], ["Persian" , "Persian" ], ["Polish" , "Polish"], ["Portugese" , "Portugese" ], ["Romanian" , "Romanian" ], ["Russian" , "Russian" ], ["Swedish" , "Swedish" ], ["Thai" , "Thai" ], ["Turkish" , "Turkish" ], ["Vietnamese" , "Vietnamese" ]],@selected_lang), {:name => "order[required_language]", :style => ""} %>
+                  </li>
+                  <li><%= check_box :notary_search, :attorney, :checked=> @check_attorney %> Attorney</li>
+                  <li><%= check_box :notary_search, :title_producer, :checked=>@check_title_producer %> Title Producer</li>
+                  <li><%= check_box :notary_search, :accepted_notary, :checked=>@accepted_notary %> Accepted Notary</li>
+
+                  <div class="clr"></div>
+                </ul>
+                <ul id="zip_form" style="list-style:none; display:inline;">
+                  <li><%= check_box :notary_search, :reverse_mortgage, :checked=> @check_reverse_mortgage %> Reverse Mortgage</li>
+                  <li><%= check_box :notary_search, :life_settlement_experience, :checked=> @check_life_settlement %> Life Settlement</li>
+                  <li><%= check_box :notary_search, :enotarization_capability, :checked=> @check_enotification %> e-Notarization</li>
+                  <li><%= check_box :notary_search, :email_capable, :checked=> @check_email_capable %> Email Capability</li>
+                </ul>
+              </div>
+            </div>
+          <% end %>
+          <div class="clr"></div>
+          <div id="results" class="notery_results">
+            <div class="snotery_results_leftcol">
+              <style type="text/css" media="screen">
+                #results div.notary_details {padding:2px 3px 2px 5px; margin:5px 0px 5px 0px;}
+                #results div.notary_details:hover {background-color:#999;}
+                #results div.odd {background-color:#333;}
+                #results div.notary_details ul {list-style:none; margin:0px;}
+                #results div.notary_details li {font-size:11px; margin:0px; line-height:11px;}
+              </style>
+              <div class="notery_results_list">
+                            <% count = 0
+                for notary in @notaries
+                  count = count+1
+                %>
+                  <% accept_order = MultipleNotary.find_by_order_id_and_notary_id(params[:id],notary.id)%>
+                  <%if accept_order%>
+                    <%  if accept_order.accept_status%>
+                      <% acceptorder = true %>
+                    <%else%>
+                      <% acceptorder = false %>
+                    <%end%>
+                  <%else%>
+                    <% acceptorder = false %>
+                  <%end%>
+                  <div class="notary_details" onmouseover="jQuery('#notary_info').html('<%= escape_javascript(render(:partial => "notary_results", :locals => {:notary => notary,:count=> count, :order => params[:id],:accept => acceptorder }).gsub(/\"/, "&quot;")) %>');">
+                    <ul>
+                      <li><%= notary.first_name %> <%= notary.last_name %></li>
+                      <% notary_total_orders = Order.find(:all, :conditions => ["notary_id = ?", notary.id]) %>
+                      
+                     <li>Distance: <%if notary.distance!=nil%> <%=sprintf("%.02f",notary.distance)%> <%end%> miles</li>
+                      <li>
+                        <% @orders = Order.find_all_by_notary_id(notary.id)%>
+                        <% number_of_signings = @orders.size %>
+                        <%= pluralize(number_of_signings, "signing") %> on NotaryFly
+                      </li>
+                      <li><%=OrderFeedback.feedback_percentage(notary.id).to_s+"%"%> positive feedback</li>
+                      <br/><% if !acceptorder %><li><%=image_submit_tag("alert_notary.png",:id=>'use_notary_focus'+count.to_s,:onClick=>remote_function(:url => { :controller => "client/orders",:action=> "send_mail_to_notaries",:mile => notary.distance,:order_id => params[:id],:id => notary.id }))%></li><%else%><li><%= image_tag 'notary_accepeted_btn.png' %></li><%end%></ul>
+                      <div id ="not_<%= notary.id%>" style ="color:red"></div>
+                      <div id ="notary_<%= notary.id%>" style ="color:green"><p></p></div>
+                      <div id ="notary_reject_<%= notary.id%>" style ="color:red"></div>
+                  </div>
+
+
+                  <div id="light<%=notary.id%>" class="white_content" style="height:800px;"  > <!-- start -->
+                    <h3 style="float:left;">Order Notary Details</h3><p style="float:right;margin-top: -37px; margin-right: -37px;"><a href = "javascript:void(0)" onclick = "document.getElementById('light<%=notary.id%>').style.display='none';document.getElementById('fade<%=notary.id%>').style.display='none'"><%=image_tag("fancyzoom/closebox.png") %></a></p>
+                    <div class="clr"></div>
+                    <p style="font-size:11px;">Editing the notary is order specific and will not change the notary’s
+                                                                  information permanently in the database.  The assigned notary needs
+                                                                  to “Edit Profile” to make permanent changes.</p>
+
+                    <% form_for :order ,:url => {:action => "confirm_notary", :id => notary.id, :order_id => params[:id]} do |f| -%>
+
+                      <div class="span-6 append-2">
+                        <h3>Notary Information</h3>
+                        <ul class="notary_info">
+                          <style type="text/css" media="screen">
+                            ul.notary_info li {
+                              font-size:12px;
+                            }
+
+                          </style>
+                          <li><strong><%= notary.first_name %> <%= notary.last_name %></strong></li>
+                          <li><strong><%= notary.company_name %></strong></li>
+                          <li><h3 class="notary_info"><input name="address" value="weekday" type="radio" checked onClick="displayAddress('weekdayAddressTitle<%=notary.id%>',<%=notary.id.to_s%>)"/>Delivery Address (Week Day):</h3></li>
+                          <li style="padding-left:22px"><%= notary.weekday_deliver_address %></li>
+                          <li style="padding-left:22px"><%= notary.weekday_deliver_city%><%if notary.weekday_deliver_city.size!=0%>,<%end%> <%= notary.weekday_deliver_state %> <%= notary.weekday_deliver_zip_code%></li>
+
+                          <li><h3 class="notary_info"><input name="address" type="radio" value="weekend" onClick="displayAddress('weekendAddressTitle<%=notary.id%>',<%=notary.id.to_s%>)"/>Delivery Address (Week End):</h3></li>
+                          <li style="padding-left:22px"><%= notary.weekend_deliver_address %></li>
+                          <li style="padding-left:22px"><%= notary.weekend_deliver_city%><%if notary.weekend_deliver_city.size!=0%>,<%end%> <%= notary.weekend_deliver_state %> <%= notary.weekend_deliver_zip_code%></li>
+
+                          <li style="padding-left:22px"><h3 class="notary_info">Contact Information:</h3></li>
+                          <li style="padding-left:22px">Tel: <%= number_to_phone(notary.day_phone, :area_code => true) %></li>
+                          <li style="padding-left:22px">Mobile: <%= number_to_phone(notary.mobile_phone, :area_code => true) %></li>
+                          <li style="padding-left:22px">Work: <%= number_to_phone(notary.work_phone, :area_code => true) %>Ext. <%= notary.work_extension %></li>
+                          <li style="padding-left:22px">Fax: <%= number_to_phone(notary.fax_number, :area_code => true) %></li>
+                          <li style="padding-left:22px">Email: <%= notary.user.email %></li>
+                          <li><h3 class="notary_info"><input name="address" type="radio" value="payment" onClick="displayAddress('paymentAddressTitle<%=notary.id%>',<%=notary.id.to_s%>)"/>Payment Address:</h3></li>
+                          <li style="padding-left:22px"><%= notary.billing_deliver_address %></li>
+                          <li style="padding-left:22px"><%= notary.billing_deliver_city %>, <%= notary.billing_deliver_state %> <%= notary.billing_deliver_zip_code%></li>
+                        </ul>
+                      </div>
+                      <div class="span-8 last form" style="margin:0px;width: 400px">
+                        <div class="labels clr">
+                          <p class="popupleft"><label>Notary Name :</label></p>
+                          <p class="formright"><%= f.text_field :order_notary_name, :value => notary.first_name + " " + notary.last_name %></p>
+                        </div>
+                        <div class="labels clr">
+                          <p class="popupleft"><label>Company Name :</label></p>
+                          <p class="formright"><%= f.text_field :order_notary_company_name, :value => notary.company_name, :style => "margin-top:5px;" %></p>
+                        </div>
+                        <div class="clr"></div>
+                        <div id="weekdayAddressTitle<%=notary.id%>" style="display:block">
+                          <h3 class="notary_info" style="margin-left:-100px;">Delivery Address (Week Day):</h3>
+                          <div class="labels clr" style="margin-top:5px; display:block" >
+                            <p class="popupleft"><label>Address :</label></p>
+                            <p class="formright"><%= f.text_field :order_notary_contact_address, :name=>"weekday_order_notary_contact_address", :value => notary.weekday_deliver_address %></p>
+                          </div>
+                          <div class="labels clr">
+                            <p class="popupleft"><label>City :</label></p>
+                            <p class="formright"><%= f.text_field :order_notary_contact_city, :name=>"weekday_order_notary_contact_city", :value => notary.weekday_deliver_city, :style => "margin-top:5px;"%></p>
+                          </div>
+                          <div class="labels clr" style="padding-top:5px;">
+                            <p class="popupleft"><label>State :</label></p>
+                            <p class="formright"><select name="weekday_order_notary_payment_state" id="order_order_notary_payment_state">
+                                <option value="">Select your state</option>
+                                <option <% if notary.weekday_deliver_state == "AL" %> selected<% end %> value="AL">Alabama</option>
+                                <option <% if notary.weekday_deliver_state == "AK" %> selected<% end %> value="AK">Alaska</option>
+                                <option <% if notary.weekday_deliver_state == "AZ" %> selected<% end %> value="AZ">Arizona</option>
+                                <option <% if notary.weekday_deliver_state == "AR" %> selected<% end %> value="AR">Arkansas</option>
+                                <option <% if notary.weekday_deliver_state == "CA" %> selected<% end %> value="CA">California</option>
+                                <option <% if notary.weekday_deliver_state == "CO" %> selected<% end %> value="CO">Colorado</option>
+                                <option <% if notary.weekday_deliver_state == "CT" %> selected<% end %> value="CT">Connecticut</option>
+                                <option <% if notary.weekday_deliver_state == "DE" %> selected<% end %> value="DE">Delaware</option>
+                                <option <% if notary.weekday_deliver_state == "DC" %> selected<% end %> value="DC">District of Columbia</option>
+                                <option <% if notary.weekday_deliver_state == "FL" %> selected<% end %> value="FL">Florida</option>
+                                <option <% if notary.weekday_deliver_state == "GA" %> selected<% end %> value="GA">Georgia</option>
+                                <option <% if notary.weekday_deliver_state == "HI" %> selected<% end %> value="HI">Hawaii</option>
+                                <option <% if notary.weekday_deliver_state == "ID" %> selected<% end %> value="ID">Idaho</option>
+                                <option <% if notary.weekday_deliver_state == "IL" %> selected<% end %> value="IL">Illinois</option>
+                                <option <% if notary.weekday_deliver_state == "IN" %> selected<% end %> value="IN">Indiana</option>
+                                <option <% if notary.weekday_deliver_state == "IA" %> selected<% end %> value="IA">Iowa</option>
+                                <option <% if notary.weekday_deliver_state == "KS" %> selected<% end %> value="KS">Kansas</option>
+                                <option <% if notary.weekday_deliver_state == "KY" %> selected<% end %> value="KY">Kentucky</option>
+                                <option <% if notary.weekday_deliver_state == "LA" %> selected<% end %> value="LA">Louisiana</option>
+                                <option <% if notary.weekday_deliver_state == "ME" %> selected<% end %> value="ME">Maine</option>
+                                <option <% if notary.weekday_deliver_state == "MD" %> selected<% end %> value="MD">Maryland</option>
+                                <option <% if notary.weekday_deliver_state == "MA" %> selected<% end %> value="MA">Massachusetts</option>
+                                <option <% if notary.weekday_deliver_state == "MI" %> selected<% end %> value="MI">Michigan</option>
+                                <option <% if notary.weekday_deliver_state == "MN" %> selected<% end %> value="MN">Minnesota</option>
+                                <option <% if notary.weekday_deliver_state == "MS" %> selected<% end %> value="MS">Mississippi</option>
+                                <option <% if notary.weekday_deliver_state == "MO" %> selected<% end %> value="MO">Missouri</option>
+                                <option <% if notary.weekday_deliver_state == "MT" %> selected<% end %> value="MT">Montana</option>
+                                <option <% if notary.weekday_deliver_state == "NE" %> selected<% end %> value="NE">Nebraska</option>
+                                <option <% if notary.weekday_deliver_state == "NV" %> selected<% end %> value="NV">Nevada</option>
+                                <option <% if notary.weekday_deliver_state == "NH" %> selected<% end %> value="NH">New Hampshire</option>
+                                <option <% if notary.weekday_deliver_state == "NJ" %> selected<% end %> value="NJ">New Jersey</option>
+                                <option <% if notary.weekday_deliver_state == "NM" %> selected<% end %> value="NM">New Mexico</option>
+                                <option <% if notary.weekday_deliver_state == "NY" %> selected<% end %> value="NY">New York</option>
+                                <option <% if notary.weekday_deliver_state == "NC" %> selected<% end %> value="NC">North Carolina</option>
+                                <option <% if notary.weekday_deliver_state == "ND" %> selected<% end %> value="ND">North Dakota</option>
+                                <option <% if notary.weekday_deliver_state == "OH" %> selected<% end %> value="OH">Ohio</option>
+                                <option <% if notary.weekday_deliver_state == "OK" %> selected<% end %> value="OK">Oklahoma</option>
+                                <option <% if notary.weekday_deliver_state == "OR" %> selected<% end %> value="OR">Oregon</option>
+                                <option <% if notary.weekday_deliver_state == "PA" %> selected<% end %> value="PA">Pennsylvania</option>
+                                <option <% if notary.weekday_deliver_state == "RI" %> selected<% end %> value="RI">Rhode Island</option>
+                                <option <% if notary.weekday_deliver_state == "SC" %> selected<% end %> value="SC">South Carolina</option>
+                                <option <% if notary.weekday_deliver_state == "SD" %> selected<% end %> value="SD">South Dakota</option>
+                                <option <% if notary.weekday_deliver_state == "TN" %> selected<% end %> value="TN">Tennessee</option>
+                                <option <% if notary.weekday_deliver_state == "TX" %> selected<% end %> value="TX">Texas</option>
+                                <option <% if notary.weekday_deliver_state == "UT" %> selected<% end %> value="UT">Utah</option>
+                                <option <% if notary.weekday_deliver_state == "VT" %> selected<% end %> value="VT">Vermont</option>
+                                <option <% if notary.weekday_deliver_state == "VA" %> selected<% end %> value="VA">Virginia</option>
+                                <option <% if notary.weekday_deliver_state == "WA" %> selected<% end %> value="WA">Washington</option>
+                                <option <% if notary.weekday_deliver_state == "WV" %> selected<% end %> value="WV">West Virginia</option>
+                                <option <% if notary.weekday_deliver_state == "WI" %> selected<% end %> value="WI">Wisconsin</option>
+                                <option <% if notary.weekday_deliver_state == "WY" %> selected<% end %> value="WY">Wyoming</option>
+                              </select></p>
+                          </div>
+                          <div class="clr"></div>
+                          <div class="labels clr">
+                            <p class="popupleft"><label>Zip Code :</label></p>
+                            <p class="formright"><%= f.text_field :order_notary_contact_zip_code, :name=>"weekday_order_notary_contact_zip_code", :value => notary.weekday_deliver_zip_code , :style => "margin-top:5px;  margin-left:2px;", :class => "tiny" %></p>
+                          </div>
+                        </div>
+                        <div id="weekendAddressTitle<%=notary.id%>" style="display:none"><h3 class="notary_info" style="margin-left:-100px;">Delivery Address (Week End):</h3>
+                          <div class="labels clr">
+                            <p class="popupleft"><label>Address :</label></p>
+                            <p class="formright"><%= f.text_field :order_notary_contact_address, :name=>"weekend_order_notary_contact_address", :value => notary.weekend_deliver_address %></p>
+                          </div>
+                          <div class="labels clr">
+                            <p class="popupleft"><label>City :</label></p>
+                            <p class="formright"><%= f.text_field :order_notary_contact_city, :name=>"weekend_order_notary_contact_city", :value => notary.weekend_deliver_city, :style => "margin-top:5px;"%></p>
+                          </div>
+                          <div class="labels clr" style="padding-top:5px;">
+                            <p class="popupleft"><label>State :</label></p>
+                            <p class="formright"><select name="weekend_order_notary_payment_state" id="order_order_notary_payment_state">
+                                <option value="">Select your state</option>
+                                <option <% if notary.weekend_deliver_state == "AL" %> selected<% end %> value="AL">Alabama</option>
+                                <option <% if notary.weekend_deliver_state == "AK" %> selected<% end %> value="AK">Alaska</option>
+                                <option <% if notary.weekend_deliver_state == "AZ" %> selected<% end %> value="AZ">Arizona</option>
+                                <option <% if notary.weekend_deliver_state == "AR" %> selected<% end %> value="AR">Arkansas</option>
+                                <option <% if notary.weekend_deliver_state == "CA" %> selected<% end %> value="CA">California</option>
+                                <option <% if notary.weekend_deliver_state == "CO" %> selected<% end %> value="CO">Colorado</option>
+                                <option <% if notary.weekend_deliver_state == "CT" %> selected<% end %> value="CT">Connecticut</option>
+                                <option <% if notary.weekend_deliver_state == "DE" %> selected<% end %> value="DE">Delaware</option>
+                                <option <% if notary.weekend_deliver_state == "DC" %> selected<% end %> value="DC">District of Columbia</option>
+                                <option <% if notary.weekend_deliver_state == "FL" %> selected<% end %> value="FL">Florida</option>
+                                <option <% if notary.weekend_deliver_state == "GA" %> selected<% end %> value="GA">Georgia</option>
+                                <option <% if notary.weekend_deliver_state == "HI" %> selected<% end %> value="HI">Hawaii</option>
+                                <option <% if notary.weekend_deliver_state == "ID" %> selected<% end %> value="ID">Idaho</option>
+                                <option <% if notary.weekend_deliver_state == "IL" %> selected<% end %> value="IL">Illinois</option>
+                                <option <% if notary.weekend_deliver_state == "IN" %> selected<% end %> value="IN">Indiana</option>
+                                <option <% if notary.weekend_deliver_state == "IA" %> selected<% end %> value="IA">Iowa</option>
+                                <option <% if notary.weekend_deliver_state == "KS" %> selected<% end %> value="KS">Kansas</option>
+                                <option <% if notary.weekend_deliver_state == "KY" %> selected<% end %> value="KY">Kentucky</option>
+                                <option <% if notary.weekend_deliver_state == "LA" %> selected<% end %> value="LA">Louisiana</option>
+                                <option <% if notary.weekend_deliver_state == "ME" %> selected<% end %> value="ME">Maine</option>
+                                <option <% if notary.weekend_deliver_state == "MD" %> selected<% end %> value="MD">Maryland</option>
+                                <option <% if notary.weekend_deliver_state == "MA" %> selected<% end %> value="MA">Massachusetts</option>
+                                <option <% if notary.weekend_deliver_state == "MI" %> selected<% end %> value="MI">Michigan</option>
+                                <option <% if notary.weekend_deliver_state == "MN" %> selected<% end %> value="MN">Minnesota</option>
+                                <option <% if notary.weekend_deliver_state == "MS" %> selected<% end %> value="MS">Mississippi</option>
+                                <option <% if notary.weekend_deliver_state == "MO" %> selected<% end %> value="MO">Missouri</option>
+                                <option <% if notary.weekend_deliver_state == "MT" %> selected<% end %> value="MT">Montana</option>
+                                <option <% if notary.weekend_deliver_state == "NE" %> selected<% end %> value="NE">Nebraska</option>
+                                <option <% if notary.weekend_deliver_state == "NV" %> selected<% end %> value="NV">Nevada</option>
+                                <option <% if notary.weekend_deliver_state == "NH" %> selected<% end %> value="NH">New Hampshire</option>
+                                <option <% if notary.weekend_deliver_state == "NJ" %> selected<% end %> value="NJ">New Jersey</option>
+                                <option <% if notary.weekend_deliver_state == "NM" %> selected<% end %> value="NM">New Mexico</option>
+                                <option <% if notary.weekend_deliver_state == "NY" %> selected<% end %> value="NY">New York</option>
+                                <option <% if notary.weekend_deliver_state == "NC" %> selected<% end %> value="NC">North Carolina</option>
+                                <option <% if notary.weekend_deliver_state == "ND" %> selected<% end %> value="ND">North Dakota</option>
+                                <option <% if notary.weekend_deliver_state == "OH" %> selected<% end %> value="OH">Ohio</option>
+                                <option <% if notary.weekend_deliver_state == "OK" %> selected<% end %> value="OK">Oklahoma</option>
+                                <option <% if notary.weekend_deliver_state == "OR" %> selected<% end %> value="OR">Oregon</option>
+                                <option <% if notary.weekend_deliver_state == "PA" %> selected<% end %> value="PA">Pennsylvania</option>
+                                <option <% if notary.weekend_deliver_state == "RI" %> selected<% end %> value="RI">Rhode Island</option>
+                                <option <% if notary.weekend_deliver_state == "SC" %> selected<% end %> value="SC">South Carolina</option>
+                                <option <% if notary.weekend_deliver_state == "SD" %> selected<% end %> value="SD">South Dakota</option>
+                                <option <% if notary.weekend_deliver_state == "TN" %> selected<% end %> value="TN">Tennessee</option>
+                                <option <% if notary.weekend_deliver_state == "TX" %> selected<% end %> value="TX">Texas</option>
+                                <option <% if notary.weekend_deliver_state == "UT" %> selected<% end %> value="UT">Utah</option>
+                                <option <% if notary.weekend_deliver_state == "VT" %> selected<% end %> value="VT">Vermont</option>
+                                <option <% if notary.weekend_deliver_state == "VA" %> selected<% end %> value="VA">Virginia</option>
+                                <option <% if notary.weekend_deliver_state == "WA" %> selected<% end %> value="WA">Washington</option>
+                                <option <% if notary.weekend_deliver_state == "WV" %> selected<% end %> value="WV">West Virginia</option>
+                                <option <% if notary.weekend_deliver_state == "WI" %> selected<% end %> value="WI">Wisconsin</option>
+                                <option <% if notary.weekend_deliver_state == "WY" %> selected<% end %> value="WY">Wyoming</option>
+                              </select></p>
+                          </div>
+                          <div class="clr"></div>
+                          <div class="labels clr">
+                            <p class="popupleft"><label>Zip Code :</label></p>
+                            <p class="formright"><%= f.text_field :order_notary_contact_zip_code, :name=>"weekend_order_notary_contact_zip_code", :value => notary.weekend_deliver_zip_code , :style => "margin-top:5px;  margin-left:2px;", :class => "tiny" %></p>
+                          </div>
+                        </div>
+                        <div class="clr"></div>
+                        <h3 class="notary_info" style="margin-left:-100px;">Contact Information:</h3>
+                        <div class="labels clr">
+                          <p class="popupleft"><label>Day Phone :</label></p>
+                          <p class="formright"><%= f.text_field :order_notary_home_phone, :value => number_to_phone(notary.day_phone, :area_code => true) %></p>
+                        </div>
+                        <div class="labels clr">
+                          <p class="popupleft"><label>Mobile Phone :</label></p>
+                          <p class="formright"><%= f.text_field :order_notary_mobile_phone, :value => number_to_phone(notary.mobile_phone, :area_code => true), :style => "margin-top:5px;" %></p>
+                        </div>
+                        <div class="labels clr">
+                          <p class="popupleft"><label>Work Phone :</label></p>
+                          <p class="formright"><%= f.text_field :order_notary_work_phone, :value => number_to_phone(notary.work_phone, :area_code => true), :style => "margin-top:5px;" %></p>
+                        </div>
+                        <div class="labels clr">
+                          <p class="popupleft"><label>Fax Number :</label></p>
+                          <p class="formright"><%= f.text_field :order_notary_fax_number, :value => number_to_phone(notary.fax_number, :area_code => true), :style => "margin-top:5px;" %></p>
+                        </div>
+                        <div class="labels clr">
+                          <p class="popupleft"><label>Email :</label></p>
+                          <p class="formright"><%= f.text_field :order_notary_email_address, :value => notary.user.email, :style => "margin-top:5px;" %></p>
+                        </div>
+                        <div class="clr"></div>
+                        <div id="paymentAddressTitle<%=notary.id%>" style="display:none"><h3 class="notary_info" style="margin-left:-100px;">Payment Address:</h3>
+                          <div class="labels clr">
+                            <p class="popupleft"><label>Address :</label></p>
+                            <p class="formright"><%= f.text_field :order_notary_payment_address, :name=>"order_notary_payment_address", :value => notary.billing_deliver_address , :style => "margin-top:5px;"%></p>
+                          </div>
+                          <div class="labels clr">
+                            <p class="popupleft"><label>City :</label></p>
+                            <p class="formright"><%= f.text_field :order_notary_payment_city, :name=>"order_notary_payment_city", :value => notary.billing_deliver_city , :style => "margin-top:5px;"%></p>
+                          </div>
+                          <div class="labels clr" style="padding-top:5px;">
+                            <p class="popupleft"><label>State :</label></p>
+                            <p class="formright"><select name="order_notary_payment_state" id="order_order_notary_payment_state">
+                                <option value="">Select your state</option>
+                                <option <% if notary.billing_deliver_state == "AL" %> selected<% end %> value="AL">Alabama</option>
+                                <option <% if notary.billing_deliver_state == "AK" %> selected<% end %> value="AK">Alaska</option>
+                                <option <% if notary.billing_deliver_state == "AZ" %> selected<% end %> value="AZ">Arizona</option>
+                                <option <% if notary.billing_deliver_state == "AR" %> selected<% end %> value="AR">Arkansas</option>
+                                <option <% if notary.billing_deliver_state == "CA" %> selected<% end %> value="CA">California</option>
+                                <option <% if notary.billing_deliver_state == "CO" %> selected<% end %> value="CO">Colorado</option>
+                                <option <% if notary.billing_deliver_state == "CT" %> selected<% end %> value="CT">Connecticut</option>
+                                <option <% if notary.billing_deliver_state == "DE" %> selected<% end %> value="DE">Delaware</option>
+                                <option <% if notary.billing_deliver_state == "DC" %> selected<% end %> value="DC">District of Columbia</option>
+                                <option <% if notary.billing_deliver_state == "FL" %> selected<% end %> value="FL">Florida</option>
+                                <option <% if notary.billing_deliver_state == "GA" %> selected<% end %> value="GA">Georgia</option>
+                                <option <% if notary.billing_deliver_state == "HI" %> selected<% end %> value="HI">Hawaii</option>
+                                <option <% if notary.billing_deliver_state == "ID" %> selected<% end %> value="ID">Idaho</option>
+                                <option <% if notary.billing_deliver_state == "IL" %> selected<% end %> value="IL">Illinois</option>
+                                <option <% if notary.billing_deliver_state == "IN" %> selected<% end %> value="IN">Indiana</option>
+                                <option <% if notary.billing_deliver_state == "IA" %> selected<% end %> value="IA">Iowa</option>
+                                <option <% if notary.billing_deliver_state == "KS" %> selected<% end %> value="KS">Kansas</option>
+                                <option <% if notary.billing_deliver_state == "KY" %> selected<% end %> value="KY">Kentucky</option>
+                                <option <% if notary.billing_deliver_state == "LA" %> selected<% end %> value="LA">Louisiana</option>
+                                <option <% if notary.billing_deliver_state == "ME" %> selected<% end %> value="ME">Maine</option>
+                                <option <% if notary.billing_deliver_state == "MD" %> selected<% end %> value="MD">Maryland</option>
+                                <option <% if notary.billing_deliver_state == "MA" %> selected<% end %> value="MA">Massachusetts</option>
+                                <option <% if notary.billing_deliver_state == "MI" %> selected<% end %> value="MI">Michigan</option>
+                                <option <% if notary.billing_deliver_state == "MN" %> selected<% end %> value="MN">Minnesota</option>
+                                <option <% if notary.billing_deliver_state == "MS" %> selected<% end %> value="MS">Mississippi</option>
+                                <option <% if notary.billing_deliver_state == "MO" %> selected<% end %> value="MO">Missouri</option>
+                                <option <% if notary.billing_deliver_state == "MT" %> selected<% end %> value="MT">Montana</option>
+                                <option <% if notary.billing_deliver_state == "NE" %> selected<% end %> value="NE">Nebraska</option>
+                                <option <% if notary.billing_deliver_state == "NV" %> selected<% end %> value="NV">Nevada</option>
+                                <option <% if notary.billing_deliver_state == "NH" %> selected<% end %> value="NH">New Hampshire</option>
+                                <option <% if notary.billing_deliver_state == "NJ" %> selected<% end %> value="NJ">New Jersey</option>
+                                <option <% if notary.billing_deliver_state == "NM" %> selected<% end %> value="NM">New Mexico</option>
+                                <option <% if notary.billing_deliver_state == "NY" %> selected<% end %> value="NY">New York</option>
+                                <option <% if notary.billing_deliver_state == "NC" %> selected<% end %> value="NC">North Carolina</option>
+                                <option <% if notary.billing_deliver_state == "ND" %> selected<% end %> value="ND">North Dakota</option>
+                                <option <% if notary.billing_deliver_state == "OH" %> selected<% end %> value="OH">Ohio</option>
+                                <option <% if notary.billing_deliver_state == "OK" %> selected<% end %> value="OK">Oklahoma</option>
+                                <option <% if notary.billing_deliver_state == "OR" %> selected<% end %> value="OR">Oregon</option>
+                                <option <% if notary.billing_deliver_state == "PA" %> selected<% end %> value="PA">Pennsylvania</option>
+                                <option <% if notary.billing_deliver_state == "RI" %> selected<% end %> value="RI">Rhode Island</option>
+                                <option <% if notary.billing_deliver_state == "SC" %> selected<% end %> value="SC">South Carolina</option>
+                                <option <% if notary.billing_deliver_state == "SD" %> selected<% end %> value="SD">South Dakota</option>
+                                <option <% if notary.billing_deliver_state == "TN" %> selected<% end %> value="TN">Tennessee</option>
+                                <option <% if notary.billing_deliver_state == "TX" %> selected<% end %> value="TX">Texas</option>
+                                <option <% if notary.billing_deliver_state == "UT" %> selected<% end %> value="UT">Utah</option>
+                                <option <% if notary.billing_deliver_state == "VT" %> selected<% end %> value="VT">Vermont</option>
+                                <option <% if notary.billing_deliver_state == "VA" %> selected<% end %> value="VA">Virginia</option>
+                                <option <% if notary.billing_deliver_state == "WA" %> selected<% end %> value="WA">Washington</option>
+                                <option <% if notary.billing_deliver_state == "WV" %> selected<% end %> value="WV">West Virginia</option>
+                                <option <% if notary.billing_deliver_state == "WI" %> selected<% end %> value="WI">Wisconsin</option>
+                                <option <% if notary.billing_deliver_state == "WY" %> selected<% end %> value="WY">Wyoming</option>
+                              </select></p>
+                          </div>
+                          <div class="clr"></div>
+                          <div class="labels clr">
+                            <p class="popupleft"><label>Zip Code :</label></p>
+                            <p class="formright"><%= f.text_field :order_notary_payment_zip_code,:name=>"order_notary_payment_zip_code", :value => notary.billing_deliver_zip_code , :style => "margin-top:5px; margin-left:2px;", :class => "tiny" %></p>
+                          </div>
+                        </div>
+                        <div style="clear:both"></div>
+                      </div>
+                      <div style="clear:both"></div>
+                      <div class="last" style="text-align:left">
+
+                        <br>
+                        <div class="errorExplanation" style="display:none" id="signupvalid<%=notary.id%>"></div>
+
+                        <p><input type="checkbox" name="agree" value="agree" id="agree2<%=notary.id%>" onclick="otherFeeEnableDisable(this.checked,<%=notary.id%>);" /><strong>Other Fee:</strong> $ <%= f.text_field :travel_fee,:id=>'notary_fee'+notary.id.to_s, :style => "width:50px;" %></p>
+                        <p  id="other_fee_reason<%=notary.id%>"><%= " Reason For \"Other Fee\" (i.e. Signing is " %><%#=number_with_precision(notary.distance.to_f,:precision=>2)%><%="54 miles from Notary)"%></p>
+                        <p id="other_fee<%=notary.id%>"> <%=f.text_area :other_fee_reason, :style => "width:800px; height:30px;"%></p>
+
+                        <div style="float:left;"><input type="checkbox" name="agree" value="agree" id="agree<%=notary.id%>"/></div> <div style="float:left;">I have read and agree to the Terms of Use </div>
+                        <div class="clr"></div>
+                        <div style="float:left;"><input type="checkbox" id="agree1<%=notary.id%>"/></div> <div style="float:left;width:750px;">I have confirmed that the notary above will be the notary used for this document signing. (You cannot change the notary after you have hit, "Confirm Notary" so please double check) </div>
+                        <div class="clr"></div>
+                        <!--<div style="float:left;"><input type="checkbox" id="agree2<%#=notary.id%>"/> </div> <div style="float:left;">I agree that I am responsible for paying the notary the "Notary Fee" listed on this page directly </div>
+                        <div class="clr"></div> -->
+
+
+                      </div>
+                     
+                      <%if @order.status!="order denied"%>
+                      <p style="padding-top: 2px;"><input onclick="return terms('notary_fee<%=notary.id%>','agree<%=notary.id%>','agree1<%=notary.id%>','agree<%=notary.id%>','agree2<%=notary.id%>',<%=notary.id%>)" src="/images/buttons/confirm_notary.jpg" type="image"/></p><% end %>
+                      <%end%>
+                    <!-- end -->
+                  </div>
+                  <div id="fade<%=notary.id%>" class="black_overlay"></div>
+                <% end %>
+              </div>
+            </div>
+            <style type="text/css" media="screen">
+              #notary_info h4, #notary_info h5 {text-align:center;}
+              #notary_info ul {list-style:none;}
+
+            </style>
+            <% if @notaries.size==0%>
+              <div style="padding-left:270px;padding-bottom:10px;font-weight: bold;color:#FF0000">Sorry,we were unable to locate any notaries matching your search criteria. Please change the search criteria and try again.</div>
+            <%else%>
+              <div id="notary_info" class="span-11 last">
+                <h5 style="color: #FF0000">Drag mouse on the notary to view their details</h5>
+              </div>
+            <%end%>
+          </div>
+        </div>
+        <div class="clr"></div>
+      </div>
+      <b class="xbottom_2"><b class="xb4_2"></b><b class="xb3_2"></b>
+        <b class="xb2_2"></b><b class="xb1_2"></b></b>
+    </div>
+  </div>
+  <h2 style="margin-bottom:0px;">Filling Notary</h2>
+  <h3 style="margin-bottom:10px; margin-top:0px;">Order Summary</h3>
+  <div class="xsnazzy" style="width: 740px">
+    <b class="xtop"><b class="xb1"></b><b class="xb2 color_a">
+      </b><b class="xb3 color_a"></b><b class="xb4 color_a"></b></b>
+    <div class="xboxcontent" style="padding:10px;">
+      <div id="order_details" class="span-18 last" style="padding:0px">
+        <div class="span-9">
+          <p><label for="loan_number">Loan/Escrow Number: </label><%= @order.loan_number %></p>
+          <p><label for="signing_date">Signing Date: </label><%= @order.signing_date.strftime("%B %d, %Y") if @order.signing_date %></p>
+          <p><label for="signing_time">Signing Time: </label><%= @order.signing_time if @order.signing_time %></p>
+          <p><label for="required_language">Required Language: </label><%= @order.required_language %></p>
+        </div>
+        <div class="span-9 last">
+          <p><label for="loan_type">Loan Type: </label><%= @order.loan_type %></p>
+          <p><label for="sets_of_docs">How Many Sets of Documents: </label><%= @order.sets_of_docs %></p>
+          <p><label for="delivery_options">How Will Documents Be Delivered: </label><%= @order.delivery_options %></p>
+          <%= order_shipped_via %>
+          <%= order_tracking_number %>
+        </div>
+        <div class="clear"></div>
+        <h3><strong>Signer/Borrower Contact(s)</strong></h3>
+        <div class="span-9">
+          <p class="strong" style="text-decoration:underline; margin:0px 0px 5px 0px;">Signer/Borrower #1</p>
+          <p><label for="borrower_1_first_name">Name: </label><%= @order.borrower_1_first_name %> <%= @order.borrower_1_last_name %></p>
+          <p><label for="borrower_1_work_phone">Work Phone: </label> <%= borrower1_work_phone(@order) %></p>
+          <p><label for="borrower_1_home_phone">Home Phone: </label><%if @order.borrower_1_home_phone.length!=0%><%= @order.borrower_1_home_phone %><%else%> Not Provided<%end%></p>
+          <p><label for="borrower_1_mobile_phone">Mobile Phone: </label><%if @order.borrower_1_mobile_phone.length!=0%><%= @order.borrower_1_mobile_phone %><%else%> Not Provided<%end%></p>
+        </div>
+        <div class="span-9 last ">
+          <p class="strong" style="text-decoration:underline; margin:0px 0px 5px 0px;">Signer/Borrower #2</p>
+          <p><label for="borrower_2_first_name">Name: </label><%if @order.borrower_2_first_name.length!=0 or @order.borrower_2_last_name.length!=0%><%= @order.borrower_2_first_name %> <%= @order.borrower_2_last_name %><%else%> Not Provided<%end%></p>
+          <p><label for="borrower_2_work_phone">Work #: </label><%if @order.borrower_2_work_phone.length!=0 %><%= @order.borrower_2_work_phone %><%else%> Not Provided<%end%> - Ext </label><% if @order.borrower_2_extension.length==0%> Not Provided<%else%> <%= @order.borrower_2_extension %> <%end%></p>
+          <p><label for="borrower_2_home_phone">Home #: </label><%if @order.borrower_2_home_phone.length!=0%><%= @order.borrower_2_home_phone %><%else%> Not Provided<%end%></p>
+          <p><label for="borrower_2_mobile_phone">Mobile #: </label><% if @order.borrower_2_mobile_phone.length!=0%> <%= @order.borrower_2_mobile_phone %><%else%> Not Provided<%end%></p>
+        </div>
+        <div class="clear"></div>
+        <div class="span-9 last">
+          <h3><strong>Signing Location</strong></h3>
+          <p><%= @order.signing_location_address %></p>
+          <p><%= @order.signing_location_city %>, <%= @order.signing_location_state %> <%= @order.signing_location_zip_code %> </p>
+        </div>
+        <div class="clear"></div>
+        <div class="span-18 last">
+          <h3><strong>Special Instructions</strong></h3>
+          <% if @order.special_instructions.length!=0 %>
+            <p><%= @order.special_instructions %></p>
+          <%else%>
+            <p>Not Provided</p>
+          <%end%>
+
+          <h3><strong>Attachments</strong></h3>
+          <% if (@order.order_attachment_1_file_name==nil or @order.order_attachment_1_file_name.length==0) and (@order.order_attachment_2_file_name==nil or @order.order_attachment_2_file_name.length==0) and (@order.order_attachment_3_file_name==nil or @order.order_attachment_3_file_name.length==0) and (@order.order_attachment_4_file_name==nil or @order.order_attachment_4_file_name.length==0) and (@order.order_attachment_5_file_name==nil or @order.order_attachment_5_file_name.length==0) and (@order.order_attachment_6_file_name==nil or @order.order_attachment_6_file_name.length==0) and (@order.attachment_1_file_name==nil or @order.attachment_1_file_name.length==0) and (@order.attachment_2_file_name==nil or @order.attachment_2_file_name.length==0) and (@order.attachment_3_file_name==nil or @order.attachment_3_file_name.length==0) and (@order.attachment_4_file_name==nil or @order.attachment_4_file_name.length==0) and (@order.attachment_5_file_name==nil or @order.attachment_5_file_name.length==0) and (@order.attachment_6_file_name==nil or @order.attachment_6_file_name.length==0) %>
+            <p>No attachment</p>
+          <%else%>
+            <!-- <ul style="list-style:none; margin:0px; font-size:11px;"> </ul>-->
+            <p><%=@order.order_attachment_1_file_name%></p>
+            <p><%=@order.attachment_1_file_name%></p>
+            <p><%=@order.order_attachment_2_file_name%></p>
+            <p><%=@order.attachment_2_file_name%></p>
+            <p><%=@order.order_attachment_3_file_name%></p>
+            <p><%=@order.attachment_3_file_name%></p>
+            <p><%=@order.order_attachment_4_file_name%></p>
+            <p><%=@order.attachment_4_file_name%></p>
+            <p><%=@order.order_attachment_5_file_name%></p>
+            <p><%=@order.attachment_5_file_name%></p>
+            <p><%=@order.order_attachment_6_file_name%></p>
+            <p><%=@order.attachment_6_file_name%></p>
+          <%end%>
+        </div>
+      </div>
+      <div class="clr"></div>
+    </div>
+    <b class="xbottom"><b class="xb4"></b><b class="xb3"></b>
+      <b class="xb2"></b><b class="xb1"></b></b>
+  </div>
+</div>
+
+ 
+
+

@@ -1,0 +1,34 @@
+<% @notary = Notary.find(@order.notary_id) %>
+<% @client = Client.find(@order.client_id) %>
+<% @user = User.find(@notary.user_id) %>
+<p><strong>This message was sent from a notification-only email address that does not accept incoming email. Please do not reply to this message.</strong></p>
+<br/>
+<p>Dear <%= @notary.first_name.capitalize %>&nbsp;<%= @notary.last_name.capitalize  %>,</p>
+<br/>
+<p>The following order has been edited.</p>
+
+<ul>
+  <li><strong>Signer/Client:</strong> <%= @order.borrower_1_first_name %> <%= @order.borrower_1_last_name %></li>
+	<li><strong>NF Order #:</strong><%= @order.id %></li>
+	<li><strong>Escrow/Transaction #:</strong> <%= @order.loan_number %></li>
+	<li><strong>Signing Date:</strong><%= @order.signing_date.strftime("%B %d, %Y") %></li>
+	<li><strong>Signing Time:</strong> <%= @order.signing_time %></li>
+</ul>
+
+<p>The work order and any applicable instructions for the signing are attached</p>
+<p>If you have trouble viewing the work order you can go to <a href="http://www.notaryfly.com">NotaryFly.com</a> and view order details by logging with your username and password.</p>
+
+<ul>
+  <li>Username: <%=@user.email%></li>
+  <li>Password: <%=@user.user_password%></li>
+
+</ul>
+<p>
+	Thanks,<br />
+	<%= @client.company_name %><br/>
+	<%= @client.client_name %><br/>
+	<%= @client.home_phone %><br/>
+</p>
+
+
+<p>This order was filled through NotaryFly.com</p>

@@ -1,0 +1,61 @@
+<style>
+				div.flash.error {
+								color: red;
+								padding: 1% 0 1% 4%;
+								border: 2px solid red;
+								border-radius: 5px;
+								margin: 2%;
+								width: 240px;
+				}
+</style>
+<h2>Assign Executive</h2>
+<% if flash[:errors].present? %>
+				<div class="flash error" style="margin-top:10px;">
+								<ul>
+												<% flash[:errors].each {|e| %>
+																<li><%= e %> </li>
+												<% } %>
+												<% flash[:errors]=nil %>
+								</ul>
+				</div>
+<% end %>
+<% form_for :client, :url => "/admin/clients/update_executive" do %>
+				<% share_percentage=params[:client].present? ? params[:client][:percentage] : ( @client_executive.present? ? @client_executive.share_percentage : nil ) %>
+				<% static_amount=params[:client].present? ? params[:client][:amount] : ( @client_executive.present? ? @client_executive.share_value : nil ) %>
+				<% executives_list=[] %>
+				<% if params[:client].present? && params[:client][:executives].present? %>
+								<% params[:client][:executives].reject! {|e| e.blank? } %>
+								<% executives_list=params[:client][:executives].map(&:to_i) %>
+				<% else %>
+								<% executives_list=( @client.client_executives.present? ? @client.client_executives.map(&:executive_id) : [] ) %>
+				<% end %>
+<div>
+				<ul class='executive'>
+								<li><label>Client Name</label>
+								<%= @client.user.login %></li>
+								<li><label>Company Name</label>
+								<%= @client.company_name %></li>
+								<input type=hidden id='client_id' name='client[id]' value="<%= @client.id %>"/>
+								<li><label>Amount Percentage:</label>
+								<input type='text' id='client_percentage' name='client[percentage]' value='<%= share_percentage %>' maxlength=3/>
+								</li>
+								<li>
+								<label>(OR)</label>
+								<label>&nbsp;</label>
+								</li>
+								<br/>
+								<li><label>Amount:</label>
+								<input type='text' id='client_amount' name='client[amount]' value='<%= static_amount %>'/>
+								</li>
+								<div>
+												<label>Select Executives:</label>
+												<%#= collection_multiple_select("client", "executives", Executive.all, :id, :name, :selected_items => params[:client][:executives], :outer_class => 'multiple_select', :inner_class => 'multiple_select_checkbox', :alternate => true)%>
+												<%= collection_multiple_select("client", "executives", Executive.all, :id, :name, {:selected_items => executives_list, :outer_class => 'multiple_select', :inner_class => 'multiple_select_checkbox', :alternate => true, :multiple => true} ) %>
+								</div>
+								<li>
+								<%= image_submit_tag("save_profile.png") %>
+								<%= link_to(image_tag("cancel.png"), :back)%>
+								</li>
+				</ul>
+</div>
+<% end %>

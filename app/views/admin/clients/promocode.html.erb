@@ -1,0 +1,36 @@
+<div class="block" id="block-tables">
+
+  <div class="content">
+<% form_for :client, :url => "/admin/clients/promocode/" do %>
+    <div class="inner">
+     
+   <table width="503" height="179" style="height: 150px;">
+          <tr>
+            <th width="172" height="23"></th>
+            <th width="289"><div align="left">Promo Code Change</div></th>
+           
+          </tr>
+
+          <tr>
+            <td width="172" height="23"></td>
+            <td width="289"><div class="errorExplanation" style="display:none;color: #ff0000" id="signupvalid" align="left"></div></td>
+
+          </tr>
+           
+          <tr valign="bottom">
+            <td><div align="right">Promo Code</div></td><td><%= text_field :promo,:promo,:value=>@promocode.promocode,:style=>"width:150px;"%></td>
+          </tr>
+          <tr valign="top">
+            <td><div align="right">Credits</div></td><td><%= text_field :credits,:credits,:value=>@promocode.credits,:style=>"width:50px;"%></td>
+          </tr>
+          <tr valign="top">
+            <td></td><td align="justify"><%=submit_tag "Change", :onclick=>'return checkPromocode()'%></td>
+          </tr>
+
+</table>
+  
+    </div>
+<%  end %>
+  </div>
+  
+</div>

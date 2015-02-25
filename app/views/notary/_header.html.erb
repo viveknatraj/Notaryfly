@@ -1,0 +1,39 @@
+<%= stylesheet_link_tag "dhtmlwindow" %>
+<%= javascript_include_tag "dhtmlwindow"%>
+<div id="client_header" class="span-24 last">
+  <div class="span-5">
+    <%= link_to image_tag("logo.jpg"),'/' %>
+  </div>
+  <div id="client_id" class="span-11" style=" width: 450px;">
+    <p><strong><%=Notary.user_name(self.current_user.id)%></strong> <% if Notary.count_steps(self.current_user.id)==3%><strong>- Notary ID#</strong><% if logged_in? %><%= Notary.find_by_user_id(self.current_user.id).id %><% end %><%end%></p>
+    <div class="span-11 last client_navigation" style=" width: 452px;">
+      <ul class="inline_list">
+        <li><a href="/notary/orders" <% if params[:controller] == "notary/orders" and params[:action] == "index" %> class="active" <% end %>>My Orders</a></li>
+        <li><a href="/notary/profile" <% if params[:controller] == "notary/profile" %> class="active" <% end %>>My Profile</a></li>
+        <li><%= link_to "Email Support", "mailto:support@notaryfly.com" %></li>
+        <li><%= link_to "Log Out", :controller => "/sessions", :action => "destroy" %></li>
+        <!--<li><a href="/notary/orders/history" <% if params[:controller] == "notary/orders" and params[:action] == "history" %> class="active" <% end %>>Order History</a></li>
+				<li><a href="/notary/messages" <% if params[:controller] == "notary/messages" and params[:action] == "index" %> class="active" <% end %>>My Messages (<%= @unread_messages.size %>)</a></li>-->
+        <!--<li><%#= link_to "My Feedback", :controller => "notary/feedback", :action => "index" %></li>-->
+        <!--<i><p style="font-size: 15px;">Go to <a href="http://198.61.217.153/notary/notaryflyu" style="color: 	#00FFFF;">NotaryFlyU</a> for a 50% Raise Per Overnight(<%#=1.ordinalize%>) Signing!!</p></i>-->
+      </ul>
+    </div>
+  </div>
+  <div id="credits_header" class="span-8 last" style="float:right; width:275px;">
+    <div class="span-5" style="width:150px;">
+      <h3>Active Orders </h3>
+      <h4>Currently in Process.</h4>
+
+    </div>
+    <div class="span-3 last">
+      <h1><%= Order.total_siging(self.current_user.id) %></h1>
+      <p class="credits">Orders</p>
+    </div>
+  </div>
+</div>
+
+
+<div id="more_info" style="display:none;">
+  <p><%= image_tag("FeedbackandRatings.jpg") %></p>
+</div>
+

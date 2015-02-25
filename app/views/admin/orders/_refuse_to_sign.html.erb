@@ -1,0 +1,26 @@
+<div id="tabs6" class="default-tabs" style="display:<%= params[:tab] == "tabs6" ? 'block' : 'none' %>">
+  <table width="100%" border="0" cellspacing="10" cellpadding="10">
+    <tr class="mid-light-green">
+      <td>NF#</td>
+      <td>SIGNER</td>
+      <td>ORDER OPENED</td>
+      <td>APPOINTMENT SCHEDULED</td>
+      <td>SIGNING LOCATION</td>
+      <td>CLIENT NAME</td>
+						<td>OTHER/TRAVEL FEE</td>
+						<td>APPROVED/PENDING</td>
+      <!--<td>DOCS?</td>-->
+      <td>MOVE TO HISTORY</td>
+    </tr>
+    <% @refuse_to_sign_orders.each do |order| %>
+      <tr class='<%= order_status_class(order) %>'>
+        <%= cancelled_orders(order, 'tabs6') %>
+      </tr>
+    <% end %>
+    <% if @refuse_to_sign_orders.blank? %>
+      <tr class="mid-light-green">
+        <td colspan='7' style="text-align: center">You currently have no cancelled orders.</td>
+      </tr>
+    <% end %>
+  </table>
+</div>

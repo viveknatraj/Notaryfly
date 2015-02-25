@@ -1,0 +1,63 @@
+<%= render :partial => "/client/header" %>
+<%= render :partial => "navigation" %>
+<%= javascript_include_tag "file_tags" %>
+<div id="content_container" class="content_container span-24 last">
+  <!--<h2>My Profile</h2>
+  <h3>Special Instructions</h3>-->
+  <div class="xsnazzy" style="width:740px">
+    <b class="xtop"><b class="xb1"></b><b class="xb2 color_a">
+      </b><b class="xb3 color_a"></b><b class="xb4 color_a"></b></b>
+    <div class="xboxcontent" style="padding:10px; ">
+      <% form_for :client, :url => "/client/profile/update", :html => {:multipart => true} do |f| -%>
+
+        <div id="special_instructions" class="span-18 last" style="padding:0px; border:none">
+
+          <% if flash[:notice] %><div class="success"><%= flash[:notice] %></div><% end %>
+
+          <p>Do you have additional instructions or documents that need to be part of every Order?
+            Put those here.</p>
+
+          <p><label for="special_instructions">Special Instructions(Every Order)</label><br/>
+            <%= f.text_area :special_instructions %></p>
+
+          <p><label for="additional_documents" class="additional">Note:  You will be able to add additional notes and/or documents when
+              placing an Order</label></p>
+
+          <% totfile=""
+          filecnt = 0
+        %>
+
+
+
+          <% if @client.attachment_1_file_name %>	<p style="width:425px">
+              <% if @client.attachment_1_file_name %>Edit<% totfile="1"%><%  filecnt=filecnt+1 %> <% else %> Add<% end %>: <% if @client.attachment_1_file_name==nil or @client.attachment_1_file_name.length==0 %><%= f.file_field :attachment_1 %><%end%> <% if @client.attachment_1_file_name %> Attachment <%=filecnt%>: <%= @client.attachment_1_file_name %> <%= link_to "(view)", @client.attachment_1.url, :target => "blank" %> <%= link_to "(delete)", :action => "delete_attachment", :id => "1" %><% end %></p><% end %>
+
+
+
+          <% if @client.attachment_2_file_name %> <p style="width:425px"><% if @client.attachment_2_file_name %>Edit<% totfile=totfile+",2" %> <%  filecnt=filecnt+1 %><% else %> Add<% end %>: <% if @client.attachment_2_file_name==nil or @client.attachment_2_file_name.length==0 %><%= f.file_field :attachment_2 %><%end%><% if @client.attachment_2_file_name %> Attachment <%=filecnt%>: <%= @client.attachment_2_file_name %> <%= link_to "(view)", @client.attachment_2.url, :target => "blank" %> <%= link_to "(delete)", :action => "delete_attachment", :id => "2" %><% end %> </p> <% end %>
+          <% if @client.attachment_3_file_name %>	<p style="width:425px"><% if @client.attachment_3_file_name %>Edit <% totfile=totfile+",3" %> <%  filecnt=filecnt+1 %><% else %> Add<% end %>: <% if @client.attachment_3_file_name==nil or @client.attachment_3_file_name.length==0 %><%= f.file_field :attachment_3 %><%end%><% if @client.attachment_3_file_name %> Attachment <%=filecnt%>: <%= @client.attachment_3_file_name %> <%= link_to "(view)", @client.attachment_3.url, :target => "blank" %> <%= link_to "(delete)", :action => "delete_attachment", :id => "3" %><% end %> </p> <% end %>
+          <% if @client.attachment_4_file_name %>	<p style="width:425px"><% if @client.attachment_4_file_name %>Edit <% totfile=totfile+",4" %> <%  filecnt=filecnt+1 %><% else %> Add<% end %>: <% if @client.attachment_4_file_name==nil or @client.attachment_4_file_name.length==0 %><%= f.file_field :attachment_4 %><%end%><% if @client.attachment_4_file_name %> Attachment <%=filecnt%>: <%= @client.attachment_4_file_name %> <%= link_to "(view)", @client.attachment_4.url, :target => "blank" %> <%= link_to "(delete)", :action => "delete_attachment", :id => "4" %><% end %></p> <% end %>
+          <% if @client.attachment_5_file_name %>	<p style="width:425px"><% if @client.attachment_5_file_name %>Edit <% totfile=totfile+",5" %> <%  filecnt=filecnt+1 %><% else %> Add<% end %>: <% if @client.attachment_5_file_name==nil or @client.attachment_5_file_name.length==0 %><%= f.file_field :attachment_5 %><%end%><% if @client.attachment_5_file_name %> Attachment <%=filecnt%>: <%= @client.attachment_5_file_name %> <%= link_to "(view)", @client.attachment_5.url, :target => "blank" %> <%= link_to "(delete)", :action => "delete_attachment", :id => "5" %><% end %> </p> <% end %>
+          <% if @client.attachment_6_file_name %>	<p style="width:425px"><% if @client.attachment_6_file_name %>Edit <% totfile=totfile+",6" %> <%  filecnt=filecnt+1 %><% else %> Add<% end %>: <% if @client.attachment_6_file_name==nil or @client.attachment_6_file_name.length==0 %><%= f.file_field :attachment_6 %><%end%><% if @client.attachment_6_file_name %> Attachment <%=filecnt%>: <%= @client.attachment_6_file_name %> <%= link_to "(view)", @client.attachment_6.url, :target => "blank" %> <%= link_to "(delete)", :action => "delete_attachment", :id => "6" %><% end %> </p> <% end %>
+
+          <div id="ItemFiles" ></div>
+          <% if filecnt!=6 %>
+            <div class="photoheadmore" id="uploadlink"><span style="margin-right:5px;"><%= image_tag("pin_im.gif") %></span><a href="Javascript:addFile();"><span>Attach Files</span></a></div>
+          <% end %>
+        </div>
+        <div class="clr"></div>
+      </div>
+      <b class="xbottom"><b class="xb4"></b><b class="xb3"></b>
+        <b class="xb2"></b><b class="xb1"></b></b>
+    </div>
+  </div>
+  <input type="hidden" name="totfile" id="totfile" value="<%=totfile%>"/>
+  <div id="submit_buttons" class="span-18 last">
+    <p><%= image_submit_tag("button_save_changes.jpg") %></p>
+  </div>
+  <%= hidden_field :user, :password, :value => session[:password] %>
+<% end %>
+
+
+
+<%= render :partial => "/shared/footer" %>

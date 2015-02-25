@@ -1,0 +1,281 @@
+<div class="list-view">
+  <h2 class="ttile">Notary Details</h2>
+  <% form_for :notary, :url => {:action => "notary_details", :id => params[:id], :order_id => params[:order_id]} do |f| -%>
+  <div class="box-list">
+
+    <div class="rating-order">
+      <ul>
+        <li>
+          <%= "#{@notary.first_name} #{@notary.last_name}" %>
+          <span class="link-style">(<%= link_to notary_completed_orders(@notary), {}, :href => "javascript:void(0)" %>)</span>
+        </li>
+        <li><div class="rating">
+          <label><%= @star_rating %></label>
+          <span>☆</span>
+          <span>☆</span>
+          <span>☆</span>
+          <span>☆</span>
+          <span>☆</span>
+          </div>
+        </li>
+        <li>
+          Current Orders (<span class="link-style"><%= link_to notary_assinged_orders(@notary), {}, :href => "javascript:void(0)" %></span>)
+          <!--Current order <span class="link-style"><a href="#">(3)</a></span>-->
+        </li>
+      </ul>
+    </div>
+
+    <div class="order-details">
+      <div class="w-half">
+        <div class="view_det_left1">
+        <h3>Notary Details</h3>
+
+          <div class="labels wholeform">
+            <p class="notaryleft"><label for="first_name">*First Name:</label></p>
+            <p class="formright"><%= f.text_field :first_name, :class => "formfield" %></p>
+          </div>
+          <div class="labels wholeform">
+            <p class="notaryleft"><label for="last_name">*Last Name:</label></p>
+            <p class="formright"><%= f.text_field :last_name, :class => "formfield"  %></p>
+          </div>
+          <div class="labels wholeform">
+            <p class="notaryleft"><label for="last_name">*Address:</label></p>
+            <p class="formright"><%= f.text_field :weekday_deliver_address, :class => "formfield"  %></p>
+          </div>
+          <div class="labels wholeform">
+            <p class="notaryleft"><label for="last_name">*City:</label></p>
+            <p class="formright"><%= f.text_field :weekday_deliver_city, :class => "formfield"  %></p>
+          </div>
+          <div class="labels wholeform">
+            <p class="notaryleft"><label for="last_name">*State:</label></p>
+            <p class="formright"><%= f.select :weekday_deliver_state, state_list, :class => "formfield"  %></p>
+          </div>
+          <div class="labels wholeform">
+            <p class="notaryleft"><label for="last_name">Zip Code:</label></p>
+            <p class="formright"><%= f.text_field :weekday_deliver_zip_code, :class => "formfield"  %></p>
+          </div>
+          <div class="labels wholeform">
+            <p class="notaryleft"><label for="last_name">Preferred #:</label></p>
+            <p class="formright"><%= f.text_field :day_phone, :class => "formfield"  %></p>
+          </div>
+          <div class="labels wholeform">
+            <p class="notaryleft"><label for="last_name">Home #:</label></p>
+            <p class="formright"><%= f.text_field :evening_phone, :class => "formfield"  %></p>
+          </div>
+          <div class="labels wholeform">
+            <p class="notaryleft"><label for="last_name">Mobile #:</label></p>
+            <p class="formright"><%= f.text_field :mobile_phone, :class => "formfield"  %></p>
+          </div>
+          <div class="labels wholeform">
+            <p class="notaryleft"><label for="last_name">Fax #:</label></p>
+            <p class="formright"><%= f.text_field :fax_number, :class => "formfield"  %></p>
+          </div>
+          <div class="labels wholeform">
+            <p class="notaryleft"><label for="last_name">EMail:</label></p>
+            <p class="formright"><%= text_field_tag :"user[email]", @notary.user.login, :class => "formfield"  %></p>
+          </div>
+          <div class="labels wholeform">
+            <p class="notaryleft"><label>Attorney:</label></p>
+            <p class="formright"><%= f.check_box :is_attorney %></p>
+          </div>
+        </div>
+      </div>
+      <div class="w-half">
+        <div class="view_det_right1">
+          <h3>Skills/Experience</h3>
+
+          <div class="labels wholeform">
+            <p class="notaryexperience"><label for="notary_history_length">*How long have you been a notary?:</label></p>
+            <p class="formright"><%= select_tag "notary_notary_history_length", options_for_select(["0-6 months", "1-2 Years", "3-5 Years", "5+ Years"], @notary.notary_history_length), {:name => "notary[notary_history_length]", :style => "margin:0"} %></p>
+          </div>
+          <div class="labels wholeform">
+            <p class="notaryexperience"><label for="notarize_loan_documents">*Have you notarized loan documents: </label></p>
+            <p class="formright">
+              <%= f.radio_button :notarize_loan_documents, 'Yes', {:onClick => "notarized_documents_count_valid_yes()"} %>
+              Yes
+              <% if @notary.notarize_loan_documents!= nil %>
+                  <%= f.radio_button :notarize_loan_documents, 'No' %> No
+              <% else %>
+                  <%= f.radio_button :notarize_loan_documents, 'No', :checked => true, :onClick => "notarized_documents_count_valid_no()" %>
+                  No
+              <% end %>
+            </p>
+          </div>
+          <div id="notarized_documents_count_label"
+               <% if @notary.notarize_loan_documents=="Yes" %> style="display: inline"
+               <% elsif @notary.notarize_loan_documents=="No" %>  style="display: none"
+               <% else %> style="display: none"
+               <% end %> >
+            <div class="labels wholeform">
+              <p class="notaryexperience"><label for="notarized_documents_count">*If so, how many?</label></p>
+              <p class="formright"><%= select_tag "notary_notarized_documents_count", options_for_select(["under 50", "50-100", "100+"], @notary.notarized_documents_count), {:name => "notary[notarized_documents_count]"} %></p>
+            </div>
+          </div>
+          <div class="labels wholeform">
+            <p class="notaryexperience"><label for="title_insurance_provider">Have You Done Commercial Loans: </label></p>
+            <p class="formright">
+              <%= f.radio_button :commercial_loan, 'Yes', :name => "notary[commercial_loan]" %> Yes
+              <% if @notary.commercial_loan!= nil %>
+                  <%= f.radio_button :commercial_loan, 'No', :name => "notary[commercial_loan]" %> No
+              <% else %>
+                  <%= f.radio_button :commercial_loan, 'No', :checked => true, :name => "notary[commercial_loan]" %> No
+              <% end %>
+            </p>
+          </div>
+          <div class="labels wholeform">
+            <p class="notaryexperience"><label for="title_insurance_provider">*Are you a Title Insurance Provider: </label></p>
+            <p class="formright">
+              <%= f.radio_button :title_insurance_provider, 'Yes', :name => "notary[title_insurance_provider]" %> Yes
+              <% if @notary.title_insurance_provider!= nil %>
+                  <%= f.radio_button :title_insurance_provider, 'No', :name => "notary[title_insurance_provider]" %> No
+              <% else %>
+                  <%= f.radio_button :title_insurance_provider, 'No', :checked => true, :name => "notary[title_insurance_provider]" %>
+                  No
+              <% end %>
+            </p>
+          </div>
+          <div class="labels wholeform">
+            <p class="notaryexperience"><label for="bilingual">*Are you multilingual?: </label></p>
+            <p class="formright">
+              <%= f.radio_button :bilingual, 'Yes', {:onClick => "notarized_bilingual_valid_yes()"} %> Yes
+              <% if @notary.bilingual!= nil %>
+                  <%= f.radio_button :bilingual, 'No', :onClick => "notarized_bilingual_valid_no()" %> No
+              <% else %>
+                  <%= f.radio_button :bilingual, 'No', :checked => true, :onClick => "notarized_bilingual_valid_no()" %>
+                  No
+              <% end %>
+            </p>
+          </div>
+          <div id="notarized_bilingual_label"
+               <% if @notary.bilingual=="Yes" %> style="display: inline"
+               <% elsif @notary.bilingual=="No" %> style="display: none"
+               <% else %> style="display: none"
+          <% end %> >
+            <div class="labels wholeform">
+              <p class="notaryexperience"><label for="bilingual_language">*Multilingual Language: </label></p>
+              <p class="formright">
+                <%= select_tag "notary_bilingual_language", options_for_select([["", "English"], ["Spanish", "Spanish"], ["Arabic", "Arabic"], ["Armenian", "Armenian"], ["ASL", "ASL"], ["Dutch", "Dutch"], ["Chinese", "Chinese"], ["French", "French"], ["Filipino", "Filipino"], ["German", "German"], ["Greek", "Greek"], ["Hebrew", "Hebrew"], ["Hindu", "Hindu"], ["Italian", "Italian"], ["Japanese", "Japanese"], ["Korean", "Korean"], ["Manderin", "Manderin"], ["Persian", "Persian"], ["Polish", "Polish"], ["Portugese", "Portugese"], ["Romanian", "Romanian"], ["Russian", "Russian"], ["Swedish", "Swedish"], ["Thai", "Thai"], ["Turkish", "Turkish"], ["Vietnamese", "Vietnamese"]], @notary.bilingual_language), {:name => "notary[bilingual_language]"} %>
+                <%= select_tag "notary_billingual_language_1", options_for_select([["", "English"], ["Spanish", "Spanish"], ["Arabic", "Arabic"], ["Armenian", "Armenian"], ["ASL", "ASL"], ["Dutch", "Dutch"], ["Chinese", "Chinese"], ["French", "French"], ["Filipino", "Filipino"], ["German", "German"], ["Greek", "Greek"], ["Hebrew", "Hebrew"], ["Hindu", "Hindu"], ["Italian", "Italian"], ["Japanese", "Japanese"], ["Korean", "Korean"], ["Manderin", "Manderin"], ["Persian", "Persian"], ["Polish", "Polish"], ["Portugese", "Portugese"], ["Romanian", "Romanian"], ["Russian", "Russian"], ["Swedish", "Swedish"], ["Thai", "Thai"], ["Turkish", "Turkish"], ["Vietnamese", "Vietnamese"]], @notary.billingual_language_1), {:name => "notary[billingual_language_1]", :style=>"margin-left:265px;"} %>
+              </p>
+            </div>
+          </div>
+
+          <div class="labels wholeform">
+            <p class="notaryexperience"><label for="email_document_capability">*Email Document Capability: </label></p>
+            <p class="formright">
+              <%= f.radio_button :email_document_capability, 'Yes', :name => "notary[email_document_capability]" %> Yes
+              <% if @notary.email_document_capability!= nil %>
+                  <%= f.radio_button :email_document_capability, 'No', :name => "notary[email_document_capability]" %>
+                  No
+              <% else %>
+                  <%= f.radio_button :email_document_capability, 'No', :checked => true, :name => "notary[email_document_capability]" %>
+                  No
+              <% end %>
+            </p>
+          </div>
+          <div id="notary_profile_exp_equip_label" style="display:none">
+            <div class="labels wholeform">
+              <p class="notaryexperience"><label for="laser_printer">Do you have a laser printer: </label></p>
+              <p class="formright"><%= select_tag "notary_laser_printer", options_for_select(["No", "Yes"], @notary.laser_printer), {:name => "notary[laser_printer]"} %></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="notaryleft"><label for="printer_paper_type">Printer paper type: </label></p>
+              <p class="formright"><%= select_tag "notary_printer_paper_type", options_for_select(["Letter", "Legal", "Both"], @notary.printer_paper_type), {:name => "notary[printer_paper_type]"} %></p>
+            </div>
+          </div>
+          <div class="labels wholeform">
+            <p class="notaryexperience"><label for="enotarization_capability">*eNotarization Capability: </label></p>
+            <p class="formright">
+              <%= f.radio_button :enotarization_capability, 'Yes', :name => "notary[enotarization_capability]" %> Yes
+              <% if @notary.enotarization_capability!= nil %>
+                  <%= f.radio_button :enotarization_capability, 'No', :name => "notary[enotarization_capability]" %> No
+              <% else %>
+                  <%= f.radio_button :enotarization_capability, 'No', :checked => true, :name => "notary[enotarization_capability]" %>
+                  No
+              <% end %>
+            </p>
+          </div>
+          <div class="labels wholeform" style="display: none">
+            <p class="notaryexperience"><label for="own_a_copier">*Do you own a copier: </label></p>
+            <p class="formright"><%= select_tag "notary_own_a_copier", options_for_select(["No", "Yes"], @notary.own_a_copier), {:name => "notary[own_a_copier]"} %></p>
+          </div>
+
+          <div class="labels wholeform">
+            <p class="notaryexperience"><label for="reverse_mortgage">*Reverse Mortgage Experience?: </label></p>
+            <p class="formright">
+              <%= f.radio_button :reverse_mortgage, 'Yes', :name => "notary[reverse_mortgage]" %> Yes
+              <% if @notary.reverse_mortgage!= nil %>
+                  <%= f.radio_button :reverse_mortgage, 'No', :name => "notary[reverse_mortgage]" %> No
+              <% else %>
+                  <%= f.radio_button :reverse_mortgage, 'No', :checked => true, :name => "notary[reverse_mortgage]" %>
+                  No
+              <% end %>
+            </p>
+          </div>
+          <div class="labels wholeform">
+            <p class="notaryexperience"><label for="certified_signing_agent">*Certified Signing Agent: </label></p>
+            <p class="formright">
+              <%= f.radio_button :certified_signing_agent, 'Yes', :name => "notary[certified_signing_agent]" %> Yes
+              <% if @notary.certified_signing_agent!= nil %>
+                  <%= f.radio_button :certified_signing_agent, 'No', :name => "notary[certified_signing_agent]" %> No
+              <% else %>
+                  <%= f.radio_button :certified_signing_agent, 'No', :checked => true, :name => "notary[certified_signing_agent]" %>
+                  No
+              <% end %>
+            </p>
+          </div>
+          <div class="labels wholeform">
+            <p class="notaryexperience"><label for="life_settlement_experience">*Life Settlement Experience?: </label></p>
+            <p class="formright">
+              <%= f.radio_button :life_settlement_experience, 'Yes', :name => "notary[life_settlement_experience]" %>
+              Yes
+              <% if @notary.life_settlement_experience!= nil %>
+                  <%= f.radio_button :life_settlement_experience, 'No', :name => "notary[life_settlement_experience]" %>
+                  No
+              <% else %>
+                  <%= f.radio_button :life_settlement_experience, 'No', :checked => true, :name => "notary[life_settlement_experience]" %>
+                  No
+              <% end %>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p><%= f.text_area :notes, :class => "box-border", :placeholder => "Notes" %></p>
+
+    <div class="form-list-box">
+      <form>
+        <div class="radio-btn">
+
+          <label>
+            <!--<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>-->
+            <%= radio_button_tag :"notary[fee_type]", "Base Fee", (@notary.fee_type == 'Base Fee' || @notary.fee_type.nil?) %>
+            BASE FEE
+          </label>
+          <%= text_field_tag :"notaries[base_fee]", 75, :class => "tiny", :readonly => :readonly %>
+        </div>
+        <div class="radio-btn">
+          <label>
+            <%= radio_button_tag :"notary[fee_type]", "Override Fee", @notary.fee_type == 'Override Fee' %>
+            OVERRIDE FEE
+          </label>
+          <%= text_field_tag :"notaries[override_fee]", 90, :class => "tiny" %>
+        </div>
+      </form>
+    </div>
+    <div class="form-list-box"><br><br>
+      <span class="btn-gray"><%= alert_notary_in_details %></span><br><br>
+      <span class="btn-green"><%= link_to_remote "ASSIGN NOTARY", {:update => "put", :url => {:action => :assign_notary, :order_id => params[:order_id], :notary_id => params[:id]}.merge!(params), :confirm => "Are you sure you want to assign this Notary?"} %></span>
+    </div>
+    <div class="clearfix"></div><br/>
+
+    <div class="sbt_btn">
+    <%=submit_tag "SAVE",:class=>'save_button'%>
+    <%= link_to '<button name="button" value="OK" type="button">CANCEL</button>', {:controller => "admin/notaries", :action => :notary_details, :id => params[:id], :order_id => params[:order_id]} %>
+    </div>
+    <div class="clearfix"></div>
+
+  </div>
+  <% end %>
+</div>

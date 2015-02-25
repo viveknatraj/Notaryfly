@@ -1,0 +1,160 @@
+<%= render :partial => "/notary/header" %>
+<%= render :partial => "navigation" %>
+<%#= stylesheet_link_tag "dhtmlwindow" %>
+<%#= javascript_include_tag "dhtmlwindow"%>
+<div id="content_container" class="content_container span-24 last">
+    <div id="contact_information" class="span-18 last" style="border:none">
+    <div class="xsnazzy">
+      <b class="xtop"><b class="xb1"></b><b class="xb2 color_a">
+        </b><b class="xb3 color_a"></b><b class="xb4 color_a"></b></b>
+      <div class="xboxcontent" style="padding:10px;">
+        <% if flash[:notice] %><div class="success" id="success" style="display:block"><%= flash[:notice] %></div><% end %>
+        <div id="success" style="display:none"></div>
+        <div class="errorExplanation" style="display:none" id="signupvalid"></div>
+        <div id="contact_form" class="form span-16 last">
+          <% form_for :notary,:url => {:controller => "/notary/profile", :action => "update"}, :html => {:multipart => true, :onsubmit=>"return notary_profile_validations()"} do |f| -%>
+              <div style="text-align:left">
+                <%= error_messages_for :notary %>
+              </div>
+            <div class="labels wholeform">
+              <p class="formleft"><label>I am on vacation:</label></p>
+              <p class="formright"><%= check_box :notary, :on_vacation %> (this will remove you from our searches until you are available again)</p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formleft"><label>I am also an attorney:</label></p>
+              <p class="formright"><%= check_box :notary, :is_attorney %></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formleft"><label for="first_name">*First Name:</label></p>
+              <p class="formright"><%= f.text_field :first_name %></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formleft"><label for="last_name">*Last Name:</label></p>
+              <p class="formright"><%= f.text_field :last_name  %></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formleft"><label for="company_name">Company Name:</label></p>
+              <p class="formright"><%= f.text_field :company_name%> <span>(if applicable)</span></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formleft"><label for="day_phone">*Preferred Phone:</label></p>
+              <p class="formright"><%= f.text_field :day_phone, :value => number_to_phone(@notary.day_phone, :area_code => true) %></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formleft"><label for="evening_phone">Home Phone:</label></p>
+              <p class="formright"><%= f.text_field :evening_phone, :value => number_to_phone(@notary.evening_phone, :area_code => true)  %></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formleft"><label for="mobile_phone">*Mobile Phone:</label></p>
+              <p class="formright"><%= f.text_field :mobile_phone, :value => number_to_phone(@notary.mobile_phone, :area_code => true) %></p>
+            </div>
+            <div class="labels wholeform" style="display: none">
+              <p class="formleft"><label for="work_phone">Work Phone:</label></p>
+              <p class="formright"><%= f.text_field :work_phone, :value => number_to_phone(@notary.work_phone, :area_code => true) %>
+                <label>Extension:</label><%= text_field :notary, :work_extension, :class => "tiny"%></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formleft"><label for="fax_number">Fax Number:</label></p>
+              <p class="formright"><%= f.text_field :fax_number, :value => number_to_phone(@notary.fax_number, :area_code => true) %></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formleft"><label for="email">*Email:</label></p>
+              <p class="formright"><%= text_field :user, :email, :value => self.current_user.email  %></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formleft"><label for="password">*Password:</label></p>
+              <p class="formright"><%= password_field :user, :password, :value => session[:password] %> <span>(minimum 6 characters)</span></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formleft"><label for="password_confirmation">*Confirm Password:</label></p>
+              <p class="formright"><%= password_field :user, :password_confirmation, :value => session[:password] %> <span>(minimum 6 characters)</span></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formleft"><label for="photo" style="margin-right:16px;">Upload Profile Photo:</label></p>
+              <p class="formright"><%= f.file_field :photo, :class => "photo"  %></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formleft"><label for="photo" style="margin-right:16px;">&nbsp;</label></p>
+              <p class="formright"><% if !@notary.photo_file_name.blank?%><p><%= image_tag @notary.photo.url, :height => 75 ,:width => 100%></p><% end %></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formleft"><label for="photo" style="margin-right:16px;">Upload W-9:</label></p>
+              <p class="formright"><%= f.file_field :w_9, :class => "photo"  %></p>
+            </div>
+              <div class="labels wholeform">
+                <p class="formleft"><label for="photo" style="margin-right:16px;">W-9 Info:</label></p>
+                <p class="formright"><%= f.text_field :w9_info, :class => "photo"  %></p>
+              </div>
+
+             <div class="labels wholeform">
+              <p class="formleft"><label for="photo" style="margin-right:16px;">&nbsp;</label></p>
+               <p class="formright"><% if @notary.w_9!=nil and @notary.w_9!=0 %><%= @notary.w_9 %><% end %></p>
+            </div>
+
+            <div class="clr"></div>
+            <h3><strong>EFT Information For Payment</strong></h3>
+            <div class="labels wholeform">
+              <p class="formleft"><label for="name">Name:</label></p>
+              <p class="formright"><%= f.text_field :name  %></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formleft"><label for="bank">Bank:</label></p>
+              <p class="formright"><%= f.text_field :bank  %></p>
+            </div>
+             <div class="labels wholeform">
+              <p class="formleft"><label>Account Type#:</label></p>
+              <p class="formright"><%= f.select :account_type, [["Savings", "savings"], ["Checking", "checking"]]  %></p>
+            </div>
+             <div class="labels wholeform">
+              <p class="formleft"><label>Account Holder Type#:</label></p>
+              <p class="formright"><%= f.select :account_holder_type, [["Business", "business"], ["Personal", "personal"]] %></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formleft"><label for="routing">Routing #</label></p>
+              <p class="formright"><%= f.text_field :routing  %></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formleft"><label for="account">Account #</label></p>
+              <p class="formright"><%= f.text_field :account  %></p>
+            </div>
+            <div class="clr"></div><br/>
+            <h3><strong>Notary Insurance</strong></h3>
+            <div class="labels wholeform">
+              <p class="formleft"><label for="notary_commision_number">Notary Commission #:</label></p>
+              <p class="formright"><%= f.text_field :notary_commision_number %></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formleft"><label for="notary_commision_number_expiration_date">Expiration Date:</label></p>
+              <p class="formright"><%= f.text_field :notary_commision_number_expiration_date, :class => "datepicker"  %> <span>(mm/dd/yyyy)</span></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formleft"><label for="e_and_o_insurance">E&O Insurance:</label></p>
+              <p class="formright"><%= select_tag "notary_e_and_o_insurance", options_for_select(["No" , "Yes", "Not Applicable"], @notary.e_and_o_insurance), {:name => "notary[e_and_o_insurance]",:onChange =>"e_O_Insurance_display()"} %></p>
+            </div>
+            <div id="e_and_o_amt_date_label" <%if @notary.e_and_o_insurance!="Yes"%>style="display:none" <%else%>style="display:inline"<%end%>>
+              <div class="labels wholeform">
+                <p class="formleft"><label for="e_and_o_insurance_amount">Amount:</label></p>
+                <p class="formright"><%= select_tag "e_and_o_insurance_amount", options_for_select(["$50,000 Or Less", "$50,000-$100,000", "$100,000-$250,000", "$250,000-$500,000", "$500,000-$1,000,000","$1,000,000 Or More"],@notary.e_and_o_insurance_amount), {:name => "notary[e_and_o_insurance_amount]"} %></p>
+              </div>
+              <div class="labels wholeform">
+                <p class="formleft"><label for="e_and_o_insurance_expiration_date">Expiration Date:</label></p>
+                <p class="formright"><%= f.text_field :e_and_o_insurance_expiration_date, :class => "datepicker" %> <span>(mm/dd/yyyy)</span></p>
+              </div>
+            </div>
+            <div id="e_and_o_amt_date_field" style="display:none">
+            </div>
+            <%= hidden_field :steps, :page, :value => "index" %>
+          </div>
+          <div class="clr"></div>
+        </div>
+        <b class="xbottom"><b class="xb4"></b><b class="xb3"></b>
+          <b class="xb2"></b><b class="xb1"></b></b>
+      </div>
+    </div>
+
+    <div id="submit_button" class="span-18 last">
+      <p><%= image_submit_tag("button_save_changes.jpg", :class => "submit") %></p>
+    <% end %>
+  </div>
+</div>
+

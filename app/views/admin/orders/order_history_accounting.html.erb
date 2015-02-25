@@ -1,0 +1,565 @@
+<%= stylesheet_link_tag  "notaryfly", "rating" %>
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/redmond/jquery-ui.css" rel="stylesheet" type="text/css"/>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<style>
+  #myTable thead {
+    background-color: #66c4ea;
+    color: #fff;
+  }
+  .odd:nth-child(2n) {
+    background-color: #CDDDDD;
+  }
+  #myTable tbody {
+    background-color: #E1F1F1;
+  }
+		#ajax-loader {
+    background-color: gray;
+    height: 400px;
+    left: 450px;
+    position: absolute;
+    z-index: 99;
+}
+.loading {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto; /* presto! */
+}
+</style>
+<script type="text/javascript">
+  function travel_fee_edit(order_id){
+    $("#travel_fee_edit"+order_id).dialog({modal: true, height: 100, width: 400})
+  }
+
+  function total_revenue_edit(order_id){
+    $("#total_revenue_edit"+order_id).dialog({modal: true, height: 100, width: 400})
+  }
+
+</script>
+<div class="block" id="block-tables">
+  <div class="secondary-navigation">
+    <ul>
+      <li class="first"><a href="/admin/orders/open_order">Open Orders</a></li>
+      <li class="first"><a href="/admin/orders/index">Completed Orders</a></li>
+      <!--<li class="first"><a href="/admin/orders/pending_order">Pending Orders/Notary</a></li>-->
+      <li class="active"><a href="/admin/orders/order_history_paid">Orders History</a></li>
+      <li class="first"><a href="/admin/orders/cancelled_order">Cancelled Orders</a></li>
+      <!--<li class="first"><a href="/admin/orders/accounting">Accounting</a></li>-->
+    </ul>
+    <div class="clear"></div>
+  </div>
+	<div id="ajax-loader" style="display:none"><%= image_tag "loader.jpeg", :class=>"loading" %></div>
+  <div class="content" id="orderhis_paid">
+    <ul class='sub_tab_list'>
+      <li class="sub_tab comp-ordr"><%= paid_in_full %></li>
+      <li class="sub_tab can-ord"><%= cancelled_orders %></li>
+      <li class="sub_tab acc"><%=order_history_accounting %></li>
+    </ul>
+
+    <div class="inner">
+      <table class="table" id="myTable">
+        <colgroup>
+          <col id="col1_1"></col>
+
+          <col id="col1_2"></col>
+          <col id="col1_3"></col>
+          <col id="col1_4"></col>
+          <col id="col1_5"></col>
+        </colgroup>
+        <thead>
+          <tr>
+            <td>Order #</td>
+            <td>Client Name</td>
+            <td>Notary Name</td>
+            <td>Order Date</td>
+            <td>Signing Type</td>
+            <td>Signing Date</td>
+            <td>Signing Fee</td>
+            <td>Other Fee</td>
+            <td>Total Fee</td>
+            <td>Notary Paid</td>
+            <td>NF Revenue</td>
+            <td>Paid Date</td>
+          </tr>
+        </thead>
+        <tbody>
+          <% for order in @orders %>
+
+            <tr class="odd">
+
+              <td><a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'order_number<%= order.id %>', '', 'width=800px,height=600px,left=200px,top=150px,resize=0,scrolling=10');" title="View Order Details" style="color: #000;font-size: 12px;"><%= order.id %></a></td>
+              <td><a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'client_name<%= order.client.client_name %>', '', 'width=800px,height=600px,left=200px,top=150px,resize=0,scrolling=10');" title="View Client Profile" style="color: #000;font-size: 12px;"><%= order.client.client_name %></a></td>
+              <% if order.notary!=nil %>
+                <td><a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'notary_name_<%= order.notary.first_name %>_<%= order.notary.last_name %>', '', 'width=800px,height=1100px,left=200px,top=150px,resize=0,scrolling=10');" title="View Notary Profile" style="color: #000;font-size: 12px;"><%= order.notary.first_name %>&nbsp;<%= order.notary.last_name %></a></td>
+              <%else%>
+                <td>&nbsp;</td>
+              <% end %>
+
+              <td><%= order.created_at.strftime '%m-%d-%Y'%></td>
+              <td><%=signing_type(order.id)%> &nbsp; <%=no_of_doc(order.id)%></td>
+              <td> <%if order.signing_date!=nil%><%= order.signing_date.strftime '%m-%d-%Y'%> <%end%></td>
+              <td><%="$"%><%=number_with_precision(order.signing_fee,:precision=>2)%></td>
+              <%if !order.travel_fee.blank?%>
+                <%travel_fee=order.travel_fee%>
+                <td><a href="javascript:void(0)" onClick="travel_fee_edit(<%=order.id%>)" style="color: #000;font-size: 12px;"><%="$"%><%=number_with_precision(order.travel_fee,:precision=>2)%></a></td>
+              <%else%>
+                <%travel_fee=0%>
+                <td><a href="javascript:void(0)" onClick="travel_fee_edit(<%=order.id%>)" style="color: #000;font-size: 12px;"><%="$"%><%="0.00"%></a></td>
+              <%end%>
+              <td><%="$"%><%=number_with_precision(order.client.customer_fee,:precision=>2)%></td>
+              <%total_revenue=order.client.customer_fee%>
+              <%if order.notary_id!=nil%>
+                <td><%="$ "%><%=number_with_precision(order.notary_fee,:precision=>2)%></td>
+                <%doc_notary_fee=order.notary_fee%>
+              <%else%>
+                <%doc_notary_fee=0%>
+                <td></td>
+              <%end%>
+              <td><%="$ "%><%=number_with_precision(total_revenue.to_f-(travel_fee.to_f+ doc_notary_fee.to_f),:precision=>2)%></td>
+              <%if order.order_notary_fee_date!=nil%>
+                <td><%=  order.order_notary_fee_date.strftime '%m-%d-%Y' %></td>
+              <%else%>
+                <td>Not paid</td>
+              <%end%>
+            </tr>
+
+          <div id="travel_fee_edit<%=order.id%>" style="display:none;" >
+            <%form_tag ("/admin/orders/edit_travel_fee")do %>
+              Travel fee: <%= text_field_tag 'travel_fee','' %>
+              <%= hidden_field_tag 'order_id',order.id %>&nbsp;<%=submit_tag 'submit'%>
+            <%end%>
+          </div>
+
+          <div id="total_revenue_edit<%=order.id%>" style="display:none;" >
+            <%form_tag ("/admin/orders/edit_total_revenue")do %>
+              Total Revenue: <%= text_field_tag 'total_revenue','' %>
+              <%= hidden_field_tag 'order_id',order.id %>&nbsp;<%=submit_tag 'submit'%>
+            <%end%>
+          </div>
+
+
+          <div id="client_name<%= order.client.client_name %>" style="display:none">
+            <div id="order_details" class="border span-18 last" style="border:none">
+              <div class="xsnazzy" style="width: 740px">
+                <b class="xtop"><b class="xb1"></b><b class="xb2 color_a">
+                  </b><b class="xb3 color_a"></b><b class="xb4 color_a"></b></b>
+                <div class="xboxcontent" style="padding:10px; margin: 0px">
+                  <ul class="notary_info">
+                    <p>
+                    <li><label>Client ID:</label> <%= order.client.id %></li>
+                    <li><label>Company Name:</label> <%= order.client.company_name %></li>
+                    <li><label>Address:</label> </li>
+                    <li><%= order.client.address %><br/> <%= order.client.city %>, <%= order.client.state %> <%= order.client.zip_code%></li>
+                    <li><label>Name:</label> <%= order.client.client_name %></li>
+                    <li><label>Title:</label><% if order.client.title.length!=0%> <%= order.client.title %><%else%> Not Provided<%end%></li>
+                    </p>
+                    <p>
+                    <li><label>Telephone:</label><% if order.client.home_phone.length!=0%> <%= order.client.home_phone %><%else%> Not Provided<%end%></li>
+                    <li><label>Mobile:</label><% if order.client.mobile_phone.length!=0%> <%= order.client.mobile_phone %><%else%> Not Provided<%end%></li>
+                    <li><label>Fax:</label><% if order.client.fax_number.length!=0%> <%= order.client.fax_number %><%else%> Not Provided<%end%></li>
+
+                    </p>
+                    <p>
+                    <li><label>Return Docs To:</label></li>
+                    <li><%= order.return_company_name %><br/><label> Attn:</label> <%= order.return_attention %><br/> <%= order.return_address %><br/> <%= order.return_city%>,<%= order.return_state%> <%= order.return_zip_code%> <br/> <%= order.return_shipping_courier%><label> Acct#:</label> <%= order.return_account_number%></li>
+                    </p>
+                  </ul>
+                </div>
+                <b class="xbottom"><b class="xb4"></b><b class="xb3"></b>
+                  <b class="xb2"></b><b class="xb1"></b></b>
+              </div>
+            </div>
+          </div>
+
+
+          <% if order.notary!=nil %>
+            <div id="notary_name_<%= order.notary.first_name %>_<%= order.notary.last_name %>" style="display:none">
+              <div id="order_details" class="border span-18 last" style="border:none">
+                <div class="xsnazzy" style="width: 740px">
+                  <b class="xtop"><b class="xb1"></b><b class="xb2 color_a">
+                    </b><b class="xb3 color_a"></b><b class="xb4 color_a"></b></b>
+                  <div class="xboxcontent" style="padding:10px; margin: 0px">
+                    <h2 class="notary_info">Notary Details</h2>
+                    <div class="span-8">
+                      <ul class="notary_info">
+                        <li><label>Notary ID:</label> <%= order.notary.id %></li>
+                        <li><label>Company Name:</label> <%= order.notary.company_name %></li>
+                        <li><label>Name:</label> <%= order.order_notary_name %></li>
+                        <li><label>Is also an attorney: </label> <% if order.notary.is_attorney == "1" %>Yes<% else %>No<% end %></li>
+                        <li><label>Bilingual:</label> <%= order.notary.bilingual %></li>
+                        <% if order.notary.bilingual == "Yes" %>
+                          <li><label>Bilingual Language:</label> <%= order.notary.bilingual_language %></li>
+                        <% end %>
+                      </ul>
+
+                      <h3 class="notary_info">Contact Information</h3>
+                      <ul class="notary_info">
+                        <li>
+                          <p><label>Document Delivery Address (weekday):</label><br />
+                            <%= order.notary.weekday_deliver_address %><br /><%= order.notary.weekday_deliver_city %>, <%= order.notary.weekday_deliver_state %> <%= order.notary.weekday_deliver_zip_code %></p>
+                        </li>
+                        <li>
+                          <p><label>Document Delivery Address (weekend):</label><br />
+                            <%= order.notary.weekend_deliver_address %><br /><%= order.notary.weekend_deliver_city %>, <%= order.notary.weekend_deliver_state %> <%= order.notary.weekend_deliver_zip_code %></p>
+                        </li>
+                        <li><label>Day Phone:</label> <%= number_to_phone(order.order_notary_home_phone, :area_code => true)  %></li>
+                        <li><label>Evening Phone:</label> <%= number_to_phone(order.order_notary_home_phone, :area_code => true) %></li>
+                        <li><label>Work Phone:</label> <%= number_to_phone(order.order_notary_work_phone, :area_code => true) %> Ext. <%= order.order_notary_work_extension %></li>
+                        <li><label>Mobile Phone:</label> <%= number_to_phone(order.order_notary_mobile_phone, :area_code => true) %></li>
+                        <li><label>Fax Number:</label> <%= number_to_phone(order.order_notary_fax_number, :area_code => true) %></li>
+                        <li><label>Email:</label> <%= link_to order.order_notary_email_address, "mailto:#{order.notary.user.email}", :class => "small_link", :style => "color:#154B66;" %></li>
+                      </ul>
+
+                      <h3 class="notary_info">Notary Experience</h3>
+                      <ul class="notary_info">
+                        <li><label>How long have you been a notary?1</label> <%= order.notary.notary_history_length %></li>
+                        <li><label>How many loan documents have you signed?</label> <%= order.notary.notarized_documents_count %></li>
+                        <li><label>Do you have loan signing experience?</label> <%= order.notary.notarize_loan_documents %></li>
+                        <% if order.notary.notarize_loan_documents == "Yes" %>
+                          <li style="margin-left:5px;"><label>Reverse Mortgage?:</label> <%= order.notary.reverse_mortgage %></li>
+                          <li style="margin-left:5px;"><label>Power of Attorney:</label> <%= order.notary.power_of_attorney %></li>
+                          <li style="margin-left:5px;"><label>Reverse Mortgage?:</label> <%= order.notary.lines_of_credit %></li>
+                          <li style="margin-left:5px;"><label>Sellers Packaging?:</label> <%= order.notary.sellers_packaging %></li>
+                          <li style="margin-left:5px;"><label>Refinance?:</label> <%= order.notary.refinance %></li>
+                          <li style="margin-left:5px;"><label>Purchases?:</label> <%= order.notary.purchases %></li>
+                        <% end %>
+                      </ul>
+
+                      <h3 class="notary_info">Notary Commission and Insurance</h3>
+                      <ul class="notary_info">
+                        <li><label>Notary Commission #:</label> <%= order.notary.notary_commision_number %></li>
+                        <li><label>Notary Commission Expiration Date:</label> <%= order.notary.notary_commision_number_expiration_date %></li>
+                        <li><label>E & O Insurance:</label> <%= order.notary.e_and_o_insurance %></li>
+                        <li><label>E & O Insurance Expiration Date:</label> <%= order.notary.e_and_o_insurance_expiration_date %></li>
+                        <li><label>E & O Insurance Amount:</label> <%= order.notary.e_and_o_insurance_amount %></li>
+                      </ul>
+
+                      <h3 class="notary_info">Equipment</h3>
+                      <ul class="notary_info">
+                        <li><label>Can You Receive Documents via email?: </label> <%= order.notary.email_document_capability %></li>
+                        <li><label>eNotarizaion?: </label> <%= order.notary.enotarization_capability %></li>
+                        <li><label>Do you have a laser printer?: </label> <%= order.notary.laser_printer %></li>
+                        <li><label>Printer paper type: </label> <%= order.notary.printer_paper_type %></li>
+                        <li><label>Do you own a copier?: </label> <%= order.notary.own_a_copier %></li>
+                      </ul>
+
+                      <h3 class="notary_info">Accounting</h3>
+                      <ul class="notary_info">
+                        <li>
+                        <li><label>Make checks payable to: </label> <%= order.notary.billing_payable_to %></li><br />
+                        <li><label>Payment Address:</label><br />
+                        <%= order.order_notary_payment_address %><br /><%= order.order_notary_payment_city  %>, <%= order.order_notary_payment_state %> <%= order.order_notary_payment_zip_code %><li>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="span-8 last">
+    <%# if order.notary.photo_file_name %><p><%#= image_tag order.notary.photo.url, :height => 75, :style => "float:right; border:2px solid #000;" %></p><%# end %>
+                    </div>
+                  </div>
+                  <b class="xbottom"><b class="xb4"></b><b class="xb3"></b>
+                    <b class="xb2"></b><b class="xb1"></b></b>
+                </div>
+              </div>
+            </div>
+          <%else%>
+
+          <% end %>
+
+
+          <div id="order_number<%= order.id %>" style="display:none">
+
+            <h2>Order Details </h2>
+
+            <div id="order_details" class="border span-18 last" style="border:none">
+              <div class="xsnazzy" style="width: 740px">
+                <b class="xtop"><b class="xb1"></b><b class="xb2 color_a">
+                  </b><b class="xb3 color_a"></b><b class="xb4 color_a"></b></b>
+                <div class="xboxcontent" style="padding:10px; margin: 0px">
+                  <div class="span-9">
+                    <% if order.status == "closed" || order.status == "filled" %>
+                      <p><label>Notary Fee: </label> <%if order.order_notary_fee==nil or order.order_notary_fee.length==0%> Not Provided<%else%> $<%= order.order_notary_fee %><%end%></p>
+                    <% end %>
+                    <p><label>Order Status: </label><%= order.status.upcase %></p>
+                    <% if order.status == "closed" %>
+                      <p><label>Return Carrier: </label><%= order.closed_carrier %></p>
+                      <p><label>Return Tracking Number: </label><%= order.closed_tracking_number %></p>
+                      <p><label>Return Comments: </label><br /><%= order.closed_comments %></p>
+                      <hr style="margin-top:10px;"/>
+                    <% end %>
+
+                    <% if order.notary %>
+                      <p><label for="name">Assigned Notary: </label><%= order.order_notary_name %> </p>
+
+                      <div id="notary_info" style="display:none;" class="span-18 last">
+                        <p><label>Please note:</label> If you edited the notary contact information when creating the order, this information will show. It is only used for this order.</p>
+                        <h2 class="notary_info">Notary Details</h2>
+                        <div class="span-8">
+                          <ul class="notary_info">
+                            <li><label>Notary ID:</label> <%= order.notary.id %></li>
+                            <li><label>Company Name:</label> <%= order.notary.company_name %></li>
+                            <li><label>Name:</label> <%= order.order_notary_name %></li>
+                            <li><label>Is also an attorney: </label> <% if order.notary.is_attorney == "1" %>Yes<% else %>No<% end %></li>
+                            <li><label>Bilingual:</label> <%= order.notary.bilingual %></li>
+                            <% if order.notary.bilingual == "Yes" %>
+                              <li><label>Bilingual Language:</label> <%= order.notary.bilingual_language %></li>
+                            <% end %>
+                          </ul>
+
+                          <h3 class="notary_info">Contact Information</h3>
+                          <ul class="notary_info">
+                            <li>
+                              <p><label>Document Delivery Address (weekday):</label><br />
+                                <%= order.notary.weekday_deliver_address %><br /><%= order.notary.weekday_deliver_city %>, <%= order.notary.weekday_deliver_state %> <%= order.notary.weekday_deliver_zip_code %></p>
+                            </li>
+                            <li>
+                              <p><label>Document Delivery Address (weekend):</label><br />
+                                <%= order.notary.weekend_deliver_address %><br /><%= order.notary.weekend_deliver_city %>, <%= order.notary.weekend_deliver_state %> <%= order.notary.weekend_deliver_zip_code %></p>
+                            </li>
+                            <li><label>Day Phone:</label> <%= number_to_phone(order.order_notary_home_phone, :area_code => true)  %></li>
+                            <li><label>Evening Phone:</label> <%= number_to_phone(order.order_notary_home_phone, :area_code => true) %></li>
+                            <li><label>Work Phone:</label> <%= number_to_phone(order.order_notary_work_phone, :area_code => true) %> Ext. <%= order.order_notary_work_extension %></li>
+                            <li><label>Mobile Phone:</label> <%= number_to_phone(order.order_notary_mobile_phone, :area_code => true) %></li>
+                            <li><label>Fax Number:</label> <%= number_to_phone(order.order_notary_fax_number, :area_code => true) %></li>
+                            <li><label>Email:</label> <%= link_to order.order_notary_email_address, "mailto:#{order.notary.user.email}", :class => "small_link", :style => "color:#154B66;" %></li>
+                          </ul>
+
+                          <h3 class="notary_info">Notary Experience</h3>
+                          <ul class="notary_info">
+                            <li><label>How long have you been a notary?1</label> <%= order.notary.notary_history_length %></li>
+                            <li><label>How many loan documents have you signed?</label> <%= order.notary.notarized_documents_count %></li>
+                            <li><label>Do you have loan signing experience?</label> <%= order.notary.notarize_loan_documents %></li>
+                            <% if order.notary.notarize_loan_documents == "Yes" %>
+                              <li style="margin-left:5px;"><label>Reverse Mortgage?:</label> <%= order.notary.reverse_mortgage %></li>
+                              <li style="margin-left:5px;"><label>Power of Attorney:</label> <%= order.notary.power_of_attorney %></li>
+                              <li style="margin-left:5px;"><label>Reverse Mortgage?:</label> <%= order.notary.lines_of_credit %></li>
+                              <li style="margin-left:5px;"><label>Sellers Packaging?:</label> <%= order.notary.sellers_packaging %></li>
+                              <li style="margin-left:5px;"><label>Refinance?:</label> <%= order.notary.refinance %></li>
+                              <li style="margin-left:5px;"><label>Purchases?:</label> <%= order.notary.purchases %></li>
+                            <% end %>
+                          </ul>
+
+                          <h3 class="notary_info">Notary Commission and Insurance</h3>
+                          <ul class="notary_info">
+                            <li><label>Notary Commission #:</label> <%= order.notary.notary_commision_number %></li>
+                            <li><label>Notary Commission Expiration Date:</label> <%= order.notary.notary_commision_number_expiration_date %></li>
+                            <li><label>E & O Insurance:</label> <%= order.notary.e_and_o_insurance %></li>
+                            <li><label>E & O Insurance Expiration Date:</label> <%= order.notary.e_and_o_insurance_expiration_date %></li>
+                            <li><label>E & O Insurance Amount:</label> <%= order.notary.e_and_o_insurance_amount %></li>
+                          </ul>
+
+                          <h3 class="notary_info">Equipment</h3>
+                          <ul class="notary_info">
+                            <li><label>Can You Receive Documents via email?: </label> <%= order.notary.email_document_capability %></li>
+                            <li><label>eNotarizaion?: </label> <%= order.notary.enotarization_capability %></li>
+                            <li><label>Do you have a laser printer?: </label> <%= order.notary.laser_printer %></li>
+                            <li><label>Printer paper type: </label> <%= order.notary.printer_paper_type %></li>
+                            <li><label>Do you own a copier?: </label> <%= order.notary.own_a_copier %></li>
+                          </ul>
+
+                          <h3 class="notary_info">Accounting</h3>
+                          <ul class="notary_info">
+                            <li>
+                            <li><label>Make checks payable to: </label> <%= order.notary.billing_payable_to %></li><br />
+                            <li><label>Payment Address:</label><br />
+                            <%= order.order_notary_payment_address %><br /><%= order.order_notary_payment_city  %>, <%= order.order_notary_payment_state %> <%= order.order_notary_payment_zip_code %><li>
+                            </li>
+                          </ul>
+                        </div>
+    <%#*<div class="span-8 last">%>
+    <%# if order.notary.photo_file_name %><p><%#= image_tag order.notary.photo.url, :height => 75, :style => "float:right; border:2px solid #000;" %></p><%# end %>
+    <%#*</div>%>
+                      </div>
+                    <% end %>
+                    <% if order.agent_id  %>
+                      <% @agent = Agent.find_by_id(order.agent_id)
+                      if @agent!=nil
+                      %>
+                        <p><label for="agent">Agent:</label> <%= @agent.broker_name %></p>
+                      <%end
+                    end
+                  %>
+                    <p><label for="loan_number">Loan/Escrow Number: </label><%= order.loan_number %></p>
+                    <p><label for="signing_date">Signing Date: </label><%if order.signing_date!=nil%><%= order.signing_date.strftime '%m-%d-%Y'%> <%end%></p>
+                    <p><label for="signing_time">Signing Time: </label><%= order.signing_time %></p>
+                    <p><label for="loan_type">Loan Type: </label><%= order.loan_type %></p>
+                    <p><label for="sets_of_docs">How Many Sets of Documents: </label><%= order.sets_of_docs %></p>
+                    <p><label for="delivery_options">How Will Documents Be Delivered: </label><%= order.delivery_options %></p>
+                    <% if order.delivery_options == "Overnight to Borrower" or order.delivery_options == "Overnight to Notary" %>
+                      <p><label for="shipped_via">Shipping Courier: </label><%= order.shipped_via %></p>
+                      <% if order.tracking_number %><p><label for="tracking_number">Tracking Number: </label><%= order.tracking_number %></p><% end %>
+                    <% end %>
+                    <p><label for="required_language">Required Language: </label><%= order.required_language %></p>
+                  </div>
+                  <div class="span-9 last" style="display:none">
+                    <% if order.agent_id  %>
+                      <% @agent = Agent.find_by_id(order.agent_id)
+                      if @agent!=nil
+                      %>
+                        <p><label for="agent">Agent:</label> <%= @agent.broker_name %> <a href="#agent_info" class="fancyzoom small_link">(details)</a></p>
+                        <div id="agent_info_<%=@agent.id%>" style="display:none;">
+                          <h2 class="notary_info">Agent Details</h2>
+                          <div class="span-8">
+                            <ul class="notary_info">
+                              <li><label>Agent ID:</label> <%= @agent.id %></li>
+                              <li><label>Company Name:</label> <%= @agent.company_name %></li>
+                              <li><label>Name:</label> <%= @agent.broker_name %></li>
+                              <li><label>Title:</label><% if @agent.title.length!=0 %> <%= @agent.title %><%else%> Not Provided<%end%></li>
+
+                            </ul>
+
+                            <h3 class="notary_info">Contact Information</h3>
+                            <ul class="notary_info">
+                              <% if @agent.address.length!=0 or @agent.city.length!=0 or @agent.state.length!=0 or @agent.zip_code.length!=0  %>
+                                <li>
+                                  <label>Address:</label><br />
+                                  <%= @agent.address %><br />
+                                  <%= @agent.city %><% if @agent.city.length!=0 and @agent.state.length!=0 %>,<%end%> <%= @agent.state %> <%= @agent.zip_code %>
+
+                                </li>
+                              <%else%>
+                                <li><label>Address:</label><br/>
+                                  Not Provided
+                                </li>
+                              <%end%>
+                              <li><label>Day Phone:</label><% if @agent.direct_phone.length!=0%>  <%= @agent.direct_phone %> <%else%> Not Provided<%end%></li>
+                              <li><label>Work Phone:</label><% if @agent.home_phone.length!=0%> <%= @agent.home_phone %><%else%> Not Provided<%end%> Ext. <% if @agent.home_extension.length!=0%><%= @agent.home_extension %><%else%> Not Provided<%end%></li>
+                              <li><label>Mobile Phone:</label><% if @agent.mobile_phone.length!=0%> <%= @agent.mobile_phone %><%else%> Not Provided<%end%></li>
+                              <li><label>Email:</label> <%= link_to @agent.email, "mailto:#{@agent.email}", :class => "small_link", :style => "color:#154B66;" %></li>
+                            </ul>
+                          </div>
+                        </div>
+
+                      <% end
+                    end
+                  %>
+
+
+
+                  </div>
+                  <div class="clear"></div>
+                  <h3>Signer/Borrower Information</h3>
+
+
+
+                  <div class="clear"></div>
+
+                  <div class="span-9 last">
+                    <h3>Signing Location</h3>
+                    <p><%= order.signing_location_address %></p>
+                    <p><%= order.signing_location_city %>, <%= order.signing_location_state %> <%= order.signing_location_zip_code %> </p>
+                    <p><a href="http://maps.google.com/?q=loc%3A<%= order.signing_location_address %>+<%= order.signing_location_city %>+<%= order.signing_location_state %>+<%= order.signing_location_zip_code %>" target="_blank">Show Map</a></p>
+                  </div>
+                  <div class="clear"></div>
+
+
+                  <div class="span-18 last">
+                    <h3>Special Instructions</h3>
+                    <% if order.special_instructions!=nil %>
+                      <p><%= order.special_instructions %></p>
+
+                    <%end%>
+
+                    <%unless order.special_instructions.present? %>
+
+                      <% unless  Dir[Rails.root.join('public', 'attachment_1s', "#{order.client.id}")].present?%>
+                        <%unless Dir[Rails.root.join('public', 'attachment_2s', "#{order.client.id}")].present? %>
+                          <%unless Dir[Rails.root.join('public', 'attachment_3s', "#{order.client.id}")].present?%>
+                            <%unless  Dir[Rails.root.join('public', 'attachment_4s', "#{order.client.id}")].present? %>
+                              <%unless  Dir[Rails.root.join('public', 'attachment_5s', "#{order.client.id}")].present?%>
+                                <%unless Dir[Rails.root.join('public', 'attachment_6s', "#{order.client.id}")].present?%>
+
+                                  <p>Not provided</p>
+                                <%end%><%end%><%end%><%end%><%end%><%end%>
+                    <%end%>
+
+
+                    <% if Dir[Rails.root.join('public', 'attachment_1s', "#{order.client.id}")].present?%>
+
+                      <p><%if  order.client.attachment_1_file_name.present? %> <%= order.client.attachment_1_file_name %> <%= link_to "(view)", order.client.attachment_1.url, :target => "blank" %> <%end%><%end%></p>
+
+                    <% if Dir[Rails.root.join('public', 'attachment_2s', "#{order.client.id}")].present?%>
+
+                      <p><%if  order.client.attachment_2_file_name.present? %><%= order.client.attachment_2_file_name %> <%= link_to "(view)", order.client.attachment_2.url, :target => "blank" %> <%end%><%end%></p>
+
+                    <% if Dir[Rails.root.join('public', 'attachment_3s', "#{order.client.id}")].present?%>
+
+                      <p><%if  order.client.attachment_3_file_name.present? %><%= order.client.attachment_3_file_name %> <%= link_to "(view)", order.client.attachment_3.url, :target => "blank" %> <%end%><%end%></p>
+                    <% if Dir[Rails.root.join('public', 'attachment_4s', "#{order.client.id}")].present?%>
+
+                      <p><%if  order.client.attachment_4_file_name.present? %><%= order.client.attachment_4_file_name %> <%= link_to "(view)", order.client.attachment_4.url, :target => "blank" %> <%end%><%end%></p>
+                    <% if Dir[Rails.root.join('public', 'attachment_5s', "#{order.client.id}")].present?%>
+
+                      <p><%if  order.client.attachment_5_file_name.present? %><%= order.client.attachment_5_file_name %> <%= link_to "(view)", order.client.attachment_5.url, :target => "blank" %> <%end%><%end%></p>
+                    <% if Dir[Rails.root.join('public', 'attachment_6s', "#{order.client.id}")].present?%>
+
+                      <p><%if  order.client.attachment_6_file_name.present? %><%= order.client.attachment_6_file_name %> <%= link_to "(view)", order.client.attachment_6.url, :target => "blank" %> <%end%><%end%></p>
+
+
+
+                    <h3>Attachments</h3>
+                    <!-- <ul style="list-style:none; margin:0px; font-size:11px;">
+                      </ul> -->
+
+                    <% unless  Dir[Rails.root.join('public', 'attachment_1s', "#{order.id}")].present?%>
+                      <%unless Dir[Rails.root.join('public', 'attachment_2s', "#{order.id}")].present? %>
+                        <%unless Dir[Rails.root.join('public', 'attachment_3s', "#{order.id}")].present?%>
+                          <%unless  Dir[Rails.root.join('public', 'attachment_4s', "#{order.id}")].present? %>
+                            <%unless  Dir[Rails.root.join('public', 'attachment_5s', "#{order.id}")].present?%>
+                              <%unless Dir[Rails.root.join('public', 'attachment_6s', "#{order.id}")].present?%>
+                                <%unless Dir[Rails.root.join('public', 'order_attachment_1s', "#{order.id}")].present?%>
+                                  <%unless Dir[Rails.root.join('public', 'order_attachment_2s', "#{order.id}")].present?%>
+
+                                    <p>Not provided</p>
+                                  <%end%><%end%><%end%><%end%><%end%><%end%><%end%><%end%>
+
+                    <p><% if Dir[Rails.root.join('public', 'order_attachment_1s', "#{order.id}")].present?%> <%if order.order_attachment_1_file_name.present?%><%=order.order_attachment_1_file_name%>&nbsp;&nbsp;<%= link_to "(view)", order.order_attachment_1.url, :target => "blank" %>&nbsp;&nbsp;<%= link_to "(download)",:action=>'download', :path=>order.order_attachment_1.url%><%end%><%end%></p>
+
+                    <p><% if Dir[Rails.root.join('public', 'attachment_1s', "#{order.id}")].present?%><% if  order.attachment_1_file_name.present? %><%=order.attachment_1_file_name%>&nbsp;&nbsp;<%= link_to "(view)", order.attachment_1_file_url, :target => "blank" %>&nbsp;&nbsp;<%= link_to "(download)",:action=>'download', :path=>order.attachment_1_file_url%><%end%><%end%></p>
+
+                    <p><% if Dir[Rails.root.join('public', 'order_attachment_2s', "#{order.id}")].present?%><%if order.order_attachment_2_file_name.present?%><%=order.order_attachment_2_file_name%>&nbsp;&nbsp;<%= link_to "(view)", order.order_attachment_2.url, :target => "blank" %>&nbsp;&nbsp;<%= link_to "(download)",:action=>'download', :path=>order.order_attachment_2.url%><%end%><%end%></p>
+
+                    <p><% if Dir[Rails.root.join('public', 'attachment_2s', "#{order.id}")].present?%><% if  order.attachment_2_file_name.present? %><%=order.attachment_2_file_name%>&nbsp;&nbsp;<%= link_to "(view)", order.attachment_2_file_url, :target => "blank" %>&nbsp;&nbsp;<%= link_to "(download)",:action=>'download', :path=>order.attachment_2_file_url%><%end%><%end%></p>
+
+                    <p><% if Dir[Rails.root.join('public', 'order_attachment_3s', "#{order.id}")].present?%><%if order.order_attachment_3_file_name.present?%><%=order.order_attachment_3_file_name%>&nbsp;&nbsp;<%= link_to "(view)", order.order_attachment_3.url, :target => "blank" %>&nbsp;&nbsp;<%= link_to "(download)",:action=>'download', :path=>order.order_attachment_3.url%><%end%><%end%></p>
+
+                    <p><% if Dir[Rails.root.join('public', 'attachment_3s', "#{order.id}")].present?%><% if  order.attachment_3_file_name.present? %><%=order.attachment_3_file_name%>&nbsp;&nbsp;<%= link_to "(view)", order.attachment_3_file_url, :target => "blank" %>&nbsp;&nbsp;<%= link_to "(download)",:action=>'download', :path=>order.attachment_3_file_url%><%end%><%end%></p>
+
+                    <p><% if Dir[Rails.root.join('public', 'order_attachment_4s', "#{order.id}")].present?%><%if order.order_attachment_4_file_name.present?%><%=order.order_attachment_4_file_name%>&nbsp;&nbsp;<%= link_to "(view)", order.order_attachment_4.url, :target => "blank" %>&nbsp;&nbsp;<%= link_to "(download)",:action=>'download', :path=>order.order_attachment_4.url%><%end%><%end%></p>
+
+                    <p><% if Dir[Rails.root.join('public', 'attachment_4s', "#{order.id}")].present?%><% if  order.attachment_4_file_name.present? %><%=order.attachment_4_file_name%>&nbsp;&nbsp;<%= link_to "(view)", order.attachment_4_file_url, :target => "blank" %>&nbsp;&nbsp;<%= link_to "(download)",:action=>'download', :path=>order.attachment_4_file_url%><%end%><%end%></p>
+
+                    <p><% if Dir[Rails.root.join('public', 'order_attachment_5s', "#{order.id}")].present?%><%if order.order_attachment_5_file_name.present?%><%=order.order_attachment_5_file_name%>&nbsp;&nbsp;<%= link_to "(view)", order.order_attachment_5.url, :target => "blank" %>&nbsp;&nbsp;<%= link_to "(download)",:action=>'download', :path=>order.order_attachment_5.url%><%end%><%end%></p>
+
+                    <p><% if Dir[Rails.root.join('public', 'attachment_5s', "#{order.id}")].present?%><% if  order.attachment_5_file_name.present? %><%=order.attachment_5_file_name%>&nbsp;&nbsp;<%= link_to "(view)", order.attachment_5_file_url, :target => "blank" %>&nbsp;&nbsp;<%= link_to "(download)",:action=>'download', :path=>order.attachment_5_file_url%><%end%><%end%></p>
+
+                    <p><% if Dir[Rails.root.join('public', 'order_attachment_6s', "#{order.id}")].present?%><%if order.order_attachment_6_file_name.present?%><%=order.order_attachment_6_file_name%>&nbsp;&nbsp;<%= link_to "(view)", order.order_attachment_6.url, :target => "blank" %>&nbsp;&nbsp;<%= link_to "(download)",:action=>'download', :path=>order.order_attachment_6.url%><%end%><%end%></p>
+
+                    <p><% if Dir[Rails.root.join('public', 'attachment_6s', "#{order.id}")].present?%><% if  order.attachment_6_file_name.present? %><%=order.attachment_6_file_name%>&nbsp;&nbsp;<%= link_to "(view)", order.attachment_6_file_url, :target => "blank" %>&nbsp;&nbsp;<%= link_to "(download)",:action=>'download', :path=>order.attachment_6_file_url%><%end%><%end%></p>
+
+
+                  </div>
+                  <div class="clr"></div>
+
+                </div>
+                <b class="xbottom"><b class="xb4"></b><b class="xb3"></b>
+                  <b class="xb2"></b><b class="xb1"></b></b>
+              </div>
+            </div>
+
+          </div>
+
+
+        <% end %>
+        </tbody>
+      </table>
+      <script type="text/javascript">
+        initSortTable('myTable',Array('N','S','S','S','S'));
+      </script>
+      <%= will_paginate @orders %>
+    </div>
+  </div>
+
+</div>

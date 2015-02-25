@@ -1,0 +1,49 @@
+<% form_for :order, :url => "/client/orders/update/#{@order.id}?redirect_to=#{request.url}",:html => {:multipart => true,:name=>"new_order_form",:onSubmit=>"return client_order_edit()"} do |f| -%>
+    <% totfile=""
+       filecnt = -1
+    %>
+
+    <% if filecnt!=6 %>
+        <div class="fileUpload btn btn-primary">
+          <a href="Javascript:addFileForOrdersEdit();" class="upload"><span>Upload Docs</span></a>
+        </div>
+    <% end %>
+
+    <p class="formright"  style="text-align:left">
+      <!--(If uploading more than one attachment, <b>please label</b> 1 of 3, 2 of 3, etc)<br/>-->
+      <span id="attachment_count-error" style="color:#FF0000"></span>
+    </p>
+    <div class="clearfix"></div>
+
+    <div class="upload-list">
+        <%= orders_upload_docs(1, f) %>
+        <% totfile << "1" if orders_upload_docs_count(1) %>
+        <%= orders_upload_docs(2, f) %>
+        <% totfile << ",2" if orders_upload_docs_count(2) %>
+        <%= orders_upload_docs(3, f) %>
+        <% totfile << ",3" if orders_upload_docs_count(3) %>
+        <%= orders_upload_docs(4, f) %>
+        <% totfile << ",4" if orders_upload_docs_count(4) %>
+        <%= orders_upload_docs(5, f) %>
+        <% totfile << ",5" if orders_upload_docs_count(5) %>
+        <%= orders_upload_docs(6, f) %>
+        <% totfile << ",6" if orders_upload_docs_count(6) %>
+        <div class="clearfix"></div>
+
+        <input type="hidden" name="fileName1" value="<%=@order.attachment_1_file_name %>"/>
+        <input type="hidden" name="fileUrl1" value="<%=@order.attachment_1_file_url %>"/>
+        <input type="hidden" name="fileName2" value="<%=@order.attachment_2_file_name %>"/>
+        <input type="hidden" name="fileUrl2" value="<%=@order.attachment_2_file_url %>"/>
+        <input type="hidden" name="fileName3" value="<%=@order.attachment_3_file_name %>"/>
+        <input type="hidden" name="fileUrl3" value="<%=@order.attachment_3_file_url %>"/>
+        <input type="hidden" name="fileName4" value="<%=@order.attachment_4_file_name %>"/>
+        <input type="hidden" name="fileUrl4" value="<%=@order.attachment_4_file_url %>"/>
+        <input type="hidden" name="fileName5" value="<%=@order.attachment_5_file_name %>"/>
+        <input type="hidden" name="fileUrl5" value="<%=@order.attachment_5_file_url %>"/>
+        <input type="hidden" name="fileName6" value="<%=@order.attachment_6_file_name %>"/>
+        <input type="hidden" name="fileUrl6" value="<%=@order.attachment_6_file_url %>"/>
+        <div id="ItemFiles"></div>
+    </div>
+    <input type="hidden" name="totfile" id="totfile" value="<%=totfile %>"/>
+    <div style="clear:both;"></div>
+<% end %>

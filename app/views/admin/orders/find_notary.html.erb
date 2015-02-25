@@ -1,0 +1,115 @@
+<%= stylesheet_link_tag "notaryfly", "rating" %>
+<div class="block" id="block-tables">
+  <div class="secondary-navigation">
+    <ul>
+      <li class="active"><a href="/admin/orders/open_order">Open Order</a></li>
+      <li class="first"><a href="/admin/orders/index">Completed Order</a></li>
+      <li class="first"><a href="/admin/orders/pending_order">Pending Orders/Notary</a></li>
+      <li class="first"><a href="/admin/orders/cancelled_order">Cancelled Orders</a></li>
+      <li class="first"><a href="/admin/orders/accounting">Accounting</a></li>
+    </ul>
+    <div class="clear"></div>
+  </div>
+  <div class="content">
+    <h2>Find Notary</h2>
+    <h4>Notary Locator</h4>
+    <div id="alert_notary_msg"></div>
+    <% form_for :notary_search, :url => {:action => "find_notary", :id => @order.id}, :html => {:name => "find_notary"} do |f| -%>
+      <div class="<%= flash[:error] ? 'error' : 'success' %>"><%= flash[:error] || flash[:notice] %></div>
+      <p class="<%= @notaries_count == 0 ? 'zero' : 'non-zero' %>"><%= pluralize(@notaries_count, "notary") %> within <%= @miles %> miles</p>
+      <p>
+        <label>Zip Code:</label>
+        <%= text_field :notary_search, :zip_code, :disabled => 'disabled', :value => @order.signing_location_zip_code, :class => "formmidfield" %>
+        <label>within:</label>
+        <%= select_tag "notary_search_radius", options_for_select(within_miles, @miles), {:name => "order[search_radius]", :class => "formsmfield"} %>
+        <label>Mile Radius</label>
+        <a href="#" id="search_button" style="color:white; padding:5px; margin-left:10px; text-decoration: none"><%= submit_tag("Find Notary!") %></a>
+      </p>
+
+      <div>
+        <p>
+        <ul id="zip_form" style="list-style:none; display:inline;">
+          <li>Additional Criteria:</li>
+          <li><%= check_box :notary_search, :additional_language, :onClick => "find_note_add_lang()", :checked => @check_additional_language %>
+            Additional Language
+          </li>
+          <li id="languages" style="<%= @dropdown_language %>">
+            <%= select_tag "order_required_language", options_for_select([["English", "English"], ["Spanish", "Spanish"], ["Arabic", "Arabic"], ["Armenian", "Armenian"], ["ASL", "ASL"], ["Dutch", "Dutch"], ["Chinese", "Chinese"], ["French", "French"], ["Filipino", "Filipino"], ["German", "German"], ["Greek", "Greek"], ["Herbrew", "Hebrew"], ["Hindu", "Hindu"], ["Italian", "Italian"], ["Japanese", "Japanese"], ["Korean", "Korean"], ["Manderin", "Manderin"], ["Persian", "Persian"], ["Polish", "Polish"], ["Portugese", "Portugese"], ["Romanian", "Romanian"], ["Russian", "Russian"], ["Swedish", "Swedish"], ["Thai", "Thai"], ["Turkish", "Turkish"], ["Vietnamese", "Vietnamese"]], @selected_lang), {:name => "order[required_language]", :style => ""} %>
+          </li>
+          <li><%= check_box :notary_search, :email_capable, :checked => @check_email_capable %> ESIGN</li>
+          <li><%= check_box :notary_search, :reverse_mortgage, :checked => @check_reverse_mortgage%> Reverse
+            Mortgage
+          </li>
+
+          <li><%= check_box :notary_search, :attorney, :checked => @check_attorney  %> Attorney</li>
+        </ul>
+        </p>
+      </div>
+    <% end %>
+    <div style="text-align:center">
+      <div class="clr"></div>
+      <div id="testid"><p></p></div>
+      <div id="load_msg" style="color:red;display:none">Please Wait.........</div>
+      <table class="table" id="notary_table">
+        <colgroup>
+          <col id="col1_1"/>
+          <col id="col1_2"/>
+          <col id="col1_3"/>
+          <col id="col1_4"/>
+          <col id="col1_5"/>
+          <col id="col1_6"/>
+          <col id="col1_7"/>
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>City/State</th>
+            <th>Cell Phone #</th>
+            <th>Distance from Signing</th>
+            <th>Fee</th>
+            <th>Offer Notary</th>
+            <th>Assign Notary</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @notaries.empty? %>
+            <tr>
+              <td colspan="7">No notaries found</td>
+            </tr>
+          <% else %>
+            <% @notaries.each do |notary| %>
+              <tr>
+                <td>
+    <%#= link_to "#{notary.first_name} #{notary.last_name}", {:controller => "admin/notaries", :action => :notary_details, :id => notary.id, :order_id => params[:id]} %>
+                  <%= link_to_remote "#{notary.first_name} #{notary.last_name}", {:update => "notary_profile", :url => {:controller => "admin/notaries", :action => :notary_details, :id => notary.id, :order_id => params[:id], :order => params[:order], :notary_search => params[:notary_search], :page => params[:page]}}, :onclick => "$('#lightbox-bg').show()" %>
+                  <br/> (<%= notary_completed_orders(notary) %>)<br/>
+                  <%= image_tag "notary_star_rating-30.png" %> <%= notary_star_rating(notary) %>
+                </td>
+                <td><%= notary_city_state(notary) %></td>
+                <td><%= notary_phone(notary) %></td>
+                <td><%= notary_distance(notary) %></td>
+                <td><%= link_to_remote "$#{notary.fee}", {:update => "notary_profile", :url => {:controller => "admin/notaries", :action => :notary_details, :id => notary.id, :order_id => params[:id], :order => params[:order], :notary_search => params[:notary_search], :page => params[:page]}}, :onclick => "$('#lightbox-bg').show()"%></td>
+                <td><%= alert_notary(notary) %><br/>
+								<span id=<%= "alert_count_#{notary.id}" %>></span>
+								<% @mail_count = MultipleNotary.find_by_notary_id_and_order_id(notary.id, params[:id]) %>
+                  <% unless @mail_count.nil? %>
+                    <% if @mail_count.mail_count > 0 %>
+                      <span id=<%= "initial_count_#{notary.id}" %>>Message Sent (<%= @mail_count.mail_count %>)</span>
+                    <% end %>
+                  <% end %>
+                </td>
+                <td>
+    <%#= link_to_remote (image_tag "assign-notary.png"), {:url => {:action => :assign_notary, :order_id => params[:id], :notary_id => notary.id}.merge!(params), :confirm => "Are you sure you want to assign this Notary?"} %>
+                  <%= link_to (image_tag "assign-notary.png"), {:action => :assign_notary, :order_id => params[:id], :notary_id => notary.id} %>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <%= (will_paginate @notaries).to_s.gsub(/<a(.*?)href="([^"]+)"/, '<a\1href="\2&' + {:order => params[:order], :notary_search => params[:notary_search]}.to_query + '"') %>
+  </div>
+</div>
+
+

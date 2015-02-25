@@ -1,0 +1,7 @@
+<div id="orders_navigation" class="span-24 last tab_navigation client_tab">
+	<ul class="inline_list">
+        <li><a href="/client/orders" <% if params[:controller] == "client/orders" and (params[:action] == "index" || params[:action] == "order_detail" )%> class="active" <% end %>><span>Open Orders</span></a></li>
+		<li><a href="/client/orders/history" <% if params[:controller] == "client/orders" and params[:action] == "history" %> class="active" <% end %>><span>Order History <% if @feedback_needed_count.size > 0 %>(<%= @feedback_needed_count.size %>)<% end %></span></a></li>
+		<li><a href="/client/messages" <% if params[:controller] == "client/messages" %> class="active" <% end %>><span>My Messages (<%= @unread_messages.size %>)</span></a></li>
+	</ul>		
+</div>

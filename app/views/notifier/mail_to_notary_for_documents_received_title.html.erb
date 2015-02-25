@@ -1,0 +1,32 @@
+
+
+
+
+
+<p style="margin-bottom:6px;"><strong>This message was sent from a notification-only email address that does not accept incoming email. Please do not reply to this message.</strong></p>
+<% @notary = Notary.find(@order.notary_id) %>
+
+<p style="margin-bottom:6px;">Dear <%= @notary.first_name.capitalize%>  <%= @notary.last_name.capitalize %>, </p>
+<p style="margin-bottom:6px;">The loan documents have been RECEIVED by the Title/Escrow department for the following Order:</p>
+
+<table width="80%" >
+
+<tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signer/Client:</div></td><td><div class="title2"><%= @order.borrower_1_first_name.capitalize %> <%= @order.borrower_1_last_name.capitalize %></div></td></tr>
+  
+	<tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">NF Order #:</div></td><td><div class="title2"> <%= @order.id %></div></td></tr>
+	<tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Escrow/Transaction #:</div></td><td><div class="title2"> <%= @order.loan_number %></div></td></tr>
+	<tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signing Date:</div></td><td><div class="title2"> <%= @order.signing_date.strftime("%B %d, %Y") %></div></td></tr>
+	<tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signing Time:</div></td><td><div class="title2"> <%= @order.signing_time %></div></td></tr>
+	<tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Type of Signing:</div></td><td><div class="title2"> <%=@order.loan_type%></div></td></tr>
+	<tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Docs Sent via:</div></td><td><div class="title2"> <%=@order.delivery_options%></div></td></tr>
+	<tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Set of Documents:</div></td><td><div class="title2"> <%= @order.sets_of_docs %></div></td></tr>
+	
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signing Location:</div></td><td><div class="title2"> <%=@order.signing_location_address%></div></td></tr>
+<tr><td><div class="title1" style="font-weight:bold;">&nbsp; </div></td><td><div class="title2"> <%=@order.signing_location_city%>,&nbsp;&nbsp;<%=@order.signing_location_state%>&nbsp;&nbsp;<%=@order.signing_location_zip_code%></div></td></tr>
+
+</table>
+<div style="float:left;width:100%;">
+<p style="margin-bottom:6px;">This order was filled through NotaryFly.com. </p>
+
+<p style="margin-bottom:6px;"><strong>For “Order Status” updates, visit <a href="http://www.notaryfly.com/">NotaryFly.com</a><strong></p>
+</div>

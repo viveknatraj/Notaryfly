@@ -1,0 +1,97 @@
+body {
+	background: #FFF url(../images/sub_bg.jpg) repeat-x;
+	font-family: "Trebuchet MS", "MS Trebuchet", Helvetica, Arial, sans-serif;
+}
+
+#home_header {
+	background-color:#252423;
+	color:#FFF;
+	padding-top:15px;
+}
+
+ul.inline_list {
+	margin:0px 0px 10px 0px;
+}
+
+ul.inline_list li {
+	list-style:none;
+	display:inline;
+	margin:0px 25px 0px 0px;
+}
+
+#home_navigation {
+	text-align:right;
+	margin-top:60px;
+}
+
+#home_navigation ul li a {
+	color:#f5e8c0;
+	font-size:15px;
+	text-decoration:none;
+}
+
+#home_navigation ul li a:hover {
+	text-decoration:underline;
+}
+
+
+
+#footer {
+	margin-top:55px;
+}
+
+#footer ul li{
+	margin:0px 3px 0px 3px;
+}
+
+#copyright p {
+	text-align:right;
+	margin:0px 25px 0px 0px;
+}
+
+div.home_content {
+	background: url(../images/home_content_bg.jpg) no-repeat;	
+	margin:125px 0px 0px 25px;
+	padding-left:25px;
+}
+
+label.additional {
+	color:#7c9dad;
+}
+
+.form {
+	margin-top:25px;
+}
+
+.form label {
+	margin-right:10px;
+	color:#595959;
+	font-size:11px;
+}
+
+.form input {
+	height:20px;
+}
+
+.form input.long {
+	width:450px;
+}
+
+.form input.small {
+	width:188px;
+	margin-right:5px;
+}
+
+.form input.tiny {
+	width:57px;
+	margin-left:5px;
+	margin-right:5px;
+}
+
+.form input.tiny_last {
+	margin-right:120px;
+}
+
+.form input.small_long {
+	margin-right:239px;
+}

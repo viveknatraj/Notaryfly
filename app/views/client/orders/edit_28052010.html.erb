@@ -1,0 +1,409 @@
+<%= render :partial => "/client/header" %>
+<%= render :partial => "navigation" %>
+<%= javascript_include_tag "file_tags" %>
+<div id="order_form" class="content_container span-16 last">
+	<h2>Edit Order</h2>
+	<h3><strong>Order Information</strong></h3>
+        <div id="new_order" class="new_order_container form span-16 append-2 last" style="border:none;margin-top:0px;padding-top: 0px;">
+         <div class="xsnazzy">
+          <b class="xtop"><b class="xb1"></b><b class="xb2 color_a">
+          </b><b class="xb3 color_a"></b><b class="xb4 color_a"></b></b>
+          <div class="xboxcontent" style="padding:10px;">
+		<% form_for :order, :url => "/client/orders/update/#{@order.id}",:html => {:multipart => true,:name=>"new_order_form",:onSubmit=>"return client_order_edit()"} do |f| -%>
+
+            <div class="labels wholeform">
+             <% if @notary %> <p class="formagent"><label for="agent" >Notary Fee $:</label></p><% end %>
+              <% if @notary %><p class="formright"><%= f.text_field :order_notary_fee %></p><% end %>
+            </div>
+             <div class="labels wholeform">
+             <p class="formagent"><label for="agent" >Agent:</label></p>
+             <p class="formright"><%= f.select("agent_id", Agent.find(:all, :conditions => ["client_id = ?", @client.id]).collect {|p| [ p.broker_name, p.id ] }, { :include_blank => true }) %> <span><%= link_to "(add an agent)", :controller => "/client/brokers", :action => "new" %></span></p>
+            </div>
+             <div class="labels wholeform">
+             <p class="formagent"><label for="loan_number">*Loan/Escrow #:</label></p>
+             <p class="formright"><%= f.text_field :loan_number %></p>
+            </div>
+             <div class="labels wholeform">
+             <p class="formagent"><label for="signing_date">*Signing Date:</label></p>
+             <% if @order.signing_date %>
+				<p class="formright"><%= f.text_field :signing_date, :class => "datepicker", :value => @order.signing_date.strftime("%m/%d/%Y") %></p>
+			<% else %>
+				<p><%= f.text_field :signing_date, :class => "datepicker"  %></p>
+			<% end %>
+            </div>
+             <div class="labels wholeform">
+             <p class="formagent"><label for="signing_time">*Signing Time:</label></p>
+             <p class="formright"><%= f.select(:signing_time, time_dropdown) %></p>
+            </div>
+             <div class="labels wholeform">
+             <p class="formagent"><label for="loan_type">*Loan Type:</label></p>
+             <p class="formright"><%= select_tag "order_loan_type", options_for_select([["Select one" , "" ],["Refinance" , "Refinance" ], ["Reverse Mortgage" , "Reverse Mortgage" ], ["Purchase" , "Purchase" ], ["Sellers Package" , "Sellers Package" ], ["HELOC" , "HELOC" ], ["Grant Deed Only" , "Grant Deed Only" ], ["Application" , "Application" ], ["Power of Attorney" , "Power of Attorney" ], ["Life Settlement" , "Life Settlement" ], ["Other" , "Other" ]], @order.loan_type), {:name => "order[loan_type]"} %></p>
+            </div>
+            <div class="labels wholeform">
+             <p class="formagent"><label for="sets_of_docs">*Sets of Documents:</label></p>
+             <p class="formright"><%= select_tag "order_sets_of_docs", options_for_select([["1" , "1" ], ["2" , "2" ], ["3" , "3" ], ["4" , "4" ], ["5" , "5" ], ["6" , "6" ]], @order.sets_of_docs), {:name => "order[sets_of_docs]"} %></p>
+            </div>
+             <div class="labels wholeform">
+             <p class="formagent"><label for="delivery_options">*Delivery Options:</label></p>
+             <p class="formright"><%= select_tag "order_delivery_options", options_for_select([["Select one" , "" ],["Overnight to Notary" , "Overnight to Notary" ], ["Overnight to Borrower" , "Overnight to Borrower" ], ["Email to Notary" , "Email to Notary" ], ["Email to Borrower" , "Email to Borrower" ], ["Courier to Notary" , "Courier to Notary" ], ["Courier to Borrower" , "Courier to Borrower" ], ["Notary Pick Up" , "Notary Pick Up" ], ["Loan Office Will Bring" , "Loan Office Will Bring" ], ["Borrower Has Docs" , "Borrower Has Docs" ], ["Other" , "Other" ]], @order.delivery_options), {:name => "order[delivery_options]",:onchange=>"order_delivery_options_display()"} %></p>
+            </div>
+            <div id="shipped_via" <% if @order.delivery_options=="Overnight to Notary" or @order.delivery_options=="Overnight to Borrower"  %> style="display:inline;"<%else%>style="display:none;"<%end%>>
+              <div class="labels wholeform">
+                <p class="formagent"><label for="shipped_via">Documents Shipped Via:</label></p>
+                <p class="formright"><%= select_tag "order_shipped_via", options_for_select([["Select one" , "" ],["FedEx" , "FedEx" ], ["UPS" , "UPS" ], ["GSO" , "GSO" ], ["OnTrac" , "OnTrac" ]], @order.shipped_via), {:name => "order[shipped_via]"} %></p>
+              </div>
+              </div>
+            <div id="tracking_no" <% if @order.delivery_options=="Overnight to Notary" or @order.delivery_options=="Overnight to Borrower"  %> style="display:inline;"<%else%>style="display:none;"<%end%> >
+              <div class="labels wholeform">
+                <p class="formagent"><label for="tracking_number">Tracking Number:</label></p>
+                <p class="formright"><%= f.text_field :tracking_number %></p>
+              </div>
+              </div>
+            <div class="labels wholeform">
+             <p class="formagent"><label for="required_language">*Required Language:</label></p>
+             <p class="formright"><%= select_tag "order_required_language", options_for_select([["English" , "English" ], ["Spanish" , "Spanish" ], ["Arabic" , "Arabic" ], ["Armenian" , "Armenian" ], ["ASL" , "ASL" ], ["Dutch" , "Dutch" ], ["Chinese" , "Chinese" ], ["French" , "French" ], ["Filipino" , "Filipino" ], ["German" , "German" ], ["Greek" , "Greek" ], ["Herbrew" , "Hebrew" ], ["Hindu" , "Hindu" ], ["Italian" , "Italian" ], ["Japanese" , "Japanese" ], ["Korean" , "Korean" ], ["Manderin" , "Manderin" ], ["Persian" , "Persian" ], ["Polish" , "Polish"], ["Portugese" , "Portugese" ], ["Romanian" , "Romanian" ], ["Russian" , "Russian" ], ["Swedish" , "Swedish" ], ["Thai" , "Thai" ], ["Turkish" , "Turkish" ], ["Vietnamese" , "Vietnamese" ]], @order.required_language), {:name => "order[required_language]"} %></p>
+            </div>
+            <div class="labels wholeform">
+             <p class="formagent"><label for="attorney_required">*Attorney Required:</label></p>
+             <p class="formright"><%= select_tag "order_attorney_required", options_for_select([["No" , "No" ],["Yes" , "Yes" ]], @order.attorney_required), {:name => "order[attorney_required]"} %></p>	
+            </div>
+            <div class="labels wholeform">
+                <p class="formagent"><label for="title_producer_required">*Title Producer Required:</label></p>
+                <p class="formright"><%= select_tag "order_title_producer_required", options_for_select([["No" , "No" ],["Yes" , "Yes" ]], @order.title_producer_required), {:name => "order[title_producer_required]"} %></p>
+              </div>
+ <div class="clr"></div>
+            <h3><strong>Signing Party Information</strong></h3>
+ <div class="labels wholeform">
+                <p class="formagent"><label for="borrower_1_first_name">*Signer #1 First Name:</label></p>
+                <p class="formright"><%= f.text_field :borrower_1_first_name %></p>
+              </div>
+             <div class="labels wholeform">
+                <p class="formagent"><label for="borrower_1_last_name">*Signer #1 Last Name:</label></p>
+                <p class="formright"><%= f.text_field :borrower_1_last_name %></p>
+              </div>
+             <div class="labels wholeform">
+                <p class="formagent"><label for="borrower_2_work_phone">Work Phone:</label></p>
+                <p class="formright"><%= f.text_field :borrower_1_work_phone %> <label for="borrower_1_extension">Ext.</label> <%= f.text_field :borrower_1_extension, :class => "tiny",:maxlength=>3,:onkeyup=>"validateNum('order_borrower_1_extension')" %></p>
+              </div>
+             <div class="labels wholeform">
+                <p class="formagent"><label for="borrower_1_home_phone">*Home Phone:</label></p>
+                <p class="formright"><%= f.text_field :borrower_1_home_phone %></p>
+              </div>
+            <div class="labels wholeform">
+                <p class="formagent"><label for="borrower_1_mobile_phone">Mobile Phone:</label></p>
+                <p class="formright"><%= f.text_field :borrower_1_mobile_phone %></p>
+                <% if @order.borrower_2_first_name.length!=0 or @order.borrower_2_last_name.length!=0 or @order.borrower_2_work_phone.length!=0 or @order.borrower_2_extension.length!=0 or @order.borrower_2_home_phone.length!=0 or @order.borrower_2_mobile_phone.length!=0  %>
+                <div id="add" style="cursor: pointer;"><%= image_tag("remove_signer.jpg",:id=>"addsigner",:onclick=>"addSigner2()") %></div>
+                <%else%>
+                <div id="add" style="cursor: pointer;"><%= image_tag("add_signer.jpg",:id=>"addsigner",:onclick=>"addSigner2()") %></div>
+                <%end%>
+              </div>
+            <div id="signer2" <% if @order.borrower_2_first_name.length!=0 or @order.borrower_2_last_name.length!=0 or @order.borrower_2_work_phone.length!=0 or @order.borrower_2_extension.length!=0 or @order.borrower_2_home_phone.length!=0 or @order.borrower_2_mobile_phone.length!=0  %>style="display:inline" <%else%>style="display:none"<%end%>>
+            <div class="labels wholeform">
+                <p class="formagent"><label for="borrower_2_first_name">Signer #2 First Name:</label></p>
+                <p class="formright"><%= f.text_field :borrower_2_first_name %></p>
+              </div>
+            <div class="labels wholeform">
+                <p class="formagent"><label for="borrower_2_last_name">Signer #2 Last Name:</label></p>
+                <p class="formright"><%= f.text_field :borrower_2_last_name %></p>
+              </div>
+            <div class="labels wholeform">
+                <p class="formagent"><label for="borrower_2_work_phone">Work Phone:</label></p>
+                <p class="formright"><%= f.text_field :borrower_2_work_phone %> <label for="borrower_2_extension">Ext.</label> <%= f.text_field :borrower_2_extension, :class => "tiny",:maxlength=>3,:onkeyup=>"validateNum('order_borrower_2_extension')" %></p>
+              </div>
+            <div class="labels wholeform">
+                <p class="formagent"><label for="borrower_2_home_phone">Home Phone:</label></p>
+                <p class="formright"><%= f.text_field :borrower_2_home_phone %></p>
+              </div>
+            <div class="labels wholeform">
+                <p class="formagent"><label for="borrower_2_mobile_phone">Mobile Phone:</label></p>
+                <p class="formright"><%= f.text_field :borrower_2_mobile_phone %></p>
+              </div>
+            </div>
+            <div class="clr"></div>
+<h3><strong>Signing Location</strong></h3>
+<div class="labels wholeform">
+                <p class="formagent"><label for="signing_location_address">*Address:</label></p>
+                <p class="formright"><%= f.text_field :signing_location_address, :disabled => false %></p>
+              </div>
+<div class="labels wholeform">
+                <p class="formagent"><label for="signing_location_city">*City:</label></p>
+                <p class="formright"><%= f.text_field :signing_location_city, :disabled => false , :style => "width:85px; margin-left:2px; margin-right:5px;"%>
+				<label for="signing_location_state" >*State:</label>
+					<select name="order_signing_location_state" id="order_signing_location_state">
+						<option value="">Select State</option>
+						<option value="AL" <% if @order.signing_location_state == "AL" %>selected<% end %>>Alabama</option>
+						<option value="AK" <% if @order.signing_location_state == "AK" %>selected<% end %>>Alaska</option>
+						<option value="AZ" <% if @order.signing_location_state == "AZ" %>selected<% end %>>Arizona</option>
+						<option value="AR" <% if @order.signing_location_state == "AR" %>selected<% end %>>Arkansas</option>
+						<option value="CA" <% if @order.signing_location_state == "CA" %>selected<% end %>>California</option>
+						<option value="CO" <% if @order.signing_location_state == "CO" %>selected<% end %>>Colorado</option>
+						<option value="CT" <% if @order.signing_location_state == "CT" %>selected<% end %>>Connecticut</option>
+						<option value="DE" <% if @order.signing_location_state == "DE" %>selected<% end %>>Delaware</option>
+						<option value="DC" <% if @order.signing_location_state == "DC" %>selected<% end %>>District of Columbia</option>
+						<option value="FL" <% if @order.signing_location_state == "FL" %>selected<% end %>>Florida</option>
+						<option value="GA" <% if @order.signing_location_state == "GA" %>selected<% end %>>Georgia</option>
+						<option value="HI" <% if @order.signing_location_state == "HI" %>selected<% end %>>Hawaii</option>
+						<option value="ID" <% if @order.signing_location_state == "ID" %>selected<% end %>>Idaho</option>
+						<option value="IL" <% if @order.signing_location_state == "IL" %>selected<% end %>>Illinois</option>
+						<option value="IN" <% if @order.signing_location_state == "IN" %>selected<% end %>>Indiana</option>
+						<option value="IA" <% if @order.signing_location_state == "IA" %>selected<% end %>>Iowa</option>
+						<option value="KS" <% if @order.signing_location_state == "KS" %>selected<% end %>>Kansas</option>
+						<option value="KY" <% if @order.signing_location_state == "KY" %>selected<% end %>>Kentucky</option>
+						<option value="LA" <% if @order.signing_location_state == "LA" %>selected<% end %>>Louisiana</option>
+						<option value="ME" <% if @order.signing_location_state == "ME" %>selected<% end %>>Maine</option>
+						<option value="MD" <% if @order.signing_location_state == "MD" %>selected<% end %>>Maryland</option>
+						<option value="MA" <% if @order.signing_location_state == "MA" %>selected<% end %>>Massachusetts</option>
+						<option value="MI" <% if @order.signing_location_state == "MI" %>selected<% end %>>Michigan</option>
+						<option value="MN" <% if @order.signing_location_state == "MN" %>selected<% end %>>Minnesota</option>
+						<option value="MS" <% if @order.signing_location_state == "MS" %>selected<% end %>>Mississippi</option>
+						<option value="MO" <% if @order.signing_location_state == "MO" %>selected<% end %>>Missouri</option>
+						<option value="MT" <% if @order.signing_location_state == "MT" %>selected<% end %>>Montana</option>
+						<option value="NE" <% if @order.signing_location_state == "NE" %>selected<% end %>>Nebraska</option>
+						<option value="NV" <% if @order.signing_location_state == "NV" %>selected<% end %>>Nevada</option>
+						<option value="NH" <% if @order.signing_location_state == "NH" %>selected<% end %>>New Hampshire</option>
+						<option value="NJ" <% if @order.signing_location_state == "NJ" %>selected<% end %>>New Jersey</option>
+						<option value="NM" <% if @order.signing_location_state == "NM" %>selected<% end %>>New Mexico</option>
+						<option value="NY" <% if @order.signing_location_state == "NY" %>selected<% end %>>New York</option>
+						<option value="NC" <% if @order.signing_location_state == "NC" %>selected<% end %>>North Carolina</option>
+						<option value="ND" <% if @order.signing_location_state == "ND" %>selected<% end %>>North Dakota</option>
+						<option value="OH" <% if @order.signing_location_state == "OH" %>selected<% end %>>Ohio</option>
+						<option value="OK" <% if @order.signing_location_state == "OK" %>selected<% end %>>Oklahoma</option>
+						<option value="OR" <% if @order.signing_location_state == "OR" %>selected<% end %>>Oregon</option>
+						<option value="PA" <% if @order.signing_location_state == "PA" %>selected<% end %>>Pennsylvania</option>
+						<option value="RI" <% if @order.signing_location_state == "RI" %>selected<% end %>>Rhode Island</option>
+						<option value="SC" <% if @order.signing_location_state == "SC" %>selected<% end %>>South Carolina</option>
+						<option value="SD" <% if @order.signing_location_state == "SD" %>selected<% end %>>South Dakota</option>
+						<option value="TN" <% if @order.signing_location_state == "TN" %>selected<% end %>>Tennessee</option>
+						<option value="TX" <% if @order.signing_location_state == "TX" %>selected<% end %>>Texas</option>
+						<option value="UT" <% if @order.signing_location_state == "UT" %>selected<% end %>>Utah</option>
+						<option value="VT" <% if @order.signing_location_state == "VT" %>selected<% end %>>Vermont</option>
+						<option value="VA" <% if @order.signing_location_state == "VA" %>selected<% end %>>Virginia</option>
+						<option value="WA" <% if @order.signing_location_state == "WA" %>selected<% end %>>Washington</option>
+						<option value="WV" <% if @order.signing_location_state == "WV" %>selected<% end %>>West Virginia</option>
+						<option value="WI" <% if @order.signing_location_state == "WI" %>selected<% end %>>Wisconsin</option>
+						<option value="WY" <% if @order.signing_location_state == "WY" %>selected<% end %>>Wyoming</option>
+					</select>
+				<label for="signing_location_zip_code">*Zip Code:</label>
+				<%= f.text_field :signing_location_zip_code, :class => "tiny", :disabled => false,:onkeyup=>"validateNum('order_signing_location_zip_code')",:maxlength=>5 %>
+			</p>
+              </div>
+<div class="clr"></div>
+<h3><strong>Special Instructions</strong></h3>
+<div class="labels wholeform">
+                <p class="formagent"></p>
+                <p class="formright">
+                  <div class="span-11 last fields">
+			<p><%= f.text_area :special_instructions, :value => @order.special_instructions, :style => "height:100px;" %></p>
+
+			<div class="span-11 last ">
+
+			
+			<p><label for="additional_documents" class="additional">Attach additional instructions or documents: (PDF, DOC, XTL, ETC)</label></p>
+			<ul style="list-style:none; margin:0px; font-size:11px;">
+
+			</ul>
+
+				<div style="padding-top:10px;">
+					<p><label for="additional_documents" class="additional">You may edit/add attachments below:</label></p>
+
+                                        
+                                        <% totfile="0"
+                                           filecnt = -1
+                                        %>
+                                        
+                                        <% if @order.order_attachment_1_file_name%>
+                                         
+                                        <p id="order[order_attachment_1]"><% if @order.order_attachment_1_file_name %>Edit <% totfile="1" %> <%  filecnt=filecnt+1 %><% else %> Add<% end %>: <%= f.file_field :order_attachment_1 %><% if @order.order_attachment_1_file_name %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Attachment 1: <%= @order.order_attachment_1_file_name %> <%= link_to "(view)", @order.order_attachment_1.url, :target => "blank" %> <%= link_to "(delete)", :action => "delete_attachment", :id => "1_"+@order.id.to_s %><% end %></p>
+
+                                      <%elsif @order.attachment_1_file_name!=nil and @order.attachment_1_file_name.length!=0%>
+                                         
+                                         
+                                          <p id="order[order_attachment_1]"><% if @order.attachment_1_file_name %>Edit<% totfile="1" %> <%  filecnt=filecnt+1 %><% else %> Add<% end %>: <%= f.file_field :order_attachment_1 %><% if @order.attachment_1_file_name %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Attachment 1: <%= @order.attachment_1_file_name %> <%= link_to "(view)", @order.attachment_1_file_url, :target => "blank" %> <a href="javascript:void(0)" onclick="javascript:removeFile('order[order_attachment_1]','1'); return false;">(delete)</a><% end %> </p>
+                                      <%else%>
+                                          Add : <%= f.file_field :order_attachment_1 %>
+                                           
+                                       <% end %>
+
+                                            <% if @order.order_attachment_2_file_name %><p><% if @order.order_attachment_2_file_name %>Edit<% totfile=totfile+",2" %> <%  filecnt=filecnt+1 %><% else %> Add<% end %>: <%= f.file_field :order_attachment_2 %><% if @order.order_attachment_2_file_name %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Attachment 2: <%= @order.order_attachment_2_file_name %> <%= link_to "(view)", @order.order_attachment_2.url, :target => "blank" %> <%= link_to "(delete)", :action => "delete_attachment", :id => "2_"+@order.id.to_s %><% end %> </p>
+                                          
+  <%elsif @order.attachment_2_file_name!=nil and @order.attachment_2_file_name.length!=0%>
+                                            
+                                            <p id="order[order_attachment_2]"><% if @order.attachment_2_file_name %>Edit<% totfile=totfile+",2" %> <%  filecnt=filecnt+1 %><% else %> Add<% end %>: <%= f.file_field :order_attachment_2 %><% if @order.attachment_2_file_name %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Attachment 2: <%= @order.attachment_2_file_name %> <%= link_to "(view)", @order.attachment_2_file_url, :target => "blank" %> <a href="javascript:void(0)" onclick="javascript:removeFile('order[order_attachment_2]','2'); return false;">(delete)</a><% end %> </p>
+                                            <% end %>
+
+                                            <% if @order.order_attachment_3_file_name %><p><% if @order.order_attachment_3_file_name %>Edit <% totfile=totfile+",3" %> <%  filecnt=filecnt+1 %><% else %> Add<% end %>: <%= f.file_field :order_attachment_3 %><% if @order.order_attachment_3_file_name %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Attachment 3: <%= @order.order_attachment_3_file_name %> <%= link_to "(view)", @order.order_attachment_3.url, :target => "blank" %> <%= link_to "(delete)", :action => "delete_attachment", :id => "3_"+@order.id.to_s %><% end %> </p>
+                                              
+  <%elsif @order.attachment_3_file_name!=nil and @order.attachment_3_file_name.length!=0%>
+                                           
+                                            <p id="order[order_attachment_3]"><% if @order.attachment_3_file_name %>Edit <% totfile=totfile+",3" %> <%  filecnt=filecnt+1 %><% else %> Add<% end %>: <%= f.file_field :order_attachment_3 %><% if @order.attachment_3_file_name %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Attachment 3: <%= @order.attachment_3_file_name %> <%= link_to "(view)", @order.attachment_3_file_url, :target => "blank" %> <a href="javascript:void(0)" onclick="javascript:removeFile('order[order_attachment_3]','3'); return false;">(delete)</a><% end %> </p>
+                                            <% end %>
+                                            
+                                            <% if @order.order_attachment_4_file_name %><p><% if @order.order_attachment_4_file_name %>Edit <% totfile=totfile+",4" %> <%  filecnt=filecnt+1 %><% else %> Add<% end %>: <%= f.file_field :order_attachment_4 %><% if @order.order_attachment_4_file_name %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Attachment 4: <%= @order.order_attachment_4_file_name %> <%= link_to "(view)", @order.order_attachment_4.url, :target => "blank" %> <%= link_to "(delete)", :action => "delete_attachment", :id => "4_"+@order.id.to_s %><% end %></p>
+                                              
+  <%elsif @order.attachment_4_file_name!=nil and @order.attachment_4_file_name.length!=0%>
+                                           
+                                            <p id="order[order_attachment_4]"><% if @order.attachment_4_file_name %>Edit <% totfile=totfile+",4" %> <%  filecnt=filecnt+1 %><% else %> Add<% end %>: <%= f.file_field :order_attachment_4 %><% if @order.attachment_4_file_name %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Attachment 4: <%= @order.attachment_4_file_name %> <%= link_to "(view)", @order.attachment_4_file_url, :target => "blank" %> <a href="javascript:void(0)" onclick="javascript:removeFile('order[order_attachment_4]','4'); return false;">(delete)</a><% end %></p>
+                                             <% end %>
+
+                                            <% if @order.order_attachment_5_file_name %><p><% if @order.order_attachment_5_file_name %>Edit <% totfile=totfile+",5" %> <%  filecnt=filecnt+1 %><% else %> Add<% end %>: <%= f.file_field :order_attachment_5 %><% if @order.order_attachment_5_file_name %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Attachment 5: <%= @order.order_attachment_5_file_name %> <%= link_to "(view)", @order.order_attachment_5.url, :target => "blank" %> <%= link_to "(delete)", :action => "delete_attachment", :id => "5_"+@order.id.to_s %><% end %> </p>
+                                             
+  <%elsif @order.attachment_5_file_name!=nil and @order.attachment_5_file_name.length!=0%>
+                                           
+                                            <p id="order[order_attachment_5]"><% if @order.attachment_5_file_name %>Edit <% totfile=totfile+",5" %> <%  filecnt=filecnt+1 %><% else %> Add<% end %>: <%= f.file_field :order_attachment_5 %><% if @order.attachment_5_file_name %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Attachment 5: <%= @order.attachment_5_file_name %> <%= link_to "(view)", @order.attachment_5_file_url, :target => "blank" %> <a href="javascript:void(0)" onclick="javascript:removeFile('order[order_attachment_5]','5'); return false;">(delete)</a><% end %> </p>
+                                            <% end %>
+
+                                            <% if @order.order_attachment_6_file_name %><p><% if @order.order_attachment_6_file_name %>Edit <% totfile=totfile+",6" %> <%  filecnt=filecnt+1 %><% else %> Add<% end %>: <%= f.file_field :order_attachment_6 %><% if @order.order_attachment_6_file_name %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Attachment 6: <%= @order.order_attachment_6_file_name %> <%= link_to "(view)", @order.order_attachment_6.url, :target => "blank" %> <%= link_to "(delete)", :action => "delete_attachment", :id => "6_"+@order.id.to_s %><% end %> </p>
+                                              
+  <%elsif @order.attachment_6_file_name!=nil and @order.attachment_6_file_name.length!=0%>
+                                            
+                                            <p id="order[order_attachment_6]"><% if @order.attachment_6_file_name %>Edit <% totfile=totfile+",6" %> <%  filecnt=filecnt+1 %><% else %> Add<% end %>: <%= f.file_field :order_attachment_6 %><% if @order.attachment_6_file_name %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Attachment 6: <%= @order.attachment_6_file_name %> <%= link_to "(view)", @order.attachment_6_file_url, :target => "blank" %> <a href="javascript:void(0)" onclick="javascript:removeFile('order[order_attachment_6]','6'); return false;">(delete)</a><% end %> </p>
+                                            <% end %>
+
+                                            <input type="hidden" name="fileName1" value="<%=@order.attachment_1_file_name %>"/>
+                                            <input type="hidden" name="fileUrl1" value="<%=@order.attachment_1_file_url %>"/>
+                                            <input type="hidden" name="fileName2" value="<%=@order.attachment_2_file_name %>"/>
+                                            <input type="hidden" name="fileUrl2" value="<%=@order.attachment_2_file_url %>"/>
+                                            <input type="hidden" name="fileName3" value="<%=@order.attachment_3_file_name %>"/>
+                                            <input type="hidden" name="fileUrl3" value="<%=@order.attachment_3_file_url %>"/>
+                                            <input type="hidden" name="fileName4" value="<%=@order.attachment_4_file_name %>"/>
+                                            <input type="hidden" name="fileUrl4" value="<%=@order.attachment_4_file_url %>"/>
+                                            <input type="hidden" name="fileName5" value="<%=@order.attachment_5_file_name %>"/>
+                                            <input type="hidden" name="fileUrl5" value="<%=@order.attachment_5_file_url %>"/>
+                                            <input type="hidden" name="fileName6" value="<%=@order.attachment_6_file_name %>"/>
+                                            <input type="hidden" name="fileUrl6" value="<%=@order.attachment_6_file_url %>"/>
+                <div id="ItemFiles" ></div>
+                  <% if filecnt!=6 %>
+                    <div class="photoheadmore" id="uploadlink"><span style="margin-right:5px;"><%= image_tag("pin_im.gif") %></span><a href="Javascript:addFileForOrdersEdit();"><span>Attach More Files</span></a></div>
+                  <% end %>
+                    <input type="hidden" name="totfile" id="totfile" value="<%=totfile%>"/>
+				</div>
+				</div>
+		</div>
+                </p>
+</div>
+<div class="clr"></div>
+
+<h3><strong>Return Documents To:</strong></h3>
+<div class="labels wholeform">
+                <p class="formagent"><label for="return_company_name">Company Name:</label></p>
+                <p class="formright"><%= f.text_field :return_company_name %></p>
+              </div>
+<div class="labels wholeform">
+                <p class="formagent"><label for="return_attention">Attention:</label></p>
+                <p class="formright"><%= f.text_field :return_attention %></p>
+              </div>
+<div class="labels wholeform">
+                <p class="formagent"><label for="return_address">Address:</label></p>
+                <p class="formright"><%= f.text_field :return_address %></p>
+              </div>
+<div class="labels wholeform">
+                <p class="formagent"><label for="City">City: </label></p>
+                <p class="formright"><%= f.text_field :return_city, :style => "width:85px; margin-left:2px; margin-right:5px;"  %>
+				<label for="state">State: </label>
+				<select name="order[return_state]" id="order_return_state">
+					<option value="">Select one</option>
+					<option value="AL" <% if @order.return_state == "AL" %>selected<% end %> >Alabama</option>
+					<option value="AK" <% if @order.return_state == "AK" %>selected<% end %> >Alaska</option>
+					<option value="AZ" <% if @order.return_state == "AZ" %>selected<% end %> >Arizona</option>
+					<option value="AR" <% if @order.return_state == "AR" %>selected<% end %> >Arkansas</option>
+					<option value="CA" <% if @order.return_state == "CA" %>selected<% end %> >California</option>
+					<option value="CO" <% if @order.return_state == "CO" %>selected<% end %> >Colorado</option>
+					<option value="CT" <% if @order.return_state == "CT" %>selected<% end %> >Connecticut</option>
+					<option value="DE" <% if @order.return_state == "DE" %>selected<% end %> >Delaware</option>
+					<option value="DC" <% if @order.return_state == "DC" %>selected<% end %> >District of Columbia</option>
+					<option value="FL" <% if @order.return_state == "FL" %>selected<% end %> >Florida</option>
+					<option value="GA" <% if @order.return_state == "GA" %>selected<% end %> >Georgia</option>
+					<option value="HI" <% if @order.return_state == "HI" %>selected<% end %> >Hawaii</option>
+					<option value="ID" <% if @order.return_state == "ID" %>selected<% end %> >Idaho</option>
+					<option value="IL" <% if @order.return_state == "IL" %>selected<% end %> >Illinois</option>
+					<option value="IN" <% if @order.return_state == "IN" %>selected<% end %> >Indiana</option>
+					<option value="IA" <% if @order.return_state == "IA" %>selected<% end %> >Iowa</option>
+					<option value="KS" <% if @order.return_state == "KS" %>selected<% end %> >Kansas</option>
+					<option value="KY" <% if @order.return_state == "KY" %>selected<% end %> >Kentucky</option>
+					<option value="LA" <% if @order.return_state == "LA" %>selected<% end %> >Louisiana</option>
+					<option value="ME" <% if @order.return_state == "ME" %>selected<% end %> >Maine</option>
+					<option value="MD" <% if @order.return_state == "MD" %>selected<% end %> >Maryland</option>
+					<option value="MA" <% if @order.return_state == "MA" %>selected<% end %> >Massachusetts</option>
+					<option value="MI" <% if @order.return_state == "MI" %>selected<% end %> >Michigan</option>
+					<option value="MN" <% if @order.return_state == "MN" %>selected<% end %> >Minnesota</option>
+					<option value="MS" <% if @order.return_state == "MS" %>selected<% end %> >Mississippi</option>
+					<option value="MO" <% if @order.return_state == "MO" %>selected<% end %> >Missouri</option>
+					<option value="MT" <% if @order.return_state == "MT" %>selected<% end %> >Montana</option>
+					<option value="NE" <% if @order.return_state == "NE" %>selected<% end %> >Nebraska</option>
+					<option value="NV" <% if @order.return_state == "NV" %>selected<% end %> >Nevada</option>
+					<option value="NH" <% if @order.return_state == "NH" %>selected<% end %> >New Hampshire</option>
+					<option value="NJ" <% if @order.return_state == "NJ" %>selected<% end %> >New Jersey</option>
+					<option value="NM" <% if @order.return_state == "NM" %>selected<% end %> >New Mexico</option>
+					<option value="NY" <% if @order.return_state == "NY" %>selected<% end %> >New York</option>
+					<option value="NC" <% if @order.return_state == "NC" %>selected<% end %> >North Carolina</option>
+					<option value="ND" <% if @order.return_state == "ND" %>selected<% end %> >North Dakota</option>
+					<option value="OH" <% if @order.return_state == "OH" %>selected<% end %> >Ohio</option>
+					<option value="OK" <% if @order.return_state == "OK" %>selected<% end %> >Oklahoma</option>
+					<option value="OR" <% if @order.return_state == "OR" %>selected<% end %> >Oregon</option>
+					<option value="PA" <% if @order.return_state == "PA" %>selected<% end %> >Pennsylvania</option>
+					<option value="RI" <% if @order.return_state == "RI" %>selected<% end %> >Rhode Island</option>
+					<option value="SC" <% if @order.return_state == "SC" %>selected<% end %> >South Carolina</option>
+					<option value="SD" <% if @order.return_state == "SD" %>selected<% end %> >South Dakota</option>
+					<option value="TN" <% if @order.return_state == "TN" %>selected<% end %> >Tennessee</option>
+					<option value="TX" <% if @order.return_state == "TX" %>selected<% end %> >Texas</option>
+					<option value="UT" <% if @order.return_state == "UT" %>selected<% end %> >Utah</option>
+					<option value="VT" <% if @order.return_state == "VT" %>selected<% end %> >Vermont</option>
+					<option value="VA" <% if @order.return_state == "VA" %>selected<% end %> >Virginia</option>
+					<option value="WA" <% if @order.return_state == "WA" %>selected<% end %> >Washington</option>
+					<option value="WV" <% if @order.return_state == "WV" %>selected<% end %> >West Virginia</option>
+					<option value="WI" <% if @order.return_state == "WI" %>selected<% end %> >Wisconsin</option>
+					<option value="WY" <% if @order.return_state == "WY" %>selected<% end %> >Wyoming</option>
+				</select>
+			   <label for="zip_code">Zip Code: </label><%= f.text_field :return_zip_code, :class => "tiny",:onkeyup=>"validateNum('order_return_zip_code')",:maxlength=>5 %>
+			</p>
+              </div>
+<div class="labels wholeform">
+                <p class="formagent"><label for="return_shipping_courier">Shipping Courier:</label></p>
+                <p class="formright"><%= select_tag "order_return_shipping_courier", options_for_select(["Select one", "FedEx", "UPS", "GSO", "OnTrac"], @order.return_shipping_courier), {:name => "order[return_shipping_courier]"} %></p></p>
+              </div>
+<div class="labels wholeform">
+                <p class="formagent"><label for="return_account_number">Account #:</label></p>
+                <p class="formright"><%= f.text_field :return_account_number%></p>
+              </div>
+
+<div class="clr"></div>
+
+		
+		
+		
+		
+		
+		
+				
+		
+		
+		
+		
+			
+
+
+<div class="clr"></div>
+
+        </div>
+<b class="xbottom"><b class="xb4"></b><b class="xb3"></b>
+<b class="xb2"></b><b class="xb1"></b></b>
+</div> 
+
+		
+		</div>
+
+<div class="span-18 last" style="margin-top:10px;">
+       <div class="errorExplanation" style="display:none" id="signupvalid"></div>
+       </div>
+        
+		<div id="submit_buttons" class="span-18 last">
+					<%= image_submit_tag("buttons/update_order.jpg") %>
+			<% end %>
+		</div>
+	
+	</div>
+	<div class="span-3 prepend-3 last" style="margin-top:60px;display: none">
+		<a href="mailto:support@notaryfly.com"><%= image_tag("prevent_abuse.jpg") %></a>
+	</div>
+</div>

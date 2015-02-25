@@ -1,0 +1,20 @@
+development:
+  adapter: mysql
+  database: notaryfly_development
+  username: root
+  password: 
+  timeout: 5000
+  host: 127.0.0.1
+test:
+  adapter: mysql
+  database: notaryfly_production
+  username: root
+  password: 
+  timeout: 5000
+
+production:
+  adapter: mysql
+  database: notaryfly_production
+  username: root
+  password: 
+  timeout: 5000

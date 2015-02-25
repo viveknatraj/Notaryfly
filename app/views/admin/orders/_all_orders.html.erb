@@ -1,0 +1,23 @@
+<div id="tabs1" class="default-tabs" style="display:<%= params[:tab] && params[:tab] != "tabs1" ? 'none' : 'block' %>">
+  <table width="100%" border="0" cellspacing="10" cellpadding="10">
+    <tr class="white-bg">
+      <td>NF#</td>
+      <td>SIGNER</td>
+      <td>ORDER OPENED</td>
+      <td>APPOINTMENT SCHEDULED</td>
+      <td>SIGNING LOCATION</td>
+      <td>Customer</td>
+      <td>DOCS?</td>
+    </tr>
+    <% @orders.each do |order| %>
+      <tr class='<%= order_status_class(order) %>'>
+        <%= admin_order_table_data(order, 'tabs1') %>
+      </tr>
+    <% end %>
+    <% if @orders.blank? %>
+      <tr class="white-bg">
+        <td colspan='7' style="text-align: center">You currently have no open orders.</td>
+      </tr>
+    <% end %>
+  </table>
+</div>

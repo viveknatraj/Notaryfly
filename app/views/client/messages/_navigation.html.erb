@@ -1,0 +1,5 @@
+<ul class="inline_list" style="margin-bottom:5px;">
+	<li><%= link_to(image_tag("buttons/inbox.jpg"), { :controller => "client/messages", :action => "index" }, :style => "color:#154B66; font-size:12px;  font-weight:bold;") %></li>
+	<li><%= link_to(image_tag("buttons/sent_messages.jpg"), { :controller => "client/messages", :action => "sent" }, :style => "color:#154B66; font-size:12px; font-weight:bold;") %></li>
+        <li><%= link_to(image_tag("back_to_open_order.jpg"), { :controller => "orders", :action => "index"}, :style => "color:#154B66; font-size:12px; font-weight:bold;") %></li>
+</ul>

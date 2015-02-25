@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Notary Fly Admin Panel</title>
+        <%= stylesheet_link_tag "admin/login" %>
+        <%= javascript_include_tag "form_validation" %>
+</head>
+  <body onload="document.getElementById('login_email').focus();">
+  <div style="margin-top:100px;">
+
+		<table border="0" cellpadding="0" cellspacing="0" height="100%"	width="100%" >
+			<tbody>
+				<tr >
+
+					<td align="center" valign="middle">
+						<table border="0" cellpadding="0" cellspacing="0" width="100%" >
+							<tbody>
+								<tr class="login_main_repeat">
+									<td class="login_main_repeat" align="right" height="315"
+										valign="middle">
+										<div class="login_logo"></div>
+									</td>
+									<td class="login_main_bg" align="right" valign="middle">
+										<table border="0" cellpadding="0" cellspacing="0" height="311"
+											width="357">
+
+											<tbody>
+												<tr>
+													<td class="login_tleft_curve">
+														<img src="images/spacer.gif" height="10" width="10">
+													</td>
+													<td class="login_top_side">
+														<img src="images/spacer.gif" height="10" width="10">
+													</td>
+													<td class="login_tright_curve">
+
+														<img src="images/spacer.gif" height="10" width="10">
+													</td>
+												</tr>
+												<tr>
+													<td class="login_left_side">
+														<img src="images/spacer.gif" height="10" width="10">
+													</td>
+													<td class="login_box_bg">
+														<% form_for :admin, :url => "/admin/signin" do  -%>
+
+															
+															<table align="center" border="0" cellpadding="0"
+																cellspacing="0" width="100%">
+																<tbody>
+																<tr>
+                                                                    <td>
+                                                                 <!--validation-->
+                                                                  <div class="validation_ind" style="display:none" id="emailandpass">
+                                                                  <ul>
+                                                                  <li>User Name is mandatory</li>
+
+                                                                  <li>Password is mandatory</li>
+                                                                  </ul>    <div class="empty"></div>
+                                                                  </div>
+                                                                  <div class="validation_ind" style="display:none" id="email">
+                                                                  <ul>
+                                                                  <li>User Name is mandatory</li>
+                                                                  </ul>    <div class="empty"></div>
+
+                                                                  </div>
+                                                                  <div class="validation_ind" style="display:none" id="pass">
+                                                                  <ul>
+                                                                  <li>Password is mandatory</li>
+                                                                  </ul>    <div class="empty"></div>
+                                                                  </div>
+                                                                  <div class="validation_ind" style="display:none" id="invalidemail">
+                                                                  <ul>
+
+                                                                  <li>Please Enter Valid User Name</li>
+                                                                  </ul>
+                                                                      <div class="empty"></div>
+                                                                  </div>
+                                                                  <% if params[:login]!=nil %>
+                                                                 <div class="validation_ind" style="display:inline" id="aflogin">
+                                                                  <ul>
+                                                                  <li>Invalid Username or Password</li>
+                                                                  </ul>    <div class="empty"></div>
+                                                                  </div>
+                                                                 <%else%>
+                                                                 <div class="validation_ind" style="display:none" id="aflogin"></div>
+                                                                 <%end%>
+                                                                  <div id="err"></div>
+
+                                                                  <!--end validation-->
+                                                                  </td>
+                                                                  </tr>
+
+																	<tr>
+																		<td class="formtext" colspan="2" align="center"
+																			height="46" nowrap="NOWRAP" valign="middle"
+																			width="37%">
+
+
+																			<table width="100%" border="0" cellspacing="0"
+																				cellpadding="0">
+																				<tr>
+																					<td width="38%" class="listforms">
+																						User Name
+																					</td>
+																					<td width="62%">
+
+																						<input type="text" name="admin[username]"
+																							title="admin_user_username" class="inputbg" id="login_email">
+																					</td>
+																				</tr>
+																			</table>
+																			<!--end forms-->
+
+																		</td>
+																	</tr>
+																	<tr>
+
+																		<td class="formtext" colspan="2" align="center"
+																			height="46" nowrap="nowrap" valign="middle">
+																			<!--forms-->
+																			<table width="100%" border="0" cellspacing="0"
+																				cellpadding="0">
+																				<tr>
+																					<td width="38%" class="listforms">
+																						Password
+																					</td>
+																					<td width="62%">
+																						<input type="password" name="admin[password]"
+																							title="admin_user_password" class="inputbg" id="login_password">
+
+																					</td>
+																				</tr>
+																			</table>
+																			</td>
+																	</tr>
+																	<tr>
+																		<td class="formtext" colspan="2" align="center"
+																			height="46" nowrap="nowrap" valign="middle">
+																			<input type="image" src="/images/admin/login.gif" onclick="return loginFormValidations()">
+																		</td>
+
+																	</tr>
+																	<!--<tr>
+			  <td class="formtext" colspan="2" align="center" height="46" nowrap="nowrap" valign="middle">
+				 $th
+			  </td>
+		  </tr>-->
+		  </form>
+																	<tr>
+																		<td colspan="2" class="formtext" align="right"
+																			height="20" nowrap="NOWRAP" valign="middle">
+																			&nbsp;
+																		</td>
+																	</tr>
+
+																</tbody>
+															</table>
+
+<%end%>
+														<div
+															style="padding: 10px 5px 0px 0px; color: rgb(255, 255, 255); font-family: verdana,arial,helvetica; font-style: normal; font-variant: normal; font-weight: normal; font-size: 10px; line-height: normal; font-size-adjust: none; font-stretch: normal; -x-system-font: none;"
+															align="center">
+															&copy; Copyright 2012-2014 NotaryFly
+														</div>
+													</td>
+													<td class="login_right_side">
+														<img src="/images/spacer.gif" height="10" width="10">
+													</td>
+
+												</tr>
+												<tr>
+													<td class="login_bleft_curve">
+														<img src="images/spacer.gif" height="10" width="10">
+													</td>
+													<td class="login_bottom_side">
+														<img src="images/spacer.gif" height="10" width="10">
+													</td>
+													<td class="login_bright_curve">
+
+														<img src="images/spacer.gif" height="10" width="10">
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+					</td>
+				</tr>
+			</tbody>
+		</table>
+</div>
+</body>
+</html>
+

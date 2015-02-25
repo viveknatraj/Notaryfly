@@ -1,0 +1,9 @@
+<div id="orders_navigation" class="span-24 last tab_navigation">
+	<ul class="inline_list">
+                <li><a href="/notary/orders/pending_orders" <% if params[:controller] == "notary/orders" and params[:action] == "pending_orders" %> class="active" <% end %>><span>Pending Orders</span></a></li>
+		<li><a href="/notary/orders" <% if params[:controller] == "notary/orders" and params[:action] == "index" %> class="active" <% end %>><span>Open Orders</span></a></li>
+		<li><a href="/notary/orders/history" <% if params[:controller] == "notary/orders" and params[:action] == "history" %> class="active" <% end %>><span>Order History</span></a></li>
+		<li><a href="/notary/messages" <% if params[:controller] == "notary/messages" %> class="active" <% end %>><span>My Messages (<%= @unread_messages.size %>)</span></a></li>
+		<!--<li><a href="/notary/feedback" <%# if params[:controller] == "notary/feedback" %> class="active" <%# end %>><span>My Feedback</span></a></li>-->
+	</ul>		
+</div>

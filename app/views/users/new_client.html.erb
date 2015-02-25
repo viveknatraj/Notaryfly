@@ -1,0 +1,380 @@
+
+<%= javascript_include_tag "notaryfly" %>
+<div id="home_header" class="span-24 last">
+	<div class="span-5">
+		<%= link_to image_tag("logo.jpg"),url_for({:controller=>"home",:action=> "index"}) %>
+	</div>
+	<div id="home_navigation" class="span-12 prepend-7 last">
+		<ul class="inline_list">
+			<li><%= link_to "Home", :controller => "home", :action => "index" %></li>
+			<li><%= link_to "Learn More", :controller => "home", :action => "learn_more" %></li>
+			<li><%= link_to "Faq's", :controller => "home", :action => "faqs" %></li>
+			<li><%= link_to "Order Status" %></li>
+		</ul>	
+	</div>
+</div>
+
+<div id="content_container" class="content_container span-24 last" style="margin-top:100px;">
+	<h2>Company Registration </h2>
+	<h3>Contact Information</h3>
+	<div id="contact_information" class="span-18 last"  style="border:none;">
+          <div class="xsnazzy" style="width:750px">
+<b class="xtop"><b class="xb1"></b><b class="xb2 color_a">
+</b><b class="xb3 color_a"></b><b class="xb4 color_a"></b></b>
+<div class="xboxcontent">
+		<% if flash[:notice] %><div class="success last"><%= flash[:notice] %></div><% end %>
+                  <div class="errorExplanation" id="err" style="display:none"></div>
+                  <div class="errorExplanation" style="display:none;margin-top:0px" id="signupvalid"></div>
+<% if params[:client]!=nil %>
+      <div class="errorExplanation" id="err" style="margin-top:0px">Email already exists.</div>
+ <%end%>
+		<div id="contact_form" class="form span-16 append-2 last">
+                  <% form_for :user,:url => {:controller => "users", :action => "create_client"},:html => {:onsubmit=>"return formValidations()"} do |f| -%>
+                  <div class="labels wholeform">
+                    <p class="formclient"><label for="company_name">*Company Name:</label></p>
+                    <p class="formright"><%= text_field :client, :company_name,:value=> if params[:client]!=nil
+  params[:client][:company_name]
+end %>
+
+                    </p>
+                  </div>
+                   <div class="labels wholeform">
+                    <p class="formclient"><label for="client_name">*Name:</label></p>
+                    <p class="formright"><%= text_field :client,:client_name ,:value=> if params[:client]!=nil
+  params[:client][:client_name]
+end %></p>
+                  </div>
+                   <div class="labels wholeform">
+                    <p class="formclient"><label for="title">*Title:</label></p>
+                    <p class="formright"><%= text_field :client, :title,:value=> if params[:client]!=nil
+  params[:client][:title]
+end %></p>
+                  </div>
+                   <div class="labels wholeform">
+                    <p class="formclient"><label for="address">*Address:</label></p>
+                    <p class="formright"><%= text_field :client,:address,:value=> if params[:client]!=nil
+  params[:client][:address]
+end %></p>
+                  </div>
+                   <div class="labels wholeform">
+                    <p class="formclient"><label for="City">*City:</label></p>
+                    <p class="formright"><%= text_field :client,:city, :style => "width:100px; margin-left:2px; margin-right:5px;",:value=> if params[:client]!=nil
+  params[:client][:city]
+end %>
+                    <label for="state" >*State:</label>
+				<select name="client[state]" id="client[state]">
+					<option value="">Select State</option>
+					<option value="AL" <% if params[:client]!=nil &&  params[:client][:state] =="AL" %>selected="selected"<%end%> >Alabama</option>
+					<option value="AK" <% if params[:client]!=nil &&  params[:client][:state] =="AK" %>selected="selected"<%end%>>Alaska</option>
+					<option value="AZ" <% if params[:client]!=nil &&  params[:client][:state] =="AZ" %>selected="selected"<%end%>>Arizona</option>
+					<option value="AR" <% if params[:client]!=nil &&  params[:client][:state] =="AR" %>selected="selected"<%end%>>Arkansas</option>
+					<option value="CA" <% if params[:client]!=nil &&  params[:client][:state] =="CA" %>selected="selected"<%end%>>California</option>
+					<option value="CO" <% if params[:client]!=nil &&  params[:client][:state] =="CO" %>selected="selected"<%end%>>Colorado</option>
+					<option value="CT" <% if params[:client]!=nil &&  params[:client][:state] =="CT" %>selected="selected"<%end%>>Connecticut</option>
+					<option value="DE" <% if params[:client]!=nil &&  params[:client][:state] =="DE" %>selected="selected"<%end%>>Delaware</option>
+					<option value="DC" <% if params[:client]!=nil &&  params[:client][:state] =="DC" %>selected="selected"<%end%>>District of Columbia</option>
+					<option value="FL" <% if params[:client]!=nil &&  params[:client][:state] =="FL" %>selected="selected"<%end%>>Florida</option>
+					<option value="GA" <% if params[:client]!=nil &&  params[:client][:state] =="GA" %>selected="selected"<%end%>>Georgia</option>
+					<option value="HI" <% if params[:client]!=nil &&  params[:client][:state] =="HI" %>selected="selected"<%end%>>Hawaii</option>
+					<option value="ID" <% if params[:client]!=nil &&  params[:client][:state] =="ID" %>selected="selected"<%end%>>Idaho</option>
+					<option value="IL" <% if params[:client]!=nil &&  params[:client][:state] =="IL" %>selected="selected"<%end%>>Illinois</option>
+					<option value="IN" <% if params[:client]!=nil &&  params[:client][:state] =="IN" %>selected="selected"<%end%>>Indiana</option>
+					<option value="IA" <% if params[:client]!=nil &&  params[:client][:state] =="IA" %>selected="selected"<%end%>>Iowa</option>
+					<option value="KS" <% if params[:client]!=nil &&  params[:client][:state] =="KS" %>selected="selected"<%end%>>Kansas</option>
+					<option value="KY" <% if params[:client]!=nil &&  params[:client][:state] =="KY" %>selected="selected"<%end%>>Kentucky</option>
+					<option value="LA" <% if params[:client]!=nil &&  params[:client][:state] =="LA" %>selected="selected"<%end%>>Louisiana</option>
+					<option value="ME" <% if params[:client]!=nil &&  params[:client][:state] =="ME" %>selected="selected"<%end%>>Maine</option>
+					<option value="MD" <% if params[:client]!=nil &&  params[:client][:state] =="MD" %>selected="selected"<%end%>>Maryland</option>
+					<option value="MA" <% if params[:client]!=nil &&  params[:client][:state] =="MA" %>selected="selected"<%end%>>Massachusetts</option>
+					<option value="MI" <% if params[:client]!=nil &&  params[:client][:state] =="MI" %>selected="selected"<%end%>>Michigan</option>
+					<option value="MN" <% if params[:client]!=nil &&  params[:client][:state] =="MN" %>selected="selected"<%end%>>Minnesota</option>
+					<option value="MS" <% if params[:client]!=nil &&  params[:client][:state] =="MS" %>selected="selected"<%end%>>Mississippi</option>
+					<option value="MO" <% if params[:client]!=nil &&  params[:client][:state] =="MO" %>selected="selected"<%end%>>Missouri</option>
+					<option value="MT" <% if params[:client]!=nil &&  params[:client][:state] =="MT" %>selected="selected"<%end%>>Montana</option>
+					<option value="NE" <% if params[:client]!=nil &&  params[:client][:state] =="NE" %>selected="selected"<%end%>>Nebraska</option>
+					<option value="NV" <% if params[:client]!=nil &&  params[:client][:state] =="NV" %>selected="selected"<%end%>>Nevada</option>
+					<option value="NH" <% if params[:client]!=nil &&  params[:client][:state] =="NH" %>selected="selected"<%end%>>New Hampshire</option>
+					<option value="NJ" <% if params[:client]!=nil &&  params[:client][:state] =="NJ" %>selected="selected"<%end%>>New Jersey</option>
+					<option value="NM" <% if params[:client]!=nil &&  params[:client][:state] =="NM" %>selected="selected"<%end%>>New Mexico</option>
+					<option value="NY" <% if params[:client]!=nil &&  params[:client][:state] =="NY" %>selected="selected"<%end%>>New York</option>
+					<option value="NC" <% if params[:client]!=nil &&  params[:client][:state] =="NC" %>selected="selected"<%end%>>North Carolina</option>
+					<option value="ND" <% if params[:client]!=nil &&  params[:client][:state] =="ND" %>selected="selected"<%end%>>North Dakota</option>
+					<option value="OH" <% if params[:client]!=nil &&  params[:client][:state] =="OH" %>selected="selected"<%end%>>Ohio</option>
+					<option value="OK" <% if params[:client]!=nil &&  params[:client][:state] =="OK" %>selected="selected"<%end%>>Oklahoma</option>
+					<option value="OR" <% if params[:client]!=nil &&  params[:client][:state] =="OR" %>selected="selected"<%end%>>Oregon</option>
+					<option value="PA" <% if params[:client]!=nil &&  params[:client][:state] =="PA" %>selected="selected"<%end%>>Pennsylvania</option>
+					<option value="RI" <% if params[:client]!=nil &&  params[:client][:state] =="RI" %>selected="selected"<%end%>>Rhode Island</option>
+					<option value="SC" <% if params[:client]!=nil &&  params[:client][:state] =="SC" %>selected="selected"<%end%>>South Carolina</option>
+					<option value="SD" <% if params[:client]!=nil &&  params[:client][:state] =="SD" %>selected="selected"<%end%>>South Dakota</option>
+					<option value="TN" <% if params[:client]!=nil &&  params[:client][:state] =="TN" %>selected="selected"<%end%>>Tennessee</option>
+					<option value="TX" <% if params[:client]!=nil &&  params[:client][:state] =="TX" %>selected="selected"<%end%>>Texas</option>
+					<option value="UT" <% if params[:client]!=nil &&  params[:client][:state] =="UT" %>selected="selected"<%end%>>Utah</option>
+					<option value="VT" <% if params[:client]!=nil &&  params[:client][:state] =="VT" %>selected="selected"<%end%>>Vermont</option>
+					<option value="VA" <% if params[:client]!=nil &&  params[:client][:state] =="VA" %>selected="selected"<%end%>>Virginia</option>
+					<option value="WA" <% if params[:client]!=nil &&  params[:client][:state] =="WA" %>selected="selected"<%end%>>Washington</option>
+					<option value="WV" <% if params[:client]!=nil &&  params[:client][:state] =="WV" %>selected="selected"<%end%>>West Virginia</option>
+					<option value="WI" <% if params[:client]!=nil &&  params[:client][:state] =="WI" %>selected="selected"<%end%>>Wisconsin</option>
+					<option value="WY" <% if params[:client]!=nil &&  params[:client][:state] =="WY" %>selected="selected"<%end%>>Wyoming</option>
+				</select>
+				<label for="zip_code" style="margin-left:7px;">*Zip Code: </label><%= text_field :client,:zip_code, :class => "tiny",:onkeyup=>"validateNum('client_zip_code')",:maxlength=>5,:value=> if params[:client]!=nil
+  params[:client][:zip_code]
+end %>
+			      </p>
+
+                  </div>
+                  <div class="labels wholeform">
+                    <p class="formclient"><label for="home_phone">*Telephone #:</label></p>
+                    <p class="formright"><%= text_field :client, :home_phone,:value=> if params[:client]!=nil
+  params[:client][:home_phone]
+end %>
+				<label for="home_extension">Extension: </label> <%= text_field :client, :home_extension, :class => "tiny",:maxlength=>3,:onkeyup=>"validateNum('client_home_extension')" ,:value=> if params[:client]!=nil
+  params[:client][:home_extension]
+end %></p>
+                  </div>
+                   <div class="labels wholeform">
+                    <p class="formclient"><label for="direct_phone">Direct #:</label></p>
+                    <p class="formright"><%= text_field :client, :direct_phone,:value=> if params[:client]!=nil
+  params[:client][:direct_phone]
+end %></p>
+                  </div>
+                   <div class="labels wholeform">
+                    <p class="formclient"><label for="mobile_phone">Mobile #:</label></p>
+                    <p class="formright"><%= text_field :client, :mobile_phone ,:value=> if params[:client]!=nil
+  params[:client][:mobile_phone]
+end %></p>
+                  </div>
+                   <div class="labels wholeform">
+                    <p class="formclient"><label for="fax_number">Fax #:</label></p>
+                    <p class="formright"><%= text_field :client, :fax_number,:value=> if params[:client]!=nil
+  params[:client][:fax_number]
+end %></p>
+                  </div>
+                   <div class="labels wholeform">
+                    <p class="formclient"><label for="email">*Email: </label></p>
+                    <p class="formright"><%= f.text_field :email  %></p>
+                  </div>
+                  <div class="labels wholeform">
+              		<p class="formclient"><label>*Confirm Email:</label></p>
+              		<p class="formright"><%= f.text_field  :email_confirmation%></p>
+            	  </div>
+                   <div class="labels wholeform">
+                    <p class="formclient"><label for="password">*New Password:</label></p>
+                    <p class="formright"><%= f.password_field :password %> <span>(minimum 6 characters)</span></p>
+                  </div>
+                   <div class="labels wholeform">
+                    <p class="formclient"><label for="password_confirmation">*Confirm Password:</label></p>
+                    <p class="formright"><%= f.password_field :password_confirmation %> <span>(minimum 6 characters)</span></p>
+                  </div>
+					
+<div style="clear:both"></div>
+		<div class="eft_info">
+			<h3><strong>EFT Information For Payment (Will need this info before you can place an Order)</strong></h3>
+            <div class="labels wholeform">
+              <p class="formleft"><label for="name">Name on Account:</label></p>
+              <p class="formright"><%= text_field :client, :name,:value=> if params[:client]!=nil
+                  params[:client][:name] end %></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formleft"><label for="bank">Bank:</label></p>
+              <p class="formright"><%= text_field :client,:bank,:value=> if params[:client]!=nil
+                  params[:client][:bank] end %></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formleft"><label for="routing">Routing #</label></p>
+              <p class="formright"><%= text_field :client,:routing ,:value=> if params[:client]!=nil
+                  params[:client][:routing] end %></p>
+            </div>
+             <div class="labels wholeform">
+              <p class="formleft"><label>Confirm Routing #</label></p>
+              <p class="formright"><%= text_field :client,:routing_confirmation %></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formleft"><label for="account">Account #</label></p>
+              <p class="formright"><%= text_field :client,:account,:value=> if params[:client]!=nil
+                  params[:client][:account] end %></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formleft"><label>Confirm Account #</label></p>
+              <p class="formright"><%= text_field :client, :account_confirmation %></p>
+            </div>
+		</div>
+			
+		
+	</div>
+                  <div class="clr"></div>
+        </div>
+<b class="xbottom"><b class="xb4"></b><b class="xb3"></b>
+<b class="xb2"></b><b class="xb1"></b></b>
+</div>    
+</div>
+
+    <div id="submit_buttons" class="span-18 last">
+      <div id="shade"></div>
+      <div id="modal">
+
+        <p style="font-size:18px;color:#0099CC;"> <u>NotaryFly Working Agreement</u> </p>
+        <p style="float: right;margin-left: 680px; margin-top: -56px;position: absolute;z-index: 3;"><%= link_to image_tag "closebox.gif",:onclick=>"window.close();" %></p>
+        
+	<div class="nf_work_agree">
+		<p>This working agreement (The "Agreement") is entered into by
+			
+			<span id="name" class="agreement_company"></span>
+			
+              	,and/or
+			
+			 <span id="comp_name" class="agreement_company"></span> 
+			
+			,and NotaryFly, LLC, a California limited liability company.
+		 </p>
+
+		
+		<p>Here are the terms of the agreement:</p>
+		<p>1. Once you have placed an Order, you have created an invoice.</p>
+		<p>2.  1 Order = 1 Signing</p>
+		<p>3.  If a loan does not fund/close for any reason, and/or is cancelled, the invoice for the Order will be credited.</p>
+		<p>4. If loan <strong>does NOT</strong> close for any reason, <strong>and a notary has driven to the location</strong>, you could have to pay up to a <strong>$50 Travel/Other fee</strong> to the notary from your NotaryFly account.</p>
+		<!--<p>5. <strong>To place an Order, you must deposit $50 into your account as a “NotaryFly Travel Deposit”(Please note: Only 1 Travel Fee Deposit per Account, NOT 	
+		per Order)</strong></p> -->
+		
+		<u><p>Terms of Placing an Order are as Follows:</p></u>
+		<p>1.  Upon loan funding, NotaryFly is paid through <strong>Closing/Order Completion.</strong> (Overnight 1st = $175/signing)</p>
+		<p>2.  Any amounts above Overnight 1st Fee will also be paid through closing. (1st/2nd TD, Email docs, Travel Fee, other)</p> 
+		<p>3.  Upon placing Order, you will be invoiced for the signing.  If NotaryFly is not paid within 30 days from the date the Order was placed, and Order invoice has NOT been credited by NotaryFly, your account will be suspended, and the invoice could be sent to a collection agency when warranted.</p>
+		
+		<u><p>Loan Cancellation Terms:</p></u>
+		<p>1.  If a loan does NOT go through for any reason after loan documents have been signed, proof of cancellation will have to be sent to NotaryFly customer support in order to receive the credit for the Order.</p>
+		<p>2.  Once this has been satisfied by NotaryFly, the credit will be refunded.</p>
+		
+		<p style="font:italic bold 14px/30px arial; text-align:center">For any issues, contact Support@NotaryFly.com</p>
+       
+	  </div>
+
+		          
+          <p><center>I agree to all terms of use in the NotaryFly working agreement: <span style="color:#0099CC;"></span></center></p>
+          <center><%= image_submit_tag "buttons/agree.png" %></center>
+      </div>
+      <%=  image_tag("buttons/next.jpg", :onclick => "userformValidations();return false;" )%>
+    <% end %>
+  </div>
+
+  <style type="text/css">
+    body { margin: 0; }
+    #shade, #modal { display: none; }
+    #shade { position: fixed; z-index: 100; top: 0; left: 0; width: 100%; height: 100%; }
+    #modal { position: absolute;top: 20%;left: 25%;/* width: 50%;*/ width:708px;height: 850px;background-color: white;z-index: 1002;padding: 20px;
+             overflow: auto;margin: 1px 0px 0px 90px;color:black; }
+    #shade { opacity: 0.5; filter: alpha(opacity=50); }
+  </style>
+
+  <script type="text/javascript">
+    function userformValidations()
+    {
+      onsubmit1 = true;
+      var error = "<ul>"
+      if (trim( document.getElementById('client_company_name').value)== 0) {
+        error += "<li>Company Name is mandatory</li>"
+        document.getElementById('client_company_name').focus();
+        onsubmit1 = false;
+      }
+      if ( trim(document.getElementById('client_client_name').value)== 0) {
+        error += "<li>Client Name is mandatory</li>"
+        onsubmit1 = false;
+      }
+      if ( trim(document.getElementById('client_title').value)==0) {
+        error += "<li>Title is mandatory</li>"
+        onsubmit1 = false;
+      }
+      if ( trim(document.getElementById('client_address').value)== 0) {
+        error += "<li>Address is mandatory</li>"
+        onsubmit = false;
+      }
+      if ( trim(document.getElementById('client_city').value)==0 ) {
+        error += "<li>City is mandatory</li>"
+        onsubmit1 = false;
+      }
+      if ( trim(document.getElementById('client[state]').value)==0 ) {
+        error += "<li>State is mandatory</li>"
+        onsubmit1 = false;
+      }
+      if ( trim(document.getElementById('client_zip_code').value)==0 ) {
+        error += "<li>Zip Code is mandatory</li>"
+        onsubmit1 = false;
+      }
+      if ( trim(document.getElementById('client_home_phone').value)==0 ) {
+        error += "<li>Telephone is mandatory</li>"
+        onsubmit1 = false;
+      }
+      if ( trim(document.getElementById('user_email').value)== 0) {
+        error += "<li>Email is mandatory</li>"
+        onsubmit1 = false;
+      }
+      else if ( isValidEmail(document.getElementById('user_email').value)==false) {
+        error += "<li>Enter Valid Email</li>"
+        onsubmit1 = false;
+      }
+      else if ((document.getElementById('user_email').value)!=document.getElementById('user_email_confirmation').value) {
+        error += "<li>Email is Mismatch</li>"
+        onsubmit1 = false;
+      }
+      if ( trim(document.getElementById('user_password').value)==0 ) {
+        error += "<li>Password is mandatory</li>"
+        onsubmit1 = false;
+      }
+      else if ( document.getElementById('user_password').value!=document.getElementById('user_password_confirmation').value) {
+        error += "<li>Password is Mismatch</li>"
+        onsubmit1 = false;
+      }
+      else if(trim(document.getElementById('user_password').value)<6)
+      {
+        error += "<li>Password is too short (minimum is 6 characters)</li>"
+        onsubmit1 = false;
+      }
+      if (document.getElementById('client_routing').value!=document.getElementById('client_routing_confirmation').value) {
+        error += "<li>Routing is Mismatch</li>"
+        onsubmit1 = false;
+      }
+
+     if (document.getElementById('client_account').value!=document.getElementById('client_account_confirmation').value) {
+        error += "<li>Account is Mismatch</li>"
+        onsubmit1 = false;
+      }
+
+      error += "</ul>";
+      document.getElementById('signupvalid').innerHTML = error;
+      document.getElementById('signupvalid').style.display = "";
+      if(onsubmit1)
+      {
+        //  alert('sdfsf');
+        // document.location.href="#working_agreement";
+        document.getElementById('name').innerHTML = document.getElementById('client_client_name').value;
+        document.getElementById('comp_name').innerHTML = document.getElementById('client_company_name').value;
+        var modal= document.getElementById('modal');
+        var shade= document.getElementById('shade');
+        modal.style.display=shade.style.display= 'block';
+
+        // This code is a workaround for IE6's lack of support for the
+        // position: fixed style.
+        //
+        if (!('maxHeight' in document.body.style)) {
+          function modalsize() {
+            var top= document.documentElement.scrollTop;
+            var winsize= document.documentElement.offsetHeight;
+            var docsize= document.documentElement.scrollHeight;
+            shade.style.height= Math.max(winsize, docsize)+'px';
+            modal.style.top= top+Math.floor(winsize/3)+'px';
+          };
+          modal.style.position=shade.style.position= 'absolute';
+          window.onscroll=window.onresize= modalsize;
+          modalsize();
+        }
+        document.getElementById('signupvalid').innerHTML = 'none';
+        document.getElementById('signupvalid').style.display = 'none';
+        //document.getElementById('working_agreement').style.display = "";
+        
+        return false;
+      }
+      return onsumbit;
+    }
+
+  </script>
+

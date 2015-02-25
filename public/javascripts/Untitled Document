@@ -1,0 +1,16 @@
+jQuery(".test_link").live("click", function(){
+  alert("am clicked");
+      jQuery.ajax({
+      url: "/notary/orders/pending_orders",
+      dataType: 'script', 
+      type: "get",
+      //data: \,
+      success:function(){
+          alert("success");
+
+      },
+      error:function(){
+          alert("failure");
+
+      }
+    });

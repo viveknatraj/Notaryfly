@@ -1,0 +1,35 @@
+@charset "utf-8";
+/* CSS Document */
+BODY {
+	TEXT-ALIGN: center
+}
+.container {
+	TEXT-ALIGN: left
+}
+ HTML .column {
+	OVERFLOW-X: hidden
+}
+ HTML LEGEND {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: -18px -8px 16px 0px; PADDING-TOP: 0px
+}
+OL {
+	MARGIN-LEFT: 2em
+}
+SUP {
+	VERTICAL-ALIGN: text-top
+}
+SUB {
+	VERTICAL-ALIGN: text-bottom
+}
+UNKNOWN {
+	WHITE-SPACE: normal
+}
+HR {
+	MARGIN: -8px auto 11px
+}
+DIV.tab_navigation {
+	MARGIN-TOP: 38px;
+}
+
+
+ .fade_in label {color:#595959; font-weight:normal}

@@ -1,0 +1,84 @@
+<%= render :partial => "/notary/header" %>
+<%= render :partial => "navigation" %>
+<div id="order_summary" class="content_container span-24 last">
+	<% if flash[:notice] %><div class="success"><%= flash[:notice] %></div><% end %>		
+	
+	<h2>Order Details</h2><br>
+	<p><%= link_to "Download this order as a PDF", { :action => "details", :id => @order.id, :format => "pdf" } , :style => "color:#154B66; font-weight:bold; font-size:12px;" %></p>
+	<p><%= link_to "Re-send Email confirmation", { :action => "resend_confirmation", :id => @order.id } , :style => "color:#154B66; font-weight:bold; font-size:12px;" %></p>
+	<br>
+	<div id="order_details" class="border span-18 last">
+		<div class="span-9">
+			<p><label>Order Fee: </label> $<%= @order.order_notary_fee %></p>
+			<p><label>Order Status: </label><%= @order.status.upcase %></p>
+			<% if @order.status == "closed" %>
+			<p><label>Return Carrier: </label><%= @order.closed_carrier %></p>
+			<p><label>Return Tracking Number: </label><%= @order.closed_tracking_number %></p>
+			<p><label>Return Comments: </label><br /><%= @order.closed_comments %></p>
+			<hr style="margin-top:10px;">
+			<% end %>
+			<p><label for="name">Client: </label><%= @order.client.client_name %> <a href="#client_info" class="fancyzoom small_link">(details)</a> / <%= link_to "(send message)", { :controller => "messages", :action => "new", :id => @order.id}, :class => "small_link" %></p>
+			<% if @order.client %>
+			<div id="client_info" style="display:none;" class="span-18 last">
+				<h2 class="notary_info" style="margin-bottom:0px;">Client Details</h2>
+				<div class="span-8">
+					<ul class="notary_info">
+						<p>
+							<li><strong>Notary ID:</strong> <%= @order.client.id %></li>
+							<li><strong>Company Name:</strong> <%= @order.client.company_name %></li>
+							<li><strong>Name:</strong><%= @order.client.client_name %></li>
+							<li><strong>Title:</strong><%= @order.client.title %></li>
+						</p>	
+						<p>
+							<li><strong>Telephone:</strong><%= @order.client.home_phone %></li>
+							<li><strong>Mobile:</strong><%= @order.client.mobile_phone %></li>
+							<li><strong>Fax:</strong><%= @order.client.fax_number %></li>
+							<li><strong>Shipping Address:</strong><br><%= @order.client.shipping_address %><br><%= @order.client.shipping_city %>, <%= @order.client.shipping_state %> <%= @order.client.shipping_zip_code%></li>
+						</p>
+					</ul>
+				</div>
+			</div>
+			<% end %>
+			<p><label for="loan_number">Loan/Escrow Number: </label><%= @order.loan_number %></p>
+			<p><label for="signing_date">Signing Date: </label><%= @order.signing_date.strftime("%B %d, %Y") %></p>
+			<p><label for="signing_time">Signing Time: </label><%= @order.signing_time %></p>
+			<p><label for="required_language">Required Language: </label><%= @order.required_language %></p>
+		</div>
+		<div class="span-9 last">
+			<p><label for="loan_type">Loan Type: </label><%= @order.loan_type %></p>
+			<p><label for="sets_of_docs">How Many Sets of Documents: </label><%= @order.sets_of_docs %></p>
+			<p><label for="shipped_via">How Will Documents Be Delivered: </label><%= @order.shipped_via %></p>
+		</div>
+		<div class="clear"></div>
+		<h3><strong>Borrower Contact(s)</strong></h3>
+
+		<div class="span-9">
+			<p class="strong" style="text-decoration:underline; margin:0px 0px 5px 0px;">Borrower #1</p>
+			<p><label for="borrower_1_first_name">Name: </label><%= @order.borrower_1_first_name %> <%= @order.borrower_1_last_name %></p>
+			<p><label for="borrower_1_work_phone">Work Phone: </label><%= @order.borrower_1_work_phone %> - Ext </label><%= @order.borrower_1_extension %></p>
+			<p><label for="borrower_1_home_phone">Home Phone: </label><%= @order.borrower_1_home_phone %></p>
+			<p><label for="borrower_1_mobile_phone">Mobile Phone: </label><%= @order.borrower_1_mobile_phone %></p>	
+		</div>
+
+		<div class="span-9 last ">
+			<p class="strong" style="text-decoration:underline; margin:0px 0px 5px 0px;">Borrower #2</p>
+			<p><label for="borrower_2_first_name">Name: </label><%= @order.borrower_2_first_name %> <%= @order.borrower_2_last_name %></p>
+			<p><label for="borrower_2_work_phone">Work #: </label><%= @order.borrower_2_work_phone %> - Ext </label><%= @order.borrower_2_extension %></p>
+			<p><label for="borrower_2_home_phone">Home #: </label><%= @order.borrower_2_home_phone %></p>
+			<p><label for="borrower_2_mobile_phone">Mobile #: </label><%= @order.borrower_2_mobile_phone %></p>
+		</div>
+		<div class="clear"></div>
+		
+		<div class="span-9 last">
+			<h3><strong>Signing Location</strong></h3>
+			<p><%= @order.signing_location_address %></p>
+			<p><%= @order.signing_location_city %>, <%= @order.signing_location_state %> <%= @order.signing_location_zip_code %> </p>
+		</div>
+		<div class="clear"></div>		
+		
+		<div class="span-18 last">
+			<h3><strong>Special Instructions</strong></h3>
+			<p><%= @order.special_instructions %></p>
+		</div>
+	</div>
+</div>

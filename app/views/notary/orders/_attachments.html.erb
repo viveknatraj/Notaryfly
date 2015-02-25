@@ -1,0 +1,130 @@
+<% order = @order %>
+<div class="btn-link fileUpload btn btn-primary">
+  <%= image_tag 'attachment.png' %>
+</div>
+
+<div class="upload-list">
+    <% if (order.order_attachment_1_file_name==nil or order.order_attachment_1_file_name.length==0) and (order.order_attachment_2_file_name==nil or order.order_attachment_2_file_name.length==0) and (order.order_attachment_3_file_name==nil or order.order_attachment_3_file_name.length==0) and (order.order_attachment_4_file_name==nil or order.order_attachment_4_file_name.length==0) and (order.order_attachment_5_file_name==nil or order.order_attachment_5_file_name.length==0) and (order.order_attachment_6_file_name==nil or order.order_attachment_6_file_name.length==0) and (order.attachment_1_file_name==nil or order.attachment_1_file_name.length==0) and (order.attachment_2_file_name==nil or order.attachment_2_file_name.length==0) and (order.attachment_3_file_name==nil or order.attachment_3_file_name.length==0) and (order.attachment_4_file_name==nil or order.attachment_4_file_name.length==0) and (order.attachment_5_file_name==nil or order.attachment_5_file_name.length==0) and (order.attachment_6_file_name==nil or order.attachment_6_file_name.length==0) %>
+        <span>No attachment</span>
+    <%else%>
+       <% attachment_count = [
+                                order.order_attachment_1_file_name, order.attachment_1_file_name,
+                                order.order_attachment_2_file_name, order.attachment_2_file_name,
+                                order.order_attachment_3_file_name, order.attachment_3_file_name,
+                                order.order_attachment_4_file_name, order.attachment_4_file_name,
+                                order.order_attachment_5_file_name, order.attachment_5_file_name,
+                                order.order_attachment_6_file_name, order.attachment_6_file_name,
+                             ].compact.reject{|i| i.blank?}
+        %>
+       <% file_count = 1 %>
+       <%if order.order_attachment_1_file_name!=nil and order.order_attachment_1_file_name.length!=0%>
+          <span>
+            <%=order.order_attachment_1_file_name%>&nbsp;&nbsp;(<%= file_count%> of <%= attachment_count.count %>)&nbsp;&nbsp;
+            <%= link_to "(view)", order.order_attachment_1.url, :target => "blank" %>&nbsp;&nbsp;
+            <%= link_to "(download)",:action=>'download', :path=>order.order_attachment_1.url%>
+            <br/>
+          </span>
+          <% file_count += 1 %>
+       <%end%>
+
+       <%if order.attachment_1_file_name!=nil and order.attachment_1_file_name.length!=0%>
+          <span>
+            <%=order.attachment_1_file_name%>&nbsp;&nbsp;(<%= file_count%> of <%= attachment_count.count %>)&nbsp;&nbsp;
+            <%= link_to "(view)", order.attachment_1_file_url, :target => "blank" %>&nbsp;&nbsp;
+            <%= link_to "(download)",:action=>'download', :path=>order.attachment_1_file_url%>
+            <br/>
+          </span>
+          <% file_count += 1 %>
+       <%end%>
+
+       <%if order.order_attachment_2_file_name!=nil and order.order_attachment_2_file_name.length!=0%>
+          <span>
+            <%=order.order_attachment_2_file_name%>&nbsp;&nbsp;(<%= file_count%> of <%= attachment_count.count %>)&nbsp;&nbsp;
+            <%= link_to "(view)", order.order_attachment_2.url, :target => "blank" %>&nbsp;&nbsp;
+            <%= link_to "(download)",:action=>'download', :path=>order.order_attachment_2.url%>
+            <br/>
+          </span>
+          <% file_count += 1 %>
+       <%end%>
+       <%if order.attachment_2_file_name!=nil and order.attachment_2_file_name.length!=0%>
+          <span>
+            <%=order.attachment_2_file_name%>&nbsp;&nbsp;(<%= file_count%> of <%= attachment_count.count %>)&nbsp;&nbsp;
+            <%= link_to "(view)", order.attachment_2_file_url, :target => "blank" %>&nbsp;&nbsp;
+            <%= link_to "(download)",:action=>'download', :path=>order.attachment_2_file_url%>
+            <br/>
+          </span>
+          <% file_count += 1 %>
+       <%end%>
+       <%if order.order_attachment_3_file_name!=nil and order.order_attachment_3_file_name.length!=0%>
+          <span>
+            <%=order.order_attachment_3_file_name%>&nbsp;&nbsp;(<%= file_count%> of <%= attachment_count.count %>)&nbsp;&nbsp;
+            <%= link_to "(view)", order.order_attachment_3.url, :target => "blank" %>&nbsp;&nbsp;
+            <%= link_to "(download)",:action=>'download', :path=>order.order_attachment_3.url%>
+            <br/>
+          </span>
+          <% file_count += 1 %>
+       <%end%>
+       <%if order.attachment_3_file_name!=nil and order.attachment_3_file_name.length!=0%>
+          <span>
+            <%=order.attachment_3_file_name%>&nbsp;&nbsp;(<%= file_count%> of <%= attachment_count.count %>)&nbsp;&nbsp;
+            <%= link_to "(view)", order.attachment_3_file_url, :target => "blank" %>&nbsp;&nbsp;
+            <%= link_to "(download)",:action=>'download', :path=>order.attachment_3_file_url%>
+            <br/>
+          </span>
+       <%end%>
+       <%if order.order_attachment_4_file_name!=nil and order.order_attachment_4_file_name.length!=0%>
+          <span>
+            <%=order.order_attachment_4_file_name%>&nbsp;&nbsp;(<%= file_count%> of <%= attachment_count.count %>)&nbsp;&nbsp;
+            <%= link_to "(view)", order.order_attachment_4.url, :target => "blank" %>&nbsp;&nbsp;
+            <%= link_to "(download)",:action=>'download', :path=>order.order_attachment_4.url%>
+            <br/>
+          </span>
+          <% file_count += 1 %>
+       <%end%>
+       <%if order.attachment_4_file_name!=nil and order.attachment_4_file_name.length!=0%>
+         <span>
+            <%=order.attachment_4_file_name%>&nbsp;&nbsp;(<%= file_count%> of <%= attachment_count.count %>)&nbsp;&nbsp;
+            <%= link_to "(view)", order.attachment_4_file_url, :target => "blank" %>&nbsp;&nbsp;
+            <%= link_to "(download)",:action=>'download', :path=>order.attachment_4_file_url%>
+            <br/>
+         </span>
+          <% file_count += 1 %>
+       <%end%>
+       <%if order.order_attachment_5_file_name!=nil and order.order_attachment_5_file_name.length!=0%>
+          <span>
+            <%=order.order_attachment_5_file_name%>&nbsp;&nbsp;(<%= file_count%> of <%= attachment_count.count %>)&nbsp;&nbsp;
+            <%= link_to "(view)", order.order_attachment_5.url, :target => "blank" %>&nbsp;&nbsp;
+            <%= link_to "(download)",:action=>'download', :path=>order.order_attachment_5.url%>
+            <br/>
+          </span>
+          <% file_count += 1 %>
+       <%end%>
+       <%if order.attachment_5_file_name!=nil and order.attachment_5_file_name.length!=0%>
+          <span>
+            <%=order.attachment_5_file_name%>&nbsp;&nbsp;(<%= file_count%> of <%= attachment_count.count %>)&nbsp;&nbsp;
+            <%= link_to "(view)", order.attachment_5_file_url, :target => "blank" %>&nbsp;&nbsp;
+            <%= link_to "(download)",:action=>'download', :path=>order.attachment_5_file_url%>
+          </span>
+          <% file_count += 1 %>
+       <%end%>
+       <%if order.order_attachment_6_file_name!=nil and order.order_attachment_6_file_name.length!=0%>
+          <span>
+            <%=order.order_attachment_6_file_name%>&nbsp;&nbsp;(<%= file_count%> of <%= attachment_count.count %>)&nbsp;&nbsp;
+            <%= link_to "(view)", order.order_attachment_6.url, :target => "blank" %>&nbsp;&nbsp;
+            <%= link_to "(download)",:action=>'download', :path=>order.order_attachment_6.url%>
+            <br/>
+          </span>
+          <% file_count += 1 %>
+       <%end%>
+       <%if order.attachment_6_file_name!=nil and order.attachment_6_file_name.length!=0%>
+          <span>
+            <%=order.attachment_6_file_name%>&nbsp;&nbsp;(<%= file_count%> of <%= attachment_count.count %>)&nbsp;&nbsp;
+            <%= link_to "(view)", order.attachment_6_file_url, :target => "blank" %>&nbsp;&nbsp;
+            <%= link_to "(download)",:action=>'download', :path=>order.attachment_6_file_url%>
+            <br/>
+          </span>
+          <% file_count += 1 %>
+      <%end%>
+
+    <%end%>
+</div>

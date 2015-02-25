@@ -1,0 +1,45 @@
+<%= render :partial => "/notary/header" %>
+<%#= stylesheet_link_tag "dhtmlwindow" %>
+<%= javascript_include_tag "form_validation" %>
+<%#= javascript_include_tag "dhtmlwindow"%>
+<%= render :partial => "navigation" %>
+
+<div id="order_history" class="span-18 last content_container">
+  <div class="xsnazzy">
+    <div class="container">
+      <div class="table-view" id="tabs">
+        <ul class="listing-view">
+          <li><a href="javascript:void(0);" id="tabs1" class="dark-light-green">paid</a></li>
+          <li><a href="javascript:void(0);" id="tabs2" class="light-red">Cancelled Orders</a></li>
+        </ul>
+        <%= render :partial => 'oh_paid_orders' %>
+        <%= render :partial => 'oh_cancelled_orders' %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script language="JavaScript">
+  ;if(window.jQuery) (function($){
+    $(window).load(function(){
+<% if params[:tab].present? %>
+        var active_tab = "<%= params[:tab]%>";
+        console.log(active_tab);
+        document.getElementById(active_tab).click();
+<% end %>
+    });
+    $('ul.listing-view a').click(function() {
+      var current_id = $(this).attr('id');
+      $('.default-tabs').each(function(){
+        if ($(this).attr('id') == current_id) {
+          $(this).attr('style', 'display:block');
+        }
+        else {
+          $(this).attr('style', 'display:none');
+        }
+
+      });
+
+    });
+  })(jQuery);
+</script>

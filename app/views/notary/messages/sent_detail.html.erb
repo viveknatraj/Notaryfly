@@ -1,0 +1,38 @@
+<%= render :partial => "/notary/header" %>
+<%= render :partial => "/notary/orders/navigation" %>
+
+<div id="messages" class="span-16 last content_container">
+	<% if flash[:notice] %><div class="success"><%= flash[:notice] %></div><% end %>		
+	<div class="span-16 last">
+		<div class="span-12 last">
+			<h2>My Messages</h2>
+			<h3><%= link_to "Back to messages", { :action => "index" }, :style => "color:#154B66; font-size:12px;"  %></h3>
+		</div>
+		<div class="span-16 last border" style="padding:5px 25px 5px 0px; margin-top:10px; border: none">
+                  <div class="xsnazzy" style="width:750px">
+<b class="xtop"><b class="xb1"></b><b class="xb2 color_a">
+</b><b class="xb3 color_a"></b><b class="xb4 color_a"></b></b>
+<div class="xboxcontent" style="padding:10px;">
+			<%  %>
+			<p style="color:#154b66; margin-top:10px; margin-bottom:0px;">From: <%if @client!=nil%><%= @client.client_name %><%end%></p>
+			<p style="color:#154b66; margin-top:0px; margin-bottom:0px;">At: <%= @message.created_at.strftime("%B %d, %Y at %I:%M %p")%></p>
+			<p style="color:#154b66; margin-top:0px; margin-bottom:10px;">NF Order #: <%= @message.order_id%></p>
+			
+			<p><%= @message.body %></p>
+			<hr style="background-color:#000;">
+			<h3 style="color:#000;">Send another message regarding NF Order #<%= @message.order_id%></h3>
+			<% form_for :message, :url => "/client/messages/create" do |f| -%>
+				<p><%= f.text_area :body, :style => "width:95%; height:75px;", :value => "" %></p>
+				<%= f.hidden_field :order_id, :value => @message.order_id %>
+			<div id="submit_button" class="span-18 last">
+				<p><%= image_submit_tag("buttons/send_message.jpg" )%></p>
+				<% end %>
+			</div>
+                                <div class="clr"></div>
+        </div>
+<b class="xbottom"><b class="xb4"></b><b class="xb3"></b>
+<b class="xb2"></b><b class="xb1"></b></b>
+</div> 
+		</div>
+	</div>
+</div>

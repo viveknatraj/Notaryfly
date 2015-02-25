@@ -1,0 +1,140 @@
+<%= render :partial => "/notary/header" %>
+<%= render :partial => "navigation" %>
+<div class="errorExplanation" style="display:none" id="signupvalid"></div>
+<div id="content_conatiner" class="content_container span-24 last">
+  <div id="contact_information" class="span-18 last" style="border:none">
+    <div class="xsnazzy" style=" width: 875px;">
+      <b class="xtop"><b class="xb1"></b><b class="xb2 color_a">
+        </b><b class="xb3 color_a"></b><b class="xb4 color_a"></b></b>
+      <div class="xboxcontent">
+        <% if flash[:notice] %><div class="success"><%= flash[:notice] %></div><% end %>
+        <% if flash[:error] %><div class="error"><%= flash[:error] %></div><% end %>
+        <div >
+
+          <div class="labels wholeform my_fees content_font">
+
+            <!--<div class="my_fees_bg">
+              <h1> Current Fee : <span>$<%= @current_fee%></span></h1>
+              <table class="table1" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td class="border">NotaryFly U:</td>
+                </tr>
+                <tr>
+                  <td><a class="green"><%=  @notary_test%></a></td>
+                </tr>
+                <tr>
+                  <td colspan="2"></td>
+                </tr>
+              </table>
+
+              <table class="table2" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td class="border">Status –</td>
+                  <td class="border">Next Raise</td>
+                </tr>
+                <tr>
+                  <td>4 – 5</td>
+                  <td><a class="green"><%=  @rating_4_5 % 50 %></a>/50<span class="star"></span></td>
+                </tr>
+                <tr>
+                  <td colspan="2"><strong>Next Raise = <%=  50 - (@rating_4_5 % 50) %> More Signings</strong></td>
+                </tr>
+              </table>
+
+              <table class="table3" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td class="border">Status –</td>
+                  <td class="border">Next Raise</td>
+                </tr>
+                <tr>
+                  <td>3 – 4</td>
+                  <td><a class="green"><%=  @rating_3_4 % 100 %></a><span class="star"></span>/100</td>
+                </tr>
+                <tr>
+                  <td colspan="2"><strong>Next Raise = <%=  100 - (@rating_3_4 % 100) %> More Signings</strong></td>
+                </tr>
+              </table>
+            </div>
+
+            <p><U class="head2"> Notary Compensation</U> </p>
+
+            <p>Current Fee = This is Current Fee you are paid per Overnight Signing (One Set of Docs) – Any “Other”
+              Signing Fees are in addition to Current Fee.</p>
+
+            <p>Initial Notary Fee = $50/Overnight Signing (One Set of Docs)</p>
+
+            <p><u class="head2">NotaryFly University Incentive (50% Raise/Overnight Signing)</u></p>
+            <p>Upon successful completion of free NotaryFly University course(s), Notary will instantly
+              receive a 50% raise per Overnight Signing ($25 – One Set of Docs), or;</p>
+
+            <p><u class="head1">Overnight Signing*</u></p>
+            <p>One Set of Docs (1st T.D.) = $75.00</p>
+            <p>Two Sets of Docs (1st T.D. & 2nd T.D.) = $100.00</p>
+            <p>*Docs are shipped to Notary and signing is within 30 driving miles of Notary</p>
+
+            <p><u class="head1">Email Signing*</u></p>
+            <p>One Set of Docs (1st T.D.) = $100.00</p>
+            <p>Two Sets of Docs (1st T. D. & 2nd T.D.) = $125.00</p>
+            <p>*Docs are emailed to Notary.  Notary prints docs and signing is within 30 driving miles of Notary</p>
+
+            <p><u class="head1">Other Fees</u></p>
+            <p>Extra Travel Fee (Outside of 30 miles)</p>
+            <p>Multiple Signing Fee (ie:  Two borrowers in 2 different locations)</p>
+            <p>Commercial Loans – Determined case by case</p>
+            <p>Other</p>
+
+            <p><u class="head2">NotaryFly Incentive – Ratings</u></p>
+            <p>Every time you complete a signing, the hiring company will complete a survey on your
+              performance, which is based on:  execution of documents, professionalism, promptness to
+              update “Order Timeline”, communication, and satisfaction with overall performance.</p>
+
+            <p>If you receive good feedback (at least 3 – 5 <a class="star"></a>") on an Order, you will receive the following raise 
+              per Order every time you reach a milestone, which is updated in real time on “Status Bar”:</p>
+
+            <p>Receive 4 – 5 <a class="star"></a> - Every 50 Signings = $5 raise/signing</p>
+
+            <p>Receive 3 – 4 <a class="star"></a> - Every 100 Signings = $5 raise/signing</p>
+
+            <p>Notary Fee Maximum/Cap per Overnight Signing = $125/signing</p>--> 
+            <p>Please input your "Base Fee" below</p>
+            <p><span  style="text-decoration:underline">Base Fee</span>  = One set of emailed documents</br>(Printing 2 sets:  one to be signed and one for client to keep)</p>
+            <p><span  style="text-decoration:underline">[Industry Standard Base Fee</span> - On average,between $75-$90 per base signing]</p>
+            <p><i>The total fee for each order will be discussed when necessary as there usually will be other fees for 2nd trust deeds, geographic location, and other factors.</i></p>
+            <p style="text-decoration:underline">The goal is to fill new orders as quickly as possible.  If your base fee is updated, and orders can be filled electronically, we will be able to get you Assigned Orders in real time.</p>
+          </div>
+
+
+
+          <div style="clear:both"></div>
+
+          <% form_for :notary,:url => {:controller => "/notary/profile", :action => "fee_update"}, :html => {:multipart => true, :onsubmit=>"return notary_profile_validations()"} do |f| -%>
+            <div class="labels wholeform">
+              <p class="myfeeleft">Base Fee:</p>
+              <p class="myfeeright"><label>$</label><%= f.text_field :fee, :class => "formtinyfield" %></p>
+            </div>
+            <div class="clr"></div><br/>
+            <div class="labels wholeform">
+              <p class="myfeeleft">Distance Willing to Travel for Base Fee:</p>
+              <p class="myfeeright">
+                Up to <%= f.text_field :travel_distance, :class => "formtinyfield" %> Miles
+              </p>
+            </div>
+            <div class="clr"></div><br/>
+            <div class="myfee-btn">
+              <%= submit_tag "Update Fee", :class => 'cancel_button' %>
+              <%= link_to "Cancel", {:action => :index}, :class => 'cancel_button', :style => "text-decoration: none" %>
+            </div>
+          <% end %>
+
+        </div>
+        <div class="clr"></div><br/>
+      </div>
+      <b class="xbottom"><b class="xb4"></b><b class="xb3"></b>
+        <b class="xb2"></b><b class="xb1"></b></b>
+    </div>
+  </div>
+
+
+
+</div>
+

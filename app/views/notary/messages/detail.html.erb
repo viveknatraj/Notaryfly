@@ -1,0 +1,60 @@
+<%= render :partial => "/notary/header" %>
+<%= render :partial => "/notary/orders/navigation" %>
+
+<div id="messages" class="span-16 last content_container">
+	<% if flash[:notice] %><div class="success"><%= flash[:notice] %></div><% end %>		
+	<div class="span-16 last">
+		<div class="span-12 last">
+			<h2>My Messages</h2>
+			<h3><%= link_to "Back to messages", :action => "index" %></h3>
+		</div>
+		<div class="span-16 last border" style="padding:5px 25px 5px 0px; margin-top:10px; border: none">
+                  <div class="xsnazzy" style="width:750px">
+<b class="xtop"><b class="xb1"></b><b class="xb2 color_a">
+</b><b class="xb3 color_a"></b><b class="xb4 color_a"></b></b>
+<div class="xboxcontent" style="padding:10px;">
+			<% if @client!=nil   %>
+			<p style="color:#154b66; margin-top:10px; margin-bottom:0px;">From: <%= @client.client_name %></p>
+			<%else%>
+                        <p style="color:#154b66; margin-top:10px; margin-bottom:0px;">From: Admin</p>
+                        <%end%>
+                        <p style="color:#154b66; margin-top:0px; margin-bottom:0px;">At: <%= @message.created_at.strftime("%B %d, %Y at %I:%M %p %Z")%></p>
+
+                        <% if @client!=nil   %>
+                        <p style="color:#154b66; margin-top:0px; margin-bottom:10px;">NF Order #: <%= @message.order_id%></p>
+			<%else%>
+                        <p></p>
+                        <p style="color:#154b66; margin-top:0px; margin-bottom:10px;">Subject : <%= @message.title %></p>
+                        <%end%>
+
+                        <p><%= @message.body.gsub("\n","<br/>") %></p>
+			<% if @message.attachment_1_file_name or @message.attachment_2_file_name or @message.attachment_3_file_name or @message.attachment_4_file_name or @message.attachment_5_file_name or @message.attachment_6_file_name  %>
+			<h4 style="font-size:12px; font-weight:bold; margin-bottom:5px;">Attachments</h4>
+			<ul>
+				<% if @message.attachment_1_file_name!=nil and @message.attachment_1_file_name.size!=0 %><li><%= @message.attachment_1_file_name %> <%= link_to "(view)", @message.attachment_1.url, :target => "blank"%> <%= link_to "(delete)", :action => "delete_attachment", :id => "1",:order_id =>@message.order_id %></li><%end%>
+                                <% if @message.attachment_2_file_name!=nil and @message.attachment_2_file_name.size!=0 %><li><%= @message.attachment_2_file_name %> <%= link_to "(view)", @message.attachment_2.url, :target => "blank"%> <%= link_to "(delete)", :action => "delete_attachment", :id => "2",:order_id =>@message.order_id %></li><%end%>
+                                <% if @message.attachment_3_file_name!=nil and @message.attachment_3_file_name.size!=0 %><li><%= @message.attachment_3_file_name %> <%= link_to "(view)", @message.attachment_3.url, :target => "blank"%> <%= link_to "(delete)", :action => "delete_attachment", :id => "3",:order_id =>@message.order_id %></li><%end%>
+                                <% if @message.attachment_4_file_name!=nil and @message.attachment_4_file_name.size!=0 %><li><%= @message.attachment_4_file_name %> <%= link_to "(view)", @message.attachment_4.url, :target => "blank"%> <%= link_to "(delete)", :action => "delete_attachment", :id => "4",:order_id =>@message.order_id %></li><%end%>
+                                <% if @message.attachment_5_file_name!=nil and @message.attachment_5_file_name.size!=0 %><li><%= @message.attachment_5_file_name %> <%= link_to "(view)", @message.attachment_5.url, :target => "blank"%> <%= link_to "(delete)", :action => "delete_attachment", :id => "5",:order_id =>@message.order_id %></li><%end%>
+                                <% if @message.attachment_6_file_name!=nil and @message.attachment_6_file_name.size!=0 %><li><%= @message.attachment_6_file_name %> <%= link_to "(view)", @message.attachment_6.url, :target => "blank"%> <%= link_to "(delete)", :action => "delete_attachment", :id => "6",:order_id =>@message.order_id %></li><%end%>
+			</ul>
+			<% end %>
+                        <% if @client!=nil   %>
+			<hr style="background-color:#000;"/>
+			<h3 style="color:#000;">Reply to this message</h3>
+			<% form_for :message, :url => "/notary/messages/create" do |f| -%>
+				<p><%= f.text_area :body, :style => "width:95%; height:75px;", :value => "" %></p>
+				<%= f.hidden_field :order_id, :value => @message.order_id %>
+			<div id="submit_button" class="span-18 last">
+				<p><%= image_submit_tag("buttons/send_message.jpg" )%></p>
+				<% end %>
+			</div>
+                       <% end %>
+                                <div class="clr"></div>
+        </div>
+<b class="xbottom"><b class="xb4"></b><b class="xb3"></b>
+<b class="xb2"></b><b class="xb1"></b></b>
+</div> 
+		</div>
+	</div>
+</div>

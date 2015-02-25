@@ -1,0 +1,40 @@
+
+<div class="my_fees_bg" style="display:none;">
+            <h1> Current Fee : <span>$<%= @current_fee%></span></h1>
+			<table class="table1" cellpadding="0" cellspacing="0">
+				<tr>
+					<td class="border">NotaryFly U:</td>
+				</tr>
+				<tr>
+					<td><a class="green"><%=notary_fee(id).first%></a></td>
+				</tr>
+				<tr>
+					<td colspan="2"></td>
+				</tr>
+			</table>
+			
+			
+				<tr>
+					<td class="border">Status –</td>
+					<td class="border">Next Raise</td>
+				</tr>
+				<tr>
+					<td>4 – 5</td>
+                                        	<td><a class="blue"><%=  notary_fee(id)[1] % 50 %></a>/50<span class="star"></span></td>
+				</tr>
+				
+			
+			<table class="table3" cellpadding="0" cellspacing="0">
+				<tr>
+					<td class="border">Status –</td>
+					<td class="border">Next Raise</td>
+				</tr>
+				<tr>
+					<td>3 – 4</td>
+					<td><a class="green"><%=  notary_fee(id).last % 100 %></a><span class="star"></span>/100</td>
+				</tr>
+				<tr>
+					<td colspan="2"><strong>Next Raise = <%=  100 - (notary_fee(id).last % 100) %> More Signings</strong></td>
+				</tr>
+			</table>
+		</div>

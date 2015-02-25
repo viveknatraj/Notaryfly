@@ -1,0 +1,20 @@
+<% @agent = Agent.find(@order.agent_id) %>
+
+<p><strong>This message was sent from a notification-only email address that does not accept incoming email. Please do not reply to this message.</strong></p>
+<br/>
+<p>Dear <%= @agent.broker_name.capitalize %>, </p>
+<br/>
+<p>We are pleased to report that the following document signing has been successfully COMPLETED!</p>
+
+<ul>
+	<li><strong>Signer/Client:</strong> <%= @order.borrower_1_first_name %> <%= @order.borrower_1_last_name %></li>
+	<li><strong>NF Order #:</strong> <%= @order.id %></li>
+	<li><strong>Escrow/Transaction #:</strong> <%= @order.loan_number %></li>
+	<li><strong>Signing Date:</strong> <%= @order.signing_date.strftime("%B %d, %Y") %></li>
+	<li><strong>Signing Time:</strong> <%= @order.signing_time %></li>
+	<li><strong>Docs Returned Via:</strong> <%= @order.closed_carrier %></li>
+        <li><strong>Tracking #:</strong> <%= @order.closed_tracking_number %></li>
+
+</ul>
+
+<p>This information was provided by NotaryFly.com</p>

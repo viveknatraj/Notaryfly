@@ -1,0 +1,154 @@
+<%= render :partial => "/client/header" %>
+<%= render :partial => "navigation" %>
+
+<div id="content_container" class="content_container span-24 last">
+	<div id="contact_information" class="span-18 last" style="border:none">
+          <div class="xsnazzy" style="width:830px">
+<b class="xtop"><b class="xb1"></b><b class="xb2 color_a">
+</b><b class="xb3 color_a"></b><b class="xb4 color_a"></b></b>
+<div class="xboxcontent" style="padding:10px;">
+		<% if flash[:notice] %><div class="success"><%= flash[:notice] %></div><% end %>
+		 <div class="errorExplanation" style="display:none" id="signupvalid"></div>
+		<%= error_messages_for :client %>
+		<div id="contact_form" class="form span-18 append-2 last">
+                 <% form_for :client,:url => {:controller => "/client/profile", :action => "update"}, :html => {:id => 'notaryfly_form',:onsubmit=>"return formValidations()"} do |f| -%>
+                  <div class="labels wholeform">
+                    <p class="formclient"><label for="company_name">*Company Name:</label></p>
+                    <p class="formright"><%= text_field :client, :company_name %></p>
+                  </div>
+                  <div class="labels wholeform">
+                    <p class="formclient"><label for="client_name">*Name:</label></p>
+                    <p class="formright"><%= text_field :client,:client_name  %></p>
+                  </div>
+                  <div class="labels wholeform">
+                    <p class="formclient"><label for="title">*Title: </label></p>
+                    <p class="formright"><%= text_field :client, :title  %></p>
+                  </div>
+                  <div class="labels wholeform">
+                    <p class="formclient"><label for="address">*Address: </label></p>
+                    <p class="formright"><%= text_field :client,:address %></p>
+                  </div>
+                  <div class="labels wholeform">
+                    <p class="formclient"><label for="City">*City: </label></p>
+                    <p class="formright"><%= text_field :client,:city, :style => "width:100px; margin-left:2px; margin-right:5px;" %>
+					<label for="state">*State:</label>
+					<select name="client[state]" id="client[state]">
+						<option value="">Select your state</option>
+						<option <% if @client.state == "AL" %>selected<% end %> value="AL">Alabama</option>
+						<option <% if @client.state == "AK" %>selected<% end %> value="AK">Alaska</option>
+						<option <% if @client.state == "AZ" %>selected<% end %> value="AZ">Arizona</option>
+						<option <% if @client.state == "AR" %>selected<% end %> value="AR">Arkansas</option>
+						<option <% if @client.state == "CA" %>selected<% end %> value="CA">California</option>
+						<option <% if @client.state == "CO" %>selected<% end %> value="CO">Colorado</option>
+						<option <% if @client.state == "CT" %>selected<% end %> value="CT">Connecticut</option>
+						<option <% if @client.state == "DE" %>selected<% end %> value="DE">Delaware</option>
+						<option <% if @client.state == "DC" %>selected<% end %> value="DC">District of Columbia</option>
+						<option <% if @client.state == "FL" %>selected<% end %> value="FL">Florida</option>
+						<option <% if @client.state == "GA" %>selected<% end %> value="GA">Georgia</option>
+						<option <% if @client.state == "HI" %>selected<% end %> value="HI">Hawaii</option>
+						<option <% if @client.state == "ID" %>selected<% end %> value="ID">Idaho</option>
+						<option <% if @client.state == "IL" %>selected<% end %> value="IL">Illinois</option>
+						<option <% if @client.state == "IN" %>selected<% end %> value="IN">Indiana</option>
+						<option <% if @client.state == "IA" %>selected<% end %> value="IA">Iowa</option>
+						<option <% if @client.state == "KS" %>selected<% end %> value="KS">Kansas</option>
+						<option <% if @client.state == "KY" %>selected<% end %> value="KY">Kentucky</option>
+						<option <% if @client.state == "LA" %>selected<% end %> value="LA">Louisiana</option>
+						<option <% if @client.state == "ME" %>selected<% end %> value="ME">Maine</option>
+						<option <% if @client.state == "MD" %>selected<% end %> value="MD">Maryland</option>
+						<option <% if @client.state == "MA" %>selected<% end %> value="MA">Massachusetts</option>
+						<option <% if @client.state == "MI" %>selected<% end %> value="MI">Michigan</option>
+						<option <% if @client.state == "MN" %>selected<% end %> value="MN">Minnesota</option>
+						<option <% if @client.state == "MS" %>selected<% end %> value="MS">Mississippi</option>
+						<option <% if @client.state == "MO" %>selected<% end %> value="MO">Missouri</option>
+						<option <% if @client.state == "MT" %>selected<% end %> value="MT">Montana</option>
+						<option <% if @client.state == "NE" %>selected<% end %> value="NE">Nebraska</option>
+						<option <% if @client.state == "NV" %>selected<% end %> value="NV">Nevada</option>
+						<option <% if @client.state == "NH" %>selected<% end %> value="NH">New Hampshire</option>
+						<option <% if @client.state == "NJ" %>selected<% end %> value="NJ">New Jersey</option>
+						<option <% if @client.state == "NM" %>selected<% end %> value="NM">New Mexico</option>
+						<option <% if @client.state == "NY" %>selected<% end %> value="NY">New York</option>
+						<option <% if @client.state == "NC" %>selected<% end %> value="NC">North Carolina</option>
+						<option <% if @client.state == "ND" %>selected<% end %> value="ND">North Dakota</option>
+						<option <% if @client.state == "OH" %>selected<% end %> value="OH">Ohio</option>
+						<option <% if @client.state == "OK" %>selected<% end %> value="OK">Oklahoma</option>
+						<option <% if @client.state == "OR" %>selected<% end %> value="OR">Oregon</option>
+						<option <% if @client.state == "PA" %>selected<% end %> value="PA">Pennsylvania</option>
+						<option <% if @client.state == "RI" %>selected<% end %> value="RI">Rhode Island</option>
+						<option <% if @client.state == "SC" %>selected<% end %> value="SC">South Carolina</option>
+						<option <% if @client.state == "SD" %>selected<% end %> value="SD">South Dakota</option>
+						<option <% if @client.state == "TN" %>selected<% end %> value="TN">Tennessee</option>
+						<option <% if @client.state == "TX" %>selected<% end %> value="TX">Texas</option>
+						<option <% if @client.state == "UT" %>selected<% end %> value="UT">Utah</option>
+						<option <% if @client.state == "VT" %>selected<% end %> value="VT">Vermont</option>
+						<option <% if @client.state == "VA" %>selected<% end %> value="VA">Virginia</option>
+						<option <% if @client.state == "WA" %>selected<% end %> value="WA">Washington</option>
+						<option <% if @client.state == "WV" %>selected<% end %> value="WV">West Virginia</option>
+						<option <% if @client.state == "WI" %>selected<% end %> value="WI">Wisconsin</option>
+						<option <% if @client.state == "WY" %>selected<% end %> value="WY">Wyoming</option>
+					</select>
+					<label for="zip_code" style="margin-left:7px;">*Zip Code: </label><%= text_field :client,:zip_code, :class => "tiny",:onkeyup=>"validateNum('client_zip_code')",:maxlength=>5 %>
+				</p>
+                  </div>
+                  <div class="labels wholeform">
+                    <p class="formclient"><label for="home_phone">*Telephone #: </label></p>
+                    <p class="formright"><%= text_field :client, :home_phone %>
+					<label for="home_extension">Extension: </label> <%= text_field :client, :home_extension, :class => "tiny",:maxlength=>3,:onkeyup=>"validateNum('client_home_extension')" %></p>
+                  </div>
+                  <div class="labels wholeform">
+                    <p class="formclient"><label for="direct_phone">Direct #: </label></p>
+                    <p class="formright"><%= text_field :client, :direct_phone %></p>
+                  </div>
+                  <div class="labels wholeform">
+                    <p class="formclient"><label for="mobile_phone">Mobile #: </label></p>
+                    <p class="formright"><%= text_field :client, :mobile_phone %></p>
+                  </div>
+                  <div class="labels wholeform">
+                    <p class="formclient"><label for="fax_number">Fax #: </label></p>
+                    <p class="formright"><%= text_field :client, :fax_number %></p>
+                  </div>
+                   <div class="labels wholeform">
+                    <p class="formclient"><label for="email">*Email: </label></p>
+                    <p class="formright"><%= text_field :user, :email, :value => self.current_user.email  %></p>
+                  </div>
+                   <div class="labels wholeform">
+                    <p class="formclient"><label for="password">*New Password: </label></p>
+                    <p class="formright"><%= password_field :user, :password, :value => session[:password] %> <span>(minimum 6 characters)</span> </p>
+                  </div>
+                   <div class="labels wholeform">
+                    <p class="formclient"><label for="password_confirmation">*Confirm Password: </label></p>
+                    <p class="formright"><%= password_field :user, :password_confirmation, :value => session[:password]  %> <span>(minimum 6 characters)</span></p>
+                  </div>
+                  <div style="clear:both"></div><br/>
+                  <h3><strong>EFT Information For Payment</strong></h3>
+                  <div class="labels wholeform">
+                    <p class="formclient"><label for="name">Name:</label></p>
+                    <p class="formright"><%= f.text_field :name  %></p>
+                  </div>
+                  <div class="labels wholeform">
+                    <p class="formclient"><label for="bank">Bank:</label></p>
+                    <p class="formright"><%= f.password_field :bank  %></p>
+                  </div>
+                  <div class="labels wholeform">
+                    <p class="formclient"><label for="routing">Routing #</label></p>
+                    <p class="formright"><%= f.password_field :routing  %></p>
+                  </div>
+                  <div class="labels wholeform">
+                    <p class="formclient"><label for="account">Account #</label></p>
+                    <p class="formright"><%= f.password_field :account  %></p>
+                  </div>
+                  <div class="clr"></div>
+			
+		</div>
+                <div class="clr"></div>
+        </div>
+<b class="xbottom"><b class="xb4"></b><b class="xb3"></b>
+<b class="xb2"></b><b class="xb1"></b></b>
+</div> 
+	</div>
+	<div id="submit_buttons" class="span-18 last">
+		<p><%= image_submit_tag("button_save_changes.jpg") %></p>
+		<% end %>
+	</div>
+</div>
+<%= render :partial => "/shared/footer" %>
+</div>

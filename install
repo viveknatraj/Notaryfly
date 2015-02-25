@@ -1,0 +1,19 @@
+ - [I] prawn 
+    - [I] prawn-core >= 0.6.3, < 0.7
+    - [I] prawn-layout >= 0.3.2, < 0.4
+    - [I] prawn-format >= 0.2.3, < 0.3
+       - [I] prawn-core 
+    - [I] prawn-security >= 0.1.1, < 0.2
+ - [I] will_paginate 
+ - [R] rdoc 
+ - [I] geokit 
+    - [I] multi_json 
+ - [ ] geokit-rails 
+ - [I] whenever 
+    - [I] chronic >= 0.6.3
+ - [I] pdfkit 
+ - [I] wkhtmltopdf-binary 
+
+I = Installed
+F = Frozen
+R = Framework (loaded before rails starts)

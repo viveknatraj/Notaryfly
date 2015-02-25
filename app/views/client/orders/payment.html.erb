@@ -1,0 +1,65 @@
+<style>
+				#payment_option {
+								margin-top: 2%;
+								margin-left: 30%;
+								width: 35%;
+								border: 2px solid black;
+				}
+				div.flash.error {
+								color: red;
+								border: 2px solid red;
+								border-radius: 2px;
+								margin-left: 28%;
+								width: 40%;
+				}
+				h2 {
+								background-color: #5977C9;
+								color: white;
+								font-weight: bold;
+								margin-top: -0.3%;
+								border: 1px solid black;
+				}
+</style>
+<% if flash[:errors].present? %>
+				<div class="flash error">
+								<ul>
+												<% flash[:errors].each {|e| %>
+																<li><%= e %> </li>
+												<% } %>
+												<% flash[:errors]=nil %>
+								</ul>
+				</div>
+<% end %>
+<div id='payment_option'>
+				<center><h2>Online Payment Form</h2></center>
+<% form_tag({:action => :do_payment, :id => @order.id}, {:method => :post}) do  %>
+<table>
+<tr>
+<td><%= label_tag :amount, "Amount to be paid:" %></td>
+<td><%= label_tag :value, @order.signing_fee %></td>
+</tr>
+<tr>
+<td><%= label_tag :card_number, "Credit Card Number " %></td>
+<td><%= text_field_tag :card_number, '', :maxlength => 16, :size => 10 %></td>
+</tr>
+<tr>
+<td><%= label_tag :card_code, "Security Code on Card (CVV)" %></td>
+<td><%= password_field_tag :card_code, '', :maxlength => 3, :size => 2 %>
+				<a href='#' title='The Card Verification Value (CVV) is a 3-digit number found on the signature panel on the back of your credit card following the printed Card number'>What is CVV?</a>
+</td>
+</tr>
+<tr>
+<td><%= label_tag :card_month, "Card Expiration" %></td>
+<td><%= select_month(Date.today, :use_month_numbers => true, :use_two_digit_numbers=> true)%>
+				<%= select_year nil, {:start_year=> Date.today.year-3, :end_year=> Date.today.year+30}%></td>
+<!--<td><%= select_month(Date.today, :use_month_numbers => true, :use_two_digit_numbers=> true, :prompt => "MM", :html_options => {:selected => 'MM'})%>
+				<%= select_year nil, {:start_year=> Date.today.year-3, :end_year=> Date.today.year+30, :prompt => 'YYYY'}, :html_options => {:selected => 'YYYY'}%></td>-->
+</tr>
+<br/>
+<tr>
+<td align='right'><%= submit_tag 'Pay' %></td>
+</tr>
+</table>
+<% end %>
+<br/>
+</div>

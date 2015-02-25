@@ -1,0 +1,19 @@
+<p><strong>This message was sent from a notification-only email address that does not accept incoming email. Please do not reply to this message.</strong></p>
+<br/>
+<p>Hi <%= Client.find_by_id(@order.client_id).client_name %>, </p>
+<br/>
+<p>We would like to inform that the following Order Cancellation has been denied  by admin and your account has been suspended!</p>
+<p>Full due amount: $50.00</p>
+
+<ul>
+	<li><strong>Signer/Client:</strong> <%= @order.borrower_1_first_name %> <%= @order.borrower_1_last_name %></li>
+	<li><strong>NF Order #:</strong> <%= @order.id %></li>
+	<li><strong>Escrow/Transaction #:</strong> <%= @order.loan_number %></li>
+	<li><strong>Signing Date:</strong> <%= @order.signing_date.strftime("%B %d, %Y") %></li>
+	<li><strong>Signing Time:</strong> <%= @order.signing_time %></li>
+	<li><strong>Docs Returned Via:</strong> <%= @order.closed_carrier %></li>
+        <li><strong>Tracking #:</strong> <%= @order.closed_tracking_number %></li>
+
+</ul>
+
+<p>This information was provided by NotaryFly.com</p>

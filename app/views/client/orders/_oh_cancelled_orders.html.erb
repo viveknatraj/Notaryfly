@@ -1,0 +1,47 @@
+<% if !params[:page_name] %>
+  <div id="tabs2" class="default-tabs" style="display: none">
+  <%elsif params[:page_name] == "Refuse orders"%>
+    <div id="tabs2" class="default-tabs">
+    <%else%>
+      <div id="tabs2" class="default-tabs" style="display: none">
+      <%end%>
+      <div class="span-12 last">
+        <% form_tag '/client/orders/history' do %>
+          <label class="sort_by">Filter by: </label>
+          <select name="filter" id="filter" onchange="this.form.submit()" style="display: inline; vertical-align: middle">
+            <option <% if params[:filter] == 'NF #' %>selected <% end %>>NF #</option>
+            <option <% if params[:filter] == 'Signer Name' %>selected <% end %>>Signer Name</option>
+            <option <% if params[:filter] == 'Order Opened' %>selected <% end %>>Order Opened</option>
+            <option <% if params[:filter] == 'Appointment Scheduled' %>selected <% end %>>Appointment Scheduled</option>
+          </select>
+          <%= hidden_field_tag "page_name", "Refuse orders" %>
+        <% end %>
+      </div>
+      <table width="100%" border="0" cellspacing="10" cellpadding="10">
+        <tr class="light-red">
+          <td>NF#</td>
+          <td>SIGNER NAME</td>
+          <td>ORDER OPENED</td>
+          <td>APPOINTMENT SCHEDULED</td>
+          <td>SIGNING LOCATION</td>
+          <td>CUSTOMER NAME</td>
+          <td>DOCS?</td>
+        </tr>
+        <% if @refused_to_sign_orders.blank? %>
+          <tr class="light-red">
+            <td colspan='7' style="text-align: center">You currently have no refuse to sign orders.</td>
+          </tr>
+        <% else %>
+
+          <% @refused_to_sign_orders.each do |order| %>
+            <tr class='light-red'>
+              <%= client_order_table_data(order, 'tabs2') %>
+            </tr>
+          <% end %>
+        <% end %>
+      </table>
+      <div id="pagination_5" class="<%= params[:tab] && params[:tab] != "tabs2" ? 'open_order-page' : '' %>">
+        <%= (will_paginate @refused_to_sign_orders).to_s.gsub(/<a(.*?)href="([^&]+)"(.*?)>/, '<a\1href="\2"\3>').gsub(/<a(.*?)href="([^"]+)"/, '<a\1href="\2&' + {:tab => "tabs2gmgm"}.to_query + '"') %>
+      </div>
+      <div class="clearfix"></div>
+    </div>

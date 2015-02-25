@@ -1,0 +1,44 @@
+<% if !params[:page_name] %>
+  <div id="tabs4" class="default-tabs" style="display: none">
+  <%elsif params[:page_name] == "Appt confirmed orders"%>
+    <div id="tabs4" class="default-tabs">
+    <%else%>
+      <div id="tabs4" class="default-tabs" style="display: none">
+      <%end%>
+<div class="span-26 last">
+          <% form_tag '/client/orders/index' do %>
+            <label class="sort_by">Filter by: </label>
+            <select name="filter" id="filter" onchange="this.form.submit()" style="display: inline; vertical-align: middle">
+              <option <% if params[:filter] == 'NF #' %>selected <% end %>>NF #</option>
+              <option <% if params[:filter] == 'Signer Name' %>selected <% end %>>Signer Name</option>
+              <option <% if params[:filter] == 'Order Opened' %>selected <% end %>>Order Opened</option>
+              <option <% if params[:filter] == 'Appointment Scheduled' %>selected <% end %>>Appointment Scheduled</option>
+            </select>
+            <%= hidden_field_tag "page_name", "Appt confirmed orders" %>
+          <% end %>
+        </div>
+<table width="100%" border="0" cellspacing="10" cellpadding="10">
+  <tr class="dark-blue">
+    <td>NF#</td>
+    <td>SIGNER NAME</td>
+    <td>ORDER OPENED</td>
+    <td>APPOINTMENT SCHEDULED</td>
+    <td>SIGNING LOCATION</td>
+    <td>NOTARY</td>
+				<!--<td>DOCS?</td>-->
+  </tr>
+  <% @appt_confirmed_orders = Order.find(:all, :conditions => ["client_id = ? AND admin_approve IS NULL AND status != 'closed' AND (status_timeline = ? ) AND status != ? ", @client.id, 'Time/Date Signing Set', "Refuse To Sign"], :order => @filter) %>
+  <% if @appt_confirmed_orders.blank? %>
+      <tr class="dark-blue">
+        <td colspan='7' style="text-align: center">No orders found </td>
+      </tr>
+  <% else %>
+      <% @appt_confirmed_orders.each do |order| %>
+          <tr class='dark-blue'>
+            <%= client_order_table_data(order, "tabs4") %>
+          </tr>
+      <% end %>
+  <% end %>
+</table>
+
+</div>

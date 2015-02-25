@@ -1,0 +1,303 @@
+<%= render :partial => "/notary/header" %>
+<%= stylesheet_link_tag "dhtmlwindow" %>
+<%= javascript_include_tag "form_validation" %>
+<%= javascript_include_tag "dhtmlwindow"%>
+<%= render :partial => "navigation" %>
+
+
+<div id="order_history" class="span-18 last content_container">
+	<div class="span-16 last">
+		<div class="span-12">
+			<h2>My Orders</h2>
+			<h3>Order History</h3>
+		</div>
+	</div>
+
+   <% unless @orders.size < 2 %>
+<div class="clr"></div>
+		<div class="span-12 last">
+			<% form_tag '/notary/orders/history' do %>
+			<label>Filter by: </label>
+                        <select name="filter" id="filter" onchange="this.form.submit()" style="display: inline; vertical-align: middle">
+				<option <% if params[:filter] == 'Borrower Name' %>selected <% end %>>Borrower Name</option>
+				<option <% if params[:filter] == 'Signing Date' %>selected <% end %>>Signing Date</option>
+				<option <% if params[:filter] == 'Escrow Number' %>selected <% end %>>Escrow Number</option>
+			</select>
+	    <% end %>
+
+		</div>
+		<% end %>
+
+   <div class="xsnazzy" style="width: 720px">
+          <b class="xtop"><b class="xb1"></b><b class="xb2 color_a">
+          </b><b class="xb3 color_a"></b><b class="xb4 color_a"></b></b>
+          <div class="xboxcontent" style="padding:2px; margin: 0px">
+	<% if @orders.size < 1 %>
+	<div class="last">
+		<p class="notice">You currently have no previous orders.</p>
+	</div>
+	<% end %>
+  
+	<% for order in @orders %>
+	<div class="dashboard_order" style="border:none; margin:0px; padding: 3px">
+          <div class="xsnazzy_1">
+  <b class="xtop_1"><b class="xb1_1"></b><b class="xb2_1 color_a">
+          </b><b class="xb3_1 color_a"></b><b class="xb4_1 color_a"></b></b>
+   <div class="xboxcontent_1" style="padding:10px;">
+		<div class="span-8">
+			<h5><strong><%= order.borrower_1_last_name %>, <%= order.borrower_1_first_name %></strong></h5>
+			<h5><strong>Escrow #<%= order.loan_number %></strong></h5>
+			<p>NF Order # <%= order.id %></p>
+			<p>Originally filled on: <%= order.created_at.strftime("%B %d, %Y") %></p>
+		</div>
+		<div class="span-8 last">
+			<h5><strong>Status:</strong> <%= order.status.capitalize %></h5>
+                        <% if order.client %>
+                        <p><label for="name">Client: </label><%= order.client.client_name %> <a href="#client_info_<%= order.client.id %>" class="fancyzoom small_link">(details)</a> / <%= link_to "(send message)", { :controller => "messages", :action => "new", :id => order.id}, :class => "small_link" %></p>
+                        <div id="client_info_<%= order.client.id %>" style="display:none;width: 100px;" class="span-18 last">
+					<h2 class="notary_info" style="margin-bottom:0px;">Client Details</h2>
+					<div class="span-8">
+						<ul class="notary_info">
+							<p>
+								<li><strong>Client ID:</strong> <%= order.client.id %></li>
+								<li><strong>Company Name:</strong> <%= order.client.company_name %></li>
+								<li><strong>Address:</strong> </li>
+                                                                <li><%= order.client.address %><br/> <%= order.client.city %>, <%= order.client.state %> <%= order.client.zip_code%></li>
+                                                                <li><strong>Name:</strong> <%= order.client.client_name %></li>
+								<li><strong>Title:</strong><% if order.client.title.length!=0%> <%= order.client.title %><%else%> Not Provided<%end%></li>
+							</p>
+							<p>
+								<li><strong>Telephone:</strong><% if order.client.home_phone.length!=0%> <%= order.client.home_phone %><%else%> Not Provided<%end%></li>
+								<li><strong>Mobile:</strong><% if order.client.mobile_phone.length!=0%> <%= order.client.mobile_phone %><%else%> Not Provided<%end%></li>
+								<li><strong>Fax:</strong><% if order.client.fax_number.length!=0%> <%= order.client.fax_number %><%else%> Not Provided<%end%></li>
+
+							</p>
+                                                        <p>
+                                                          <li><strong>Return Docs To:</strong></li>
+                                                          <li><%= order.return_company_name %><br/> Attn: <%= order.return_attention %><br/> <%= order.return_address %><br/> <%= order.return_city%>,<%= order.return_state%> <%= order.return_zip_code%> <br/> <%= order.return_shipping_courier%> Acct#: <%= order.return_account_number%></li>
+                                                        </p>
+						</ul>
+					</div>
+				</div>
+                        <% end %>
+			<p>Signing Date: <%= order.signing_date.strftime("%B %d, %Y") %></p>
+			<p>Signing Time: <%= order.signing_time %></p>
+			<p><div class="formright"><%= link_to "PDF Format", {:action => "details", :id => order.id , :format => "pdf"}, :style => "font-size:11px;",:target=>'_blank' %> |
+                          <a href="#order_summary<%=order.id%>" class="fancyzoom small_link" onclick="hide_dropdown()" style="font-size:11px;">Order Details</a> | <a href="#" onClick="divwin=dhtmlwindow.open('divbox', 'div', 'add_note_<%=order.id%>', '', 'width=480px,height=250px,left=200px,top=150px,resize=0,scrolling=0'); return false" style="font-size:11px;">Add Note</a> | <%= link_to "Messages", {:controller=>"messages",:action=>"index",:id=>order.id},:style=>"font-size:11px;" %>(<%=Order.messages_for_individual_order(order.id,self.current_user.id)%>)  </div>
+                        <div style="clear:both"> </div>
+                        <div class="formright" style="font-size:11px"><a href="#" onClick="divwin=dhtmlwindow.open('divbox', 'div', 'order_notes_view_<%=order.id%>', '', 'width=450px,height=300px,left=200px,top=150px,resize=1,scrolling=1'); return false">Notes</a>(<%=Notes.notesCount(self.current_user.id,order.id)%>)</div></p>
+		</div>
+      <div class="clr"></div>
+
+        </div>
+<b class="xbottom_1"><b class="xb4_1"></b><b class="xb3_1"></b>
+<b class="xb2_1"></b><b class="xb1_1"></b></b>
+</div>
+	</div>
+
+  <!--- For order details start -->
+
+<% @notary = Order.details(order.id)%>
+
+
+
+                        <div id="order_summary<%=order.id%>" class="content_container span-24 last" style="display:none;">
+
+
+	<h2>Order Details </h2>
+	<h3 style="margin:0px 0px 10px 0px;display: none">
+		<% unless order.status == "closed" %>
+			<%= link_to "Edit this order", { :action => "edit", :id => order.id } , :style => "color:#154B66; font-weight:bold; font-size:12px;" %>
+		<% end %>
+          &nbsp;<%= link_to "Re-send Email confirmation", { :action => "resend_confirmation", :id => order.id } , :style => "color:#154B66; font-weight:bold; font-size:12px;" %>
+	</h3>
+        <div id="order_details" class="border span-18 last" style="border:none">
+ <div class="xsnazzy" style="width: 740px">
+          <b class="xtop"><b class="xb1"></b><b class="xb2 color_a">
+          </b><b class="xb3 color_a"></b><b class="xb4 color_a"></b></b>
+          <div class="xboxcontent" style="padding:10px; margin: 0px">
+		<div class="span-9">
+			<% if order.status == "closed" || order.status == "filled" %>
+			<p><label>Notary Fee: </label> <%if order.order_notary_fee==nil or order.order_notary_fee.length==0%> Not Provided<%else%> $<%= order.order_notary_fee %><%end%></p>
+			<% end %>
+			<p><label>Order Status: </label><%= order.status.upcase %></p>
+			<% if order.status == "closed" %>
+			<p><label>Return Carrier: </label><%= order.closed_carrier %></p>
+			<p><label>Return Tracking Number: </label><%= order.closed_tracking_number %></p>
+			<p><label>Return Comments: </label><br /><%= order.closed_comments %></p>
+			<hr style="margin-top:10px;"/>
+			<% end %>
+
+			<% if @notary %>
+			<p><label for="name">Assigned Notary: </label><%= order.order_notary_name %></p>
+
+
+			<% end %>
+                        <% if order.agent_id  %>
+                        <% @agent = Agent.find_by_id(order.agent_id)
+                            if @agent!=nil
+                        %>
+                        <p><label for="agent">Agent:</label> <%= @agent.broker_name %></p>
+               <%
+                end
+               end%>
+			<p><label for="loan_number">Loan/Escrow Number: </label><%= order.loan_number %></p>
+			<p><label for="signing_date">Signing Date: </label><%= order.signing_date.strftime("%B %d, %Y") %></p>
+			<p><label for="signing_time">Signing Time: </label><%= order.signing_time %></p>
+                        <p><label for="loan_type">Loan Type: </label><%= order.loan_type %></p>
+			<p><label for="sets_of_docs">How Many Sets of Documents: </label><%= order.sets_of_docs %></p>
+                        <p><label for="delivery_options">How Will Documents Be Delivered: </label><%= order.delivery_options %></p>
+				<% if order.delivery_options == "Overnight to Borrower" or order.delivery_options == "Overnight to Notary" %>
+					<p><label for="shipped_via">Shipping Courier: </label><%= order.shipped_via %></p>
+					<% if order.tracking_number %><p><label for="tracking_number">Tracking Number: </label><%= order.tracking_number %></p><% end %>
+				<% end %>
+                        <p><label for="required_language">Required Language: </label><%= order.required_language %></p>
+		</div>
+            <div class="span-9 last" style="display:none">
+			<% if order.agent_id  %>
+				<% @agent = Agent.find_by_id(order.agent_id)
+                                if @agent!=nil
+                                 %>
+				<p><label for="agent">Agent:</label> <%= @agent.broker_name %> <a href="#agent_info" class="fancyzoom small_link">(details)</a></p>
+				<div id="agent_info" style="display:none;" class="span-18 last">
+					<h2 class="notary_info">Agent Details</h2>
+					<div class="span-8">
+						<ul class="notary_info">
+							<li><strong>Agent ID:</strong> <%= @agent.id %></li>
+							<li><strong>Company Name:</strong> <%= @agent.company_name %></li>
+							<li><strong>Name:</strong> <%= @agent.broker_name %></li>
+							<li><strong>Title:</strong> <%= @agent.title %></li>
+
+						</ul>
+
+						<h3 class="notary_info">Contact Information</h3>
+						<ul class="notary_info">
+							<li>
+								<p><strong>Address:</strong><br />
+								<%= @agent.address %><br />
+								<%= @agent.city %>, <%= @agent.state %> <%= @agent.zip_code %>
+
+							</li>
+							<li><strong>Day Phone:</strong> <%= @agent.direct_phone %></li>
+							<li><strong>Work Phone:</strong> <%= @agent.home_phone %> Ext. <%= @agent.home_extension %></li>
+							<li><strong>Mobile Phone:</strong> <%= @agent.mobile_phone %></li>
+							<li><strong>Email:</strong> <%= link_to @agent.email, "mailto:#{@agent.email}", :class => "small_link", :style => "color:#154B66;" %></li>
+						</ul>
+			</div>
+			</div>
+
+			<% 
+                        end
+                        end %>
+
+
+
+		</div>
+		<div class="clear"></div>
+		<h3><strong>Signer/Borrower Information</strong></h3>
+
+		<div class="span-9">
+			<p><label for="borrower_1_first_name">Signer #1: </label><%if order.borrower_1_first_name.length!=0 or order.borrower_1_last_name.length!=0%> <%= order.borrower_1_first_name %> <%= order.borrower_1_last_name %><%else%> Not Provided<%end%> </p>
+			<p><label for="borrower_1_work_phone">Work Phone: </label><%if order.borrower_1_work_phone.length!=0%><%= order.borrower_1_work_phone %><%else%> Not Provided<%end%> - Ext </label><% if order.borrower_1_extension.length!=0%> <%= order.borrower_1_extension %><%else%> Not Provided<%end%></p>
+			<p><label for="borrower_1_home_phone">Home Phone: </label><%if order.borrower_1_home_phone.length!=0%><%= order.borrower_1_home_phone %><%else%> Not Provided<%end%></p>
+			<p><label for="borrower_1_mobile_phone">Mobile Phone: </label><%if order.borrower_1_mobile_phone.length!=0%><%= order.borrower_1_mobile_phone %><%else%> Not Provided<%end%></p>
+                        <p>&nbsp;</p>
+                <p><label for="borrower_2_last_name">Signer #2: </label><%if order.borrower_2_first_name.length!=0 or order.borrower_2_last_name.length!=0%><%= order.borrower_2_first_name %> <%= order.borrower_2_last_name %><%else%> Not Provided<%end%></p>
+			<p><label for="borrower_2_work_phone">Work #: </label><%if order.borrower_2_work_phone.length!=0 %><%= order.borrower_2_work_phone %><%else%> Not Provided<%end%> - Ext </label><% if order.borrower_2_extension.length==0%> Not Provided<%else%> <%= order.borrower_2_extension %> <%end%></p>
+			<p><label for="borrower_2_home_phone">Home #: </label><%if order.borrower_2_home_phone.length!=0%><%= order.borrower_2_home_phone %><%else%> Not Provided<%end%></p>
+			<p><label for="borrower_2_mobile_phone">Mobile #: </label><% if order.borrower_2_mobile_phone.length!=0%> <%= order.borrower_2_mobile_phone %><%else%> Not Provided<%end%></p>
+                </div>
+
+		<div class="clear"></div>
+
+		<div class="span-9 last">
+			<h3><strong>Signing Location</strong></h3>
+			<p><%= order.signing_location_address %></p>
+			<p><%= order.signing_location_city %>, <%= order.signing_location_state %> <%= order.signing_location_zip_code %> </p>
+			<p><a href="http://maps.google.com/?q=loc%3A<%= order.signing_location_address %>+<%= order.signing_location_city %>+<%= order.signing_location_state %>+<%= order.signing_location_zip_code %>" target="_blank">Show Map</a></p>
+		</div>
+		<div class="clear"></div>
+
+
+		<div class="span-18 last">
+			<h3><strong>Special Instructions</strong></h3>
+                        <% if order.special_instructions.length!=0 %>
+			<p><%= order.special_instructions %></p>
+                        <%else%>
+                        <p>Not Provided</p>
+                        <%end%>
+			<h3><strong>Attachments</strong></h3>
+			<!-- <ul style="list-style:none; margin:0px; font-size:11px;">
+			</ul> -->
+                        <% if (order.order_attachment_1_file_name==nil or order.order_attachment_1_file_name.length==0) and (order.order_attachment_2_file_name==nil or order.order_attachment_2_file_name.length==0) and (order.order_attachment_3_file_name==nil or order.order_attachment_3_file_name.length==0) and (order.order_attachment_4_file_name==nil or order.order_attachment_4_file_name.length==0) and (order.order_attachment_5_file_name==nil or order.order_attachment_5_file_name.length==0) and (order.order_attachment_6_file_name==nil or order.order_attachment_6_file_name.length==0) and (order.attachment_1_file_name==nil or order.attachment_1_file_name.length==0) and (order.attachment_2_file_name==nil or order.attachment_2_file_name.length==0) and (order.attachment_3_file_name==nil or order.attachment_3_file_name.length==0) and (order.attachment_4_file_name==nil or order.attachment_4_file_name.length==0) and (order.attachment_5_file_name==nil or order.attachment_5_file_name.length==0) and (order.attachment_6_file_name==nil or order.attachment_6_file_name.length==0) %>
+                         <p>No attachment</p>
+                        <%else%>
+                        <p><%=order.order_attachment_1_file_name%></p>
+                        <p><%=order.attachment_1_file_name%></p>
+                          <p><%=order.order_attachment_2_file_name%></p>
+                          <p><%=order.attachment_2_file_name%></p>
+                          <p><%=order.order_attachment_3_file_name%></p>
+                          <p><%=order.attachment_3_file_name%></p>
+                          <p><%=order.order_attachment_4_file_name%></p>
+                          <p><%=order.attachment_4_file_name%></p>
+                          <p><%=order.order_attachment_5_file_name%></p>
+                          <p><%=order.attachment_5_file_name%></p>
+                          <p><%=order.order_attachment_6_file_name%></p>
+                          <p><%=order.attachment_6_file_name%></p>
+                          <%end%>
+		</div>
+                <div class="clr"></div>
+
+        </div>
+<b class="xbottom"><b class="xb4"></b><b class="xb3"></b>
+<b class="xb2"></b><b class="xb1"></b></b>
+</div>
+	</div>
+
+</div>
+
+<div id="add_note_<%=order.id%>" style="display:none">
+<p style="padding-left:40px"><b>Add Note</b></p>
+<% form_for :order, :url => "/notary/orders/add_notes_from_history/#{order.id}" do |f| -%>
+<p>
+<div style="padding-left: 40px;"> <%= text_area :notes,:notes,:onKeyDown=>"textCounter(500)", :onKeyUp=>"textCounter(500)" %> </div>
+</p>
+<p align="right">
+<input type="hidden" id="hcharLen" name="charLenths" value="500"/>
+<div id="charLen" style="padding-left:40px;height:6px">500 characters left</div>
+<div style="padding-left:300px"><%=submit_tag "Save"%> | <a href="javascript:void(0)" onClick="cancelWindow()" style="text-decoration: none">Cancel</a></div>
+                       </p>
+<%  end %>
+
+</div>
+                  <div id="order_notes_view_<%=order.id%>" style="display:none">
+<%
+nId = "";
+@notes_view = Notes.view_notes(self.current_user.id,order.id)
+for notess in @notes_view
+nId = nId+notess.id.to_s+","
+%>
+                    <div id="nid_<%=notess.id%>"><input type="radio" name="notes_radio" onClick="displyNotes('<%=notess.id%>','<%=order.id%>')"/>&nbsp;<%=notess.created_at.strftime("%B %d, %Y")%>&nbsp;<%=notess.created_at.strftime("at %I:%M%p")%></div>
+<% end %>
+ <% for notess in @notes_view %>
+ <p>
+ <div id="note_content_<%=notess.id%>" style="display:none">
+   Order ID : #<%=order.id%> <br/>
+   Created On : <%=notess.created_at.strftime("%B %d, %Y")%>&nbsp;<%=notess.created_at.strftime("at %I:%M%p")%> <br/>
+Note : <%=notess.notes.gsub("\n","<br/>")%>
+ </div>
+ </p>
+  <% end %>
+<input type="hidden" id="notes_view_<%=order.id%>" value="<%=nId%>"/>
+                </div>
+
+                        <!-- Order details end --->
+	<% end %>
+ <div class="clr"></div>
+            </div>
+   <div class="clr"></div>
+<b class="xbottom"><b class="xb4"></b><b class="xb3"></b>
+<b class="xb2"></b><b class="xb1"></b></b>
+</div>
+
+          </div>

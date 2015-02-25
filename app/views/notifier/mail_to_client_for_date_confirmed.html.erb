@@ -1,0 +1,97 @@
+<%
+   full_name = 'Not Provided'
+   email = 'Not Provided'
+   mobile_phone = 'Not Provided'
+   if @notary
+     full_name = [@notary.first_name, @notary.last_name].join(" ")
+     email = @notary.user.email
+     mobile_phone = @notary.mobile_phone
+   end
+%>
+<p style="margin-bottom:6px;">
+  <strong>This message was sent from a notification-only email address that does not accept incoming email. Please do not reply to this message.</strong>
+</p>
+<p style="margin-bottom:6px;">Dear <%= link_to @order.client.client_name.split.collect{|n|n.capitalize}.join(" "), "javascript:void(0)" %>,</p>
+<p style="margin-bottom:6px;">The <strong>Date/Time</strong> of the following Signing has been <strong>CONFIRMED</strong>:</p>
+
+<table width="60%" style="float:left;">
+  <tr>
+    <td>
+      <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div>
+      <div class="title1" style="font-weight:bold;">Order #:</div>
+    </td>
+    <td>
+      <div class="title2"><strong>NF</strong># <%= @order.id %> <strong>Escrow</strong># <%= @order.loan_number %></div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div>
+      <div class="title1" style="font-weight:bold;">Signer/Client:</div>
+    </td>
+    <td>
+      <div class="title2"><%= link_to "#{@order.borrower_1_first_name.capitalize} #{@order.borrower_1_last_name.capitalize}", "javascript:void(0)" %></div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div>
+      <div class="title1" style="font-weight:bold;">Signing Location:</div>
+    </td>
+    <td>
+      <div class="title2"><%= "#{@order.signing_location_address} #{@order.signing_location_city}, #{@order.signing_location_state} #{@order.signing_location_zip_code}" %></div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div>
+      <div class="title1" style="font-weight:bold;">Signing Date:</div>
+    </td>
+    <td>
+      <div class="title2"><%= @order.signing_date.strftime("%B %d, %Y") %></div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div>
+      <div class="title1" style="font-weight:bold;">Signing Time:</div>
+    </td>
+    <td>
+      <div class="title2"><%= @order.signing_time %></div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div>
+      <div class="title1" style="font-weight:bold;">Notary Assigned:</div>
+    </td>
+    <td>
+      <div class="title2"><%= link_to "#{full_name}", "javascript:void(0)" %></div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div>
+      <div class="title1" style="font-weight:bold;">Notary Email:</div>
+    </td>
+    <td>
+      <div class="title2"><a href="mail_to:<%= email %>"><%= email%> </a></div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div>
+      <div class="title1" style="font-weight:bold;">Notary Phone:</div>
+    </td>
+    <td>
+      <div class="title2"><%= link_to "#{mobile_phone}", "javascript:void(0)" %></div>
+    </td>
+  </tr>
+</table>
+
+<p style="margin-bottom:6px;">
+  <strong>For “Order Status” updates, visit <a href="http://www.notaryfly.com/">NotaryFly.com</a></strong>
+</p>
+<p style="margin-bottom:6px;">
+  <strong>For questions or assistance, please email <a href="mailto:support@notaryfly.com/">support@notaryfly.com</a> or call 888-888-8888.</strong>
+</p>

@@ -1,0 +1,429 @@
+
+
+<style type="text/css">
+
+  .order_number_list {
+    float: left;
+    width: 50px;
+  }
+
+.center_head  h1
+{
+	 color: #567789;
+    font-size: 24px;
+
+}
+.center_head  h1 span
+{
+	color:#222f54;
+}
+.center_subhead
+{
+	 color: #2475AC;
+    font-weight: bold;
+    margin: 0 auto;
+    width: 100%;
+}
+
+}
+</style>
+
+<%= javascript_include_tag "prototype"  %>
+
+<script>
+
+
+
+  function show_order_details(order_id,order_id_arr){
+
+
+   for(i=0;i<order_id_arr.length;i++)
+     {
+       if (order_id_arr[i]!=order_id)
+          document.getElementById('client_order_rightcnt_'+order_id_arr[i]).hide();
+       else
+         document.getElementById('client_order_rightcnt_'+order_id_arr[i]).show();
+     }
+
+
+  }
+  function showfirstdiv(orderid){
+
+    document.getElementById('client_order_rightcnt_'+orderid).show();
+  }
+
+  </script>
+
+<div class="block" id="block-tables" style="border:0px solid #fff;">
+  <div style="padding-left:538px;">
+
+    <% form_for :notaries, :url => "/admin/notaries/index/",:html=>{:method=>'get'} do %>
+      <input type="text" name="keyword" style="vertical-align: middle"/><%=submit_tag "Search",:style=>"vertical-align: middle;"%>
+    <% end %>
+  </div>
+  <div class="content" id="counter">
+    <form name="test" method="post">
+    <div class="inner" >
+
+      <table class="table" id="myTable">
+        <colgroup>
+          <col id="col1_1"></col>
+          <col id="col1_2"></col>
+          <col id="col1_3"></col>
+          <col id="col1_4"></col>
+          <col id="col1_5"></col>
+        </colgroup>
+        <thead>
+          <tr>
+            <td>Notary ID #</td>
+            <td>Notary Name</td>
+            <td><div style="width: 200px;">Notary Email</div></td>
+            <td style="width: 45px;">Sign up date</td>
+           <!-- <td style="width: 45px;">Last Logged In</td> -->
+            <td style="width: 45px;">Total # Of Orders</td>
+           <!-- <th style="width: 25px;"><a href="javascript:void(0)" onclick="checkAll()" title="Select All" style="color: #000;font-size: 12px;">All</a>&nbsp;<a href="javascript:void(0)" onclick="unCheckAll()" title="None" style="color: #000;font-size: 12px;">None</a><br/><a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'add_message', '', 'width=480px,height=250px,left=200px,top=150px,resize=0,scrolling=0');sendMsg();" title="Send Message" style="color: #000;font-size: 12px;">Send Email</a></th>
+            <td style="width: 10px;">&nbsp;</td> -->
+            <td style="width: 45px;">Suspend</td>
+            <td style="width: 45px;">Vacation</td>
+            <td style="width: 45px;">Fee</td>
+            <td style="width: 45px;">Star rating</td>
+            
+
+
+          </tr>
+        </thead>
+        <tbody>
+
+          <%@feedback_count=0%>
+          <% for notary in @notaries %>
+
+
+          <% @ratings = @feedback_average_final[@feedback_count] %>
+          <%unless @ratings.nan?
+                @rating_percentage =@ratings%>
+             <%else %>
+          <%@rating_percentage=0%>
+          <%end%>
+          <%@feedback_count+=1%>
+            <tr class="even">
+              <td><%= notary.id %></td>
+              <td style="width:200px;">  <a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'view_userprofile_<%= notary.id %>', '', 'width=720px,height=530px,left=200px,top=150px,resize=0,scrolling=0');
+                                           " title="View notary profile" style="color: #000;font-size: 12px;"> <% if !notary.last_name.blank? %><%= notary.last_name%>,<% end %> <%=  notary.first_name %> </a></td>
+              <td>
+                <div style="width: 200px;"><%= notary.user.login %></div></td>
+              <% if notary.created_at!=nil %>
+                <td style="width: 76px;  "><%= notary.created_at.strftime '%m-%d-%Y' %></td>
+              <%else%>
+                <td>&nbsp;</td>
+              <%end%>
+            <!--  <td style="width:135px;   "><%#=  notary.user.user_signin.strftime('%m-%d-%Y %I:%M%p') unless  notary.user.user_signin.nil? %></td> -->
+              <td style="text-align:center;width:20px;"><%=Notary.orders_count(notary.id)%></td>
+             <!-- <td style="text-align:center;width:20px;"><input type="checkbox" name="CheckAll[]" id="user" value="<%#=notary.user_id%>"/></td>
+              <td style="text-align:center;width:20px;"><%#= link_to "X", { :controller => "/admin/notaries", :action => "destroy", :id => notary.id,:page => params[:page]},{:style => 'margin-left:0px;' },:confirm => "Are you sure you want to delete this notary?" %></td> -->
+
+              <%if notary.user.suspend ==1 %>
+              <td style="text-align:center;width:20px;"><%=  check_box_tag "suspend",notary.user.id,true,{:onchange=> remote_function(
+                      :url => { :controller => "admin/notaries",:id =>notary.user.id,:checked => false,:action => "suspend_update" })}%></td>
+
+              <%else %>
+              <td style="text-align:center;width:20px;"><%=  check_box_tag "suspend",notary.user.id,false,{:onchange=> remote_function(
+                      :url => { :controller => "admin/notaries",:id =>notary.user.id,:checked => false,:action => "suspend_update" })}%></td>
+              <%end%>
+              <% if notary.on_vacation != true %>
+                <td style="text-align:center;width:20px;"><%=  check_box_tag "vacation",notary.id,false,{:onchange=> remote_function(
+                      :url => { :controller => "admin/notaries",:id => notary.id,:checked => false,:action => :vacation_update })}%></td>
+
+              <% else %>
+                <td style="width:20px;text-align:center;"><%=  check_box_tag "vacation",notary.id,true,{:onchange=> remote_function(
+                      :url => { :controller => "admin/notaries",:id => notary.id,:checked => false,:action => :vacation_update })}%></td>
+              <% end %>
+                <td><%="$ "%><%=number_with_precision(notary_fee(notary.id)[2],:precision=>2)%></td>
+
+                <td>&nbsp;&nbsp;<%=number_with_precision(@rating_percentage.to_f,:precision=>2)%>/5</td>
+								<td><%= link_to "X", { :controller => "/admin/notaries", :action => "destroy", :id => notary.id}, :confirm => "Are you sure you want to delete this notary?", :style => 'margin-left:0px;' %></td>
+								<!--<td style="text-align:center;width:20px;"><%= link_to "X", { :controller => "/admin/notaries", :action => "destroy", :id => notary.id,:page => params[:page]},{:style => 'margin-left:0px;' }, :confirm => "Are you sure you want to delete this notary?" %></td>-->
+                <td> <a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'view_contactinfo_<%= notary.id %>', '', 'width=720px,height=530px,left=200px,top=150px,resize=0,scrolling=0');
+                                           " title="View Contact Info" style="color: #000;font-size: 12px;">Contact Info</a></td>
+
+               <td> <a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'view_orderinfo_<%= notary.id %>', '', 'width=720px,height=530px,left=200px,top=150px,resize=0,scrolling=50');showfirstdiv(<%=notary_order_id(notary.id)[0]%>);
+                                           " title="View Order History" style="color: #000;font-size: 12px;">Order History</a></td>
+               <td> <a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'view_W9info_<%= notary.id %>', '', 'width=720px,height=400px,left=200px,top=150px,resize=0,scrolling=50');
+                                           " title="View W9 Info" style="color: #000;font-size: 12px;">W9</a></td>
+
+            </tr>
+
+          <div class="view_det" id="view_userprofile_<%= notary.id %>" style="display:none;">
+            <div>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </div>
+            <div class="view_det_left1">
+				<span>Contact Information:</span>
+              <ul>
+                ---------------------<br/>
+                <li> <label style="color:#00008B;">ID:</label><%= notary.id %></li>
+                <li><label style="color:#00008B;">Notary Name: </label><%=  notary.first_name %><%=  notary.last_name %></li>
+                <li><label style="color:#00008B;">Company Name: </label><%= notary.company_name.blank? ? "Not Provided" : notary.company_name %> </li>
+                <li><label style="color:#00008B;">Preferred Phone: </label><%= notary.day_phone.blank? ? "Not Provided" : notary.day_phone %> </li>
+                <li><label style="color:#00008B;">Home Phone: </label><%= notary.evening_phone.blank? ? "Not Provided" : notary.evening_phone %> </li>
+                <li><label style="color:#00008B;">Mobile Phone: </label><%= notary.mobile_phone.blank? ? "Not Provided" : notary.mobile_phone %> </li>
+               
+                <li><label style="color:#00008B;">Fax Number: </label><%= notary.fax_number.blank? ? "Not Provided" : notary.fax_number %> </li>
+                <li><label style="color:#00008B;">EMail: </label><%= notary.user.login.blank? ? "Not Provided" : notary.user.login %> </li>
+              </ul>
+            </div>
+            <div class="view_det_right1" >
+				<span >Document Delivery Address (Weekday):</span>
+              <ul>
+                -----------------------------------------<br/>
+                <li><label style="color:#00008B;">Address: </label><%= notary.weekday_deliver_address.blank? ? "Not Provided" : notary.weekday_deliver_address %> </li>
+                <li><label style="color:#00008B;">City: </label><%= notary.weekday_deliver_city.blank? ? "Not Provided" : notary.weekday_deliver_city %> </li>
+                <li><label style="color:#00008B;">State: </label><%= notary.weekday_deliver_state.blank? ? "Not Provided" : statename(notary.weekday_deliver_state) %> </li>
+                <li><label style="color:#00008B;">ZipCode: </label><%= notary.weekday_deliver_zip_code.blank? ? "Not Provided" : notary.weekday_deliver_zip_code %> </li>
+                <li><label style="color:#00008B;">Document Delivery Address (Weekend)</label></li>
+                -----------------------------------------<br/>
+                <li><label style="color:#00008B;">Address: </label><%= notary.weekend_deliver_address.blank? ? "Not Provided" : notary.weekend_deliver_address %> </li>
+                <li><label style="color:#00008B;">City: </label><%= notary.weekend_deliver_city.blank? ? "Not Provided" : notary.weekend_deliver_city %> </li>
+                <li><label style="color:#00008B;">State: </label><%= notary.weekend_deliver_state.blank? ? "Not Provided" : statename(notary.weekend_deliver_state) %> </li>
+                <li><label style="color:#00008B;">Zip Code: </label><%= notary.weekend_deliver_zip_code.blank? ? "Not Provided" : notary.weekend_deliver_zip_code %> </li>
+                <li><label style="color:#00008B;">Payment Address (address check is to be sent to)</label></li>
+                -----------------------------------------<br/>
+                <li><label style="color:#00008B;">Make Check PayableTo: </label><%= notary.billing_payable_to.blank? ? "Not Provided" : notary.billing_payable_to %> </li>
+                <li><label style="color:#00008B;">Address: </label><%= notary.billing_deliver_address.blank? ? "Not Provided" : notary.billing_deliver_address %> </li>
+                <li><label style="color:#00008B;">City: </label><%= notary.billing_deliver_city.blank? ? "Not Provided" : notary.billing_deliver_city %> </li>
+                <li><label style="color:#00008B;">State: </label><%= notary.billing_deliver_state.blank? ? "Not Provided" : statename(notary.billing_deliver_state) %> </li>
+                <li><label style="color:#00008B;">Zip Code: </label><%= notary.billing_deliver_zip_code.blank? ? "Not Provided" : notary.billing_deliver_zip_code %> </li>
+              </ul>
+              <div style="clear:both">
+              </div>
+            </div>
+          </div>
+        <div id="view_contactinfo_<%=notary.id%>" style="display:none;">
+                <div>
+
+         NotaryFly U:&nbsp;<%= notary.id %> <br></br>
+        <center class="center_head"><h1 style="font-size: 24px; color:#597AB2;"> Current Fee : <span>$<%= notary_fee(notary.id)[2]+0.0%>0</span></h1> </center>
+		<center class="center_subhead" style="font-weight: bold; color:#3096dc;"> <span class="not_completed">NotaryFly U: &nbsp;&nbsp;<%=  notary_fee(notary.id).first%> </span>&nbsp;&nbsp;
+          <span> 4-5 &nbsp;&nbsp;<%=  notary_fee(notary.id)[1] % 50 %>/50 </span>&nbsp;&nbsp;
+	    <span class="right_span"> 3-4 &nbsp;&nbsp;<%=  notary_fee(notary.id).last % 50 %>/100 </span> </center><br></br>
+
+
+                  </div>
+                <div class="view_det_left1">
+				<span>Notary Details</span>
+              <ul>
+                <br/>
+
+                <li><label>Name: </label><%=  notary.first_name %>&nbsp;<%=  notary.last_name %></li>
+                <li><label >Address: </label><%= notary.weekday_deliver_address %> </li>
+                                <li>&nbsp;<%= notary.weekday_deliver_city %>, <%= notary.weekday_deliver_state %> <%= notary.weekday_deliver_zip_code %></li>
+                <li><label >Preferred #: </label><%= notary.day_phone.blank? ? "Not Provided" : notary.day_phone %> </li>
+                <li><label >Home #: </label><%= notary.evening_phone.blank? ? "Not Provided" : notary.evening_phone %> </li>
+                <li><label >Mobile #: </label><%= notary.mobile_phone.blank? ? "Not Provided" : notary.mobile_phone %> </li>
+                <!--<li><label style="color:#00008B;">WorkPhone: </label><%= notary.work_phone.blank? ? "Not Provided" : notary.work_phone %> </li>-->
+                <li><label>Fax #: </label><%= notary.fax_number.blank? ? "Not Provided" : notary.fax_number %> </li>
+                <li><label >EMail: </label><%= notary.user.login.blank? ? "Not Provided" : notary.user.login %> </li>
+                <li><label >Attorney: </label><%= notary.is_attorney=1 ? "Yes" : "No" %> </li>
+                <li><label >Title Producer: </label><%= notary.title_insurance_provider='yes' ? "Yes" : "No" %> </li>
+                <li><label >Billungual: </label><%= notary.bilingual="yes" ? "Yes" : "No" %> </li>
+              </ul>
+            </div>
+
+                <div class="view_det_right1">
+				<span>Skills/Experience</span>
+              <ul>
+                <br/>
+
+                <li><label>Years as a notary: </label><%=  notary.notary_history_length.blank? ? "Not Provided":notary.notary_history_length%></li>
+                <li><label ># of loan documents signed: </label><%= notary.notarized_documents_count.blank? ? "Not Provided" : notary.notarized_documents_count %> </li>
+
+              </ul>
+            </div>
+
+        </div>
+
+
+                <div id="view_orderinfo_<%= notary.id %>" style="display:none;">
+          <%order1=notary_order(notary.id)%>
+          <%order_arr=notary_order_id(notary.id)%>
+
+        <%unless order1.empty? %>
+          <%#raise order_arr.inspect%>
+          <h1> Order #</h1>
+          <div class="order_number_list">
+         <%order1.each do |order|%>
+         <%=link_to order.id,'#',:onclick=>"show_order_details(#{order.id},#{order_arr.to_json});"%> <br></br>
+         <%end%>
+         </div>
+         <%order1.each do |order|%>
+         <div  class="order_list" id="client_order_rightcnt_<%=order.id%>"style="display:none;">
+          <h1>NotaryFLY.com</h1><br></br>
+           Please visit http://www.notaryfly.com and login with your username and password so yo can provide up to date status on the signing.<br></br>
+           <li><label>Notary Username:</label><%=notary.user.email%></li>
+           <li><label>Notary Password:</label><%=notary.user.password%></li><br></br>
+           <div class='order_credentials'>
+			<div class="work_details">
+             <div class="order_details">
+             <h1>Work Order details:</h1>
+			 <div class="order_details_box">
+
+                           <ul>
+             <li><label>NF Order #:</label><%=order.id%></li>
+              <li><label>  Escrow #:</label><%=order.loan_number%></li>
+              <li><label> Scheduled By #:</label><%=order.client.company_name%>&nbsp;<%=order.client.address%>&nbsp;<%if order.client.city!=nil%><%=order.client.city%><%=","%><%end%><%=order.client.state%><%=order.client.zip_code%></li>
+               <li><label>  Contact Name #:</label><%=order.client.client_name%></li>
+               <li><label>  Telephone #:</label><%=order.client.home_phone.blank? ? "Not Provided" :order.client.home_phone%>&nbsp;&nbsp;&nbsp;<label>Ext:</label><%=order.client.home_extension.blank? ? "Not Provided" :order.client.home_extension%></li>
+               <li><label>  Direct #:</label><%=order.client.direct_phone.blank? ? "Not Provided" :order.client.direct_phone %></li>
+               <li><label>  Mobile #:</label><%=order.client.mobile_phone.blank? ? "Not Provided" :order.client.mobile_phone%></li><br></br>
+
+                <li><label> Notary:</label><%if order.notary!=nil%><%=order.notary.first_name.blank? ? "Not provided":order.notary.first_name%>&nbsp;<%=order.notary.last_name.blank? ? "Not provided":order.notary.last_name%><%end%></li>
+               <li><label>  NotaryFly ID #:</label><%if order.notary!=nil%><%=order.notary.id.blank? ? "Not provided":order.notary.id%><%end%></li>
+               <li><label> Signing Fee:</label><% if order.order_notary_fee.blank?%> <%="Not Provided"%><%else%><%='$ '%><%=number_with_precision(order.order_notary_fee,:precision=>2)%><%end%></li>
+                <li><label> Day #:</label><%= notary.day_phone.blank? ? "Not Provided" : notary.day_phone %> </li>
+                <li><label>  Evening #:</label><%= notary.evening_phone.blank? ? "Not Provided" : notary.evening_phone %> </li>
+               <li><label >Mobile #: </label><%if order.notary!=nil%><%= order.notary.mobile_phone.blank? ? "Not Provided" : order.notary.mobile_phone %> <%end%></li>
+                <li><label >WorkPhone: </label><%if order.notary!=nil%><%= order.notary.work_phone.blank? ? "Not Provided" : order.notary.work_phone %><%end%></li>
+                <li><label> Email:</label><%if order.notary!=nil%><%=order.notary.user.email%><%end%></li>
+
+				</div>
+			 </div>
+			 <div class="order_details">
+                 <h1>Return Documents To:</h1>
+				 <div class="order_details_box">
+                 <li><%=order.return_company_name%></li>
+                 <li><%=order.return_attention%></li>
+                 <li><%=order.return_address%></li>
+                 <li><%=order.return_city%>&nbsp;<%=order.return_state%>&nbsp;<%=order.return_zip_code%></li>
+                 <br></br>
+
+             </ul>
+				</div>
+               </div>
+			 </div>
+				<div class="work_details">
+             <div class="order_details" >
+			 <h1>Signing Information</h1>
+				<div class="order_details_box">
+               <li><label>Signing date:</label><%=  order.signing_date.blank? ? "Not Provided": order.signing_date %></li>
+               <li><label>Signing Time:</label><%=  order.signing_time.blank? ? "Not Provided": order.signing_time %></li>
+               <li><label>Transaction Type:</label><%=  order.loan_type.blank? ? "Not Provided": order.loan_type %></li>
+               <li><label>Delivery Option:</label><%=  order.delivery_options.blank? ? "Not Provided": order.delivery_options %></li>
+               <li><label>Document Sets(s):</label><%=  order.sets_of_docs.blank? ? "Not Provided": order.sets_of_docs %></li>
+               <li><label>Docs sent via:</label><%=  order.shipped_via.blank? ? "Not Provided": order.shipped_via %></li>
+
+               <li><label>Tracking #:</label><%=  order.tracking_number.blank? ? "Not Provided": order.tracking_number %></li><br></br>
+
+                <%#*<li><label>Signing Location:</label><%=order.signing_location_address=nil && order.signing_location_city=nil && order.signing_location_state=nil && order.signing_location_zip_code=nil ? "Not Provided" :  order.signing_location_address+" "+order.signing_location_city+" "+order.signing_location_state+","+order.signing_location_zip_code %>
+             <li><label>Signing Location:</label><%= order.signing_location_address%>&nbsp;<%order.signing_location_city%>&nbsp;<%=order.signing_location_state%><%= "," %><%= order.signing_location_zip_code %></li>
+               <br></br>
+
+              <li><label>Signer #1:</label><% if order.borrower_1_first_name.blank? && order.borrower_1_last_name.blank?%><%= "Not Provided"%><%else%> <%= order.borrower_1_first_name%>&nbsp;<%=order.borrower_1_last_name %><%end%></li>
+               <%#=  order.borrower_1_first_name=nil && order.borrower_1_last_name!=nil ? "Not Provided": order.borrower_1_last_name %>
+                 <%#=  order.borrower_1_first_name!=nil && order.borrower_1_last_name=nil ? "Not Provided": order.borrower_1_first_name %>
+               </li>
+               <li><label>Work #:</label><%=  order.borrower_1_work_phone.blank? ? "Not Provided": order.borrower_1_work_phone %></li>
+               <li><label>Home #:</label><%=  order.borrower_1_home_phone.blank? ? "Not Provided": order.borrower_1_home_phone %></li>
+               <li><label>Mobile #:</label><%=  order.borrower_1_mobile_phone.blank? ? "Not Provided": order.borrower_1_mobile_phone %></li><br></br>
+
+               <li><label>Signer #2:</label><%=  order.borrower_2_first_name.blank? && order.borrower_2_last_name.blank? ? "Not Provided":  order.borrower_2_first_name+' '+order.borrower_2_last_name %></li>
+               <li><label>Work #:</label><%=  order.borrower_2_work_phone.blank? ? "Not Provided": order.borrower_2_work_phone %></li>
+               <li><label>Home #:</label><%=  order.borrower_2_home_phone.blank? ? "Not Provided": order.borrower_2_home_phone %></li>
+               <li><label>Mobile #:</label><%=  order.borrower_2_mobile_phone.blank? ? "Not Provided": order.borrower_2_mobile_phone %></li><br></br>
+			   </div>
+			   </div>
+			   <div class="order_details">
+               <h1> Agent Contact Information:</h1>
+				<div class="order_details_box">
+               <%agent= Agent.find_by_id(order.agent_id)%>
+               <%if agent!=nil%>
+               <li><%=agent.company_name.blank? ? "Not Provided" : agent.company_name%></li>
+                <li><%=agent.broker_name.blank? ? "Not Provided" : agent.broker_name%></li>
+                <li><%=agent.address.blank? ? "Not Provided" : agent.address%></li>
+               <li><%=agent.city%><%=','%><%=agent.state%>&nbsp;<%=agent.zip_code%></li>
+               <li><label>Telephone #:</label><%= agent.home_phone.blank? ? "Not Provided":agent.home_phone%> &nbsp;&nbsp:<label>Ext:</label><%= agent.home_extension.blank? ? "Not provided": agent.home_extension%></li>
+               <li><label>Cell #:</label><%= agent.mobile_phone.blank? ? "Not Provided":agent.mobile_phone %></li>
+                <%else%>
+               Not provided
+               <%end%>
+			   </div>
+			   </div>
+			   </div>
+			   <div class="sign_details">
+			   <h1>Signing Instructions:</h1>
+				<div class="order_details_box">
+                 <li><%=order.special_instructions%></li>
+				 </div>
+               </div>
+              
+             </div>
+           </div>
+          <%end%>
+
+         <%else%>
+         <h1>No orders found</h1>
+      <%end%>
+
+
+</div>
+
+        <div id="view_W9info_<%= notary.id %>"  style="display:none;">
+          <%unless notary.w_9==nil%>
+          <div id="example"> </div>
+
+          <% if Dir[Rails.root.join('public', 'repository_files', "#{notary.id}",'*')].present?%>
+          
+          <%#= link_to "#{notary.w_9}", :controller => 'admin/notaries', :action => 'send_file', :filename => "#{notary.w_9}"%>
+          Click below to download file<br></br>
+          <%= link_to "#{notary.w_9}", "/repository_files/#{notary.id}/#{notary.w_9}" %>
+          <%else%>
+        <%=notary.w_9%>
+          
+         
+          <%#=content%>
+          <%#=render :file=>'public/repository_files/26/orders_controller_2.rb'%>
+          <%#=File.read("#{notary.w_9}","r")%>
+          
+
+          <%end%>
+          <%else%>
+          <h1>Document Not Provided</h1>
+      <%end%>
+          
+
+        </div>
+
+        <% end %>
+        </tbody>
+      </table>
+      <script type="text/javascript">
+        initSortTable('myTable',Array('N','S','S','S','N'));
+      </script>
+      <%= will_paginate @notaries %>
+      <div style=" margin-top: 20px; clear:both;"></div>
+    </div>
+    </form>
+  </div>
+
+</div>
+<div id="add_message" style="display:none">
+
+  <% form_for :notary, :url => "/admin/notaries/send_message/" do |f| -%>
+    <p>
+    <div style="padding-left: 40px;">Subject : <%= text_field :title,:title%> </div>
+  </p>
+  <p>
+  <div style="padding-left: 90px;"> <%= text_area :notes,:notes,:value=> "\n\n\n\n\nRespectfully Yours,\nNotaryFly\n(For any inquiries, please send email to: <a href='mailto:support@notaryfly.com'>support@notaryfly.com</a>)"%> </div>
+  </p>
+  <p>
+    <!-- <input type="hidden" id="hcharLen" name="charLenths" value="500"/>
+    <div id="charLen" style="padding-left:40px;height:6px">500 characters left</div> -->
+  <div style="padding-left:300px"><%=submit_tag "Send"%> | <a href="javascript:void(0)" onClick="cancelWindow()" style="text-decoration: none">Cancel</a></div>
+  </p>
+  <input type="hidden" id="clientIds" value="" name="clients[ids]" />
+<%  end %>
+
+</div>
+
+
+
+
+

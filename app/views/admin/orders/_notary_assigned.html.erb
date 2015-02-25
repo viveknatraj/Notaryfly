@@ -1,0 +1,23 @@
+<div id="tabs3" class="default-tabs" style="display:<%= params[:tab] == "tabs3" ? 'block' : 'none' %>">
+  <table width="100%" border="0" cellspacing="10" cellpadding="10">
+    <tr class="mid-light-blue">
+      <td>NF#</td>
+      <td>SIGNER</td>
+      <td>ORDER OPENED</td>
+      <td>APPOINTMENT SCHEDULED</td>
+      <td>SIGNING LOCATION</td>
+      <td>CLIENT NAME</td>
+      <td>DOCS?</td>
+    </tr>
+    <% @notary_assigned_orders.each do |order| %>
+      <tr class='<%= order_status_class(order) %>'>
+        <%= admin_order_table_data(order, 'tabs3') %>
+      </tr>
+    <% end %>
+    <% if @notary_assigned_orders.blank? %>
+      <tr class="mid-light-blue">
+        <td colspan='7' style="text-align: center">You currently have no open orders.</td>
+      </tr>
+    <% end %>
+  </table>
+</div>

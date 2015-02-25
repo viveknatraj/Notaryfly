@@ -1,0 +1,180 @@
+<div id='notary_info' class='last'>
+		<style type='text/css' media='screen'>
+			li * {font-size:11px;}
+			h3 * {font-size:13px;}
+			h2 * {font-size:13px;}
+		</style>
+		
+		<h2 class='notary_info'>Notary Details</h2>
+		<div class="notary_deyails">
+			<ul class='notary_info'>
+				<li><strong>Name:</strong> <%= notary.first_name %> <%= notary.last_name %></li>
+				<li><strong>Address:</strong> <%= notary.weekday_deliver_address %> </li>
+                                <li><span>&nbsp;<%= notary.weekday_deliver_city %>, <%= notary.weekday_deliver_state %> <%= notary.weekday_deliver_zip_code %></span></li>
+                 		<% if accept %>
+                                  <li class="no_highlight"><strong>Preferred #:</strong><span><% if notary.day_phone.length!=0 %> <%= number_to_phone(notary.day_phone, :area_code => true) %><%else%> Not Provided <%end%></span></li>
+                                  <li class="no_highlight"><strong>Home #:</strong><span><% if notary.evening_phone.length!=0 %> <%= number_to_phone(notary.evening_phone, :area_code => true) %><%else%> Not Provided <%end%></span></li>
+                                  <li class="no_highlight"><strong>Mobile #:</strong><span><% if notary.mobile_phone.length!=0 %> <%= number_to_phone(notary.mobile_phone, :area_code => true) %><%else%> Not Provided <%end%></span></li>
+                                  <li class="no_highlight"><strong>Fax #:</strong> <span><% if notary.fax_number.length!=0 %> <%= number_to_phone(notary.fax_number, :area_code => true) %> <%else%> Not Provided <%end%> </span></li>
+                                  <li><strong>Email:</strong> <a href='mailto:<%= notary.user.email %>' class='small_link' style='color:#154B66'><%= notary.user.email %></a></li>
+				<%end%>
+                                <li><strong>Attorney: </strong> <% if notary.is_attorney == '1' %>Yes<% else %>No<% end %></li>
+                                <li><strong>Title Producer: </strong> <% if notary.title_insurance_provider == 'Yes' %>Yes<% else %>No<% end %></li>
+				<li><strong>Bilingual:</strong>
+				<% if notary.bilingual == 'Yes' %>
+					<%= notary.bilingual_language %>
+                                  <%else%>
+                                  No
+				<% end %>
+                                </li>
+			</ul>
+			
+			<h2 class='notary_info' style='margin-top:10px;'>Skills/Experience</h2>
+			<ul class='notary_info'>
+                                <li><strong>Years as a notary: </strong> <%= notary.notary_history_length %></li>
+                                <li><strong># of loan docs signed: </strong> <%= notary.notarized_documents_count %></li>
+				<li><strong>Email Document Capability: </strong> <%= notary.email_document_capability %></li>
+				<li><strong>eNotarizaion Capability: </strong> <%= notary.enotarization_capability %></li>
+				<li><strong>Reverse Mortgage Experience: </strong> <%= notary.reverse_mortgage %></li>
+				<li><strong>Life Settlement Experience: </strong> <%= notary.life_settlement_experience %></li>
+			</ul>
+
+
+                        <h2 class='notary_info' style='margin-top:10px;'>Notes:</h2>
+                        <% if notary.notes!=nil and notary.notes.length!=0 %>
+                        <%=notary.notes.gsub("\n","<br/>")%>
+                        <%else%>
+                        Not Provided
+                        <%end%>
+			
+		</div>
+
+                <div class='conform_area'>
+				<% if accept %>
+                  <%if @order.status!='order denied'%>
+				<a class="conform_notery" href = "javascript:void(0)" onclick = "document.getElementById('notary_fee<%=notary.id%>').disabled = true;document.getElementById('other_fee_reason<%=notary.id%>').style.display='none';document.getElementById('other_fee<%=notary.id%>').style.display='none';document.getElementById('light<%=notary.id%>').style.display='block';document.getElementById('fade<%=notary.id%>').style.display='block'"><%=image_submit_tag("Confirm-This-Notary.jpg",:id=>'use_notary_focus'+count.to_s,:onclick=>'return false')%></a> 
+	          <%end%>
+                                <%end%>	
+<% if notary.photo_file_name!=nil and notary.photo_file_name.length!=0 %><p class='person_img'><img src='<%= notary.photo.url %>' height='75' style='float:right;  margin: 5px 0 0 46px; border:2px solid #000; /></p><% end %>
+
+		</div>
+                
+                <% if accept %>
+                <%if @order.status!='order denied'%>
+                  <h2 class='notify_header'>Notary Feedback</h2>
+                  <%count=0%>
+                  <div id="not_feedback" class="notary_rating">
+                    <% client = OrderFeedback.find_all_by_notary_id(notary.id).collect{|i| i.id} %>
+                    <% j = client.count %>
+                    <% notary1 = OrderFeedback.find_all_by_notary_id(notary,:group => 'created_at DESC').collect{|i| i.client_id}.uniq %>
+                    <%client_name=[]%>
+                    <%company_name=[]%>
+                    <%feedback_comment=[]%>
+                    <%rating_percentage=[]%>
+                    <%  notary1.each do |i| %>
+                      <%  tot_Percentage = 0%>
+                      <% feedback = OrderFeedback.find_all_by_notary_id(notary.id,:group=>'created_at DESC')%>
+                    
+                    <% OrderFeedback.find_all_by_notary_id(notary.id,:group=>'created_at DESC').collect{|a| a.comments}.each do |f|
+                      feedback_comment << f
+                      end%>
+
+                        <% client= Client.find_by_id(i) %>
+                                  
+
+                      <%  for feed in feedback%>
+
+                      <% client_name << client.client_name%>
+                      <% company_name << client.company_name%>
+                        <%tot_Percentage = feed.accuracy.to_i+feed.communication.to_i+feed.punctuality.to_i+feed.fees.to_i+feed.professionalism.to_i%>
+                      
+                      <%if feedback.size.to_i!=0%>
+                        <%totStars = 25%>
+                        <%tot_Percentage = tot_Percentage.to_f / totStars.to_f%>
+
+					           <%else%>
+					           <%tot_Percentage = 0.0%>
+                     <%end%>
+                      <% ratings =tot_Percentage*5*20
+                      rating_percentage << sprintf('%0.0f',ratings)
+                    %>
+                    <%end%>
+                    <%end%>
+		<%if !rating_percentage.blank? %>
+    <%if feedback_comment.length < 5%>
+                    <%for i in 0...feedback_comment.length%>
+                      <div id="star">
+                        <ul id="star4" class="star">
+                          <li id="starCur4" class="curr" style="width:<%= rating_percentage[i].to_s+'%'%>"></li>
+                        </ul>
+                       <div id="star_client" ><%=company_name[i]%>&nbsp;<%= client_name[i]%>
+                        </div>
+                      
+                      
+                    <div id="star_feedback comment"><%if feedback_comment[i]!=""%>
+
+                        <p style="margin:0 0 5px 12px !important;"><%=feedback_comment[i]%> </p>
+			                 <hr class="comment_line"></hr>
+                         <%end%>
+                       <%count=count+1%>
+                    </div>
+		                </div>
+                    <%end%>
+      <%else%>
+      <%for i in 0...5%>
+                      <div id="star">
+                        <ul id="star4" class="star">
+                          <li id="starCur4" class="curr" style="width:<%= rating_percentage[i].to_s+'%'%>"></li>
+                        </ul>
+                       <div id="star_client" ><%=company_name[i]%>&nbsp;<%= client_name[i]%>
+                        </div>
+                      
+                      
+                    <div id="star_feedback comment"><%if feedback_comment[i]!=""%>
+
+                        <p style="margin:0 0 5px 12px !important;"><%=feedback_comment[i]%> </p>
+                       <hr class="comment_line"></hr>
+                         <%end%>
+                       <%count=count+1%>
+                    </div>
+                    </div>
+                    <%end%>
+      <%end%>
+                 <%end%>  
+                   
+                    
+                    <%  if j.to_i > 5%>              
+
+<a class="feedback_showmore" href = "" onclick = "document.getElementById('lite').style.display='block';document.getElementById('not_feedback').style.display='none';return false">To View All FeedBack, Click Here</a>
+                  <%end%>
+                  </div>
+                  <%count=0%>
+
+                  <div id="lite" class="notary_rating" style="display:none">
+                                     
+                     <%for i in 0...rating_percentage.length/2%>
+                      <div id="star">
+                        <ul id="star4" class="star">
+                          <li id="starCur4" class="curr" style="width:<%= rating_percentage[i].to_s+'%'%>"></li>
+                        </ul>
+                       <div id="star_client" ><%=company_name[i]%>&nbsp;<%= client_name[i]%>
+                        </div>
+                      
+                      
+                    <div id="star_feedback comment"><%if feedback_comment[i]!=""%>
+
+                        <p style="margin:0 0 5px 12px !important;"><%=feedback_comment[i]%> </p>
+			                 <hr class="comment_line"></hr>
+                         <%end%>
+                       <%count=count+1%>
+                    </div>
+		                </div>
+                    <%end%>
+                      
+			
+                    </div>
+
+                  
+                <%end%>
+                <%end%>
+	</div>

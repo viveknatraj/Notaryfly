@@ -1,0 +1,36 @@
+<div class="block" id="block-tables">
+
+  <div class="content">
+<% form_for :client, :url => "/admin/clients/settings/" do %>
+    <div class="inner">
+     
+   <table width="503" height="179" style="height: 150px;">
+          <tr>
+            <th width="172" height="23"></th>
+            <th width="289"><div align="left">Admin User/Password Change</div></th>
+           
+          </tr>
+
+          <tr>
+            <td width="172" height="23"></td>
+            <td width="289"><div class="errorExplanation" style="display:none;color: #ff0000" id="signupvalid" align="left"></div></td>
+
+          </tr>
+           
+          <tr valign="bottom">
+            <td><div align="right">User Name</div></td><td><%= text_field :admin,:username,:value=>@admin.username,:style=>"width:150px;"%></td>
+          </tr>
+          <tr valign="top">
+            <td><div align="right">Password</div></td><td><%= password_field :admin,:password,:value=>@admin.password,:style=>"width:150px;"%></td>
+          </tr>
+          <tr valign="top">
+            <td></td><td align="justify"><%=submit_tag "Change", :onclick=>'return checkAdmin()'%></td>
+          </tr>
+
+</table>
+  
+    </div>
+<%  end %>
+  </div>
+  
+</div>

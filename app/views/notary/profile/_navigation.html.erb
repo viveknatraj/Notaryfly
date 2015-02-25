@@ -1,0 +1,21 @@
+<div id="profile_navigation" class="tab_navigation span-24 last">
+  <ul class="inline_list">
+    <li class="tab"><a href="/notary/profile"
+                       <% if params[:controller] == "notary/profile" and params[:action] == "index" || (params[:steps] && params[:steps][:page] == "index") %> class="active"
+                       <% end %>><span>Contact Information</span></a></li>
+    </li>
+    <li class="tab"><a href="/notary/profile/address"
+                       <% if params[:controller] == "notary/profile" and params[:action] == "address" || (params[:steps] && params[:steps][:page] == "address") %> class="active"
+                       <% end %>><span>Address Information</span></a></li>
+    <li class="tab"><a href="/notary/profile/experience"
+                       <% if params[:controller] == "notary/profile" and params[:action] == "experience" || (params[:steps] && params[:steps][:page] == "experience") %> class="active"
+                       <% end %>><span>Skills And Experience</span></a></li>
+    <li class="tab"><a href="/notary/profile/my_fees"
+                       <% if params[:controller] == "notary/profile" and params[:action] == "my_fees" || params[:action] == "fee_update" %> class="active"
+                       <% end %>><span>My Fee$</span></a></li>
+    <!--<li class="tab"><a href="notaryflyu"><span>NotaryFlyU</span>-->
+
+      <!--<div class="cap_icon"><img src="/images/cap.png?1362751221"></div>-->
+    <!--</a></li>-->
+  </ul>
+</div>

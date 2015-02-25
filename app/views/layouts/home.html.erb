@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<%= stylesheet_link_tag "blueprint/screen", "home" %>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>
+<%= javascript_include_tag "fancyzoom", "jqueryui", "jquery.validate", "rating", "jquery.maskedinput","form_validation" %>
+	
+	<title>NotaryFly</title>
+
+<!-- Right Click Disabled Function -->
+<!--<script language=JavaScript>
+var message="Function Disabled!";
+
+function clickIE4(){
+if (event.button==2){
+alert(message);
+return false;
+}
+}
+
+function clickNS4(e){
+if (document.layers||document.getElementById&&!document.all){
+if (e.which==2||e.which==3){
+alert(message);
+return false;
+}
+}
+}
+
+if (document.layers){
+document.captureEvents(Event.MOUSEDOWN);
+document.onmousedown=clickNS4;
+}
+else if (document.all&&!document.getElementById){
+document.onmousedown=clickIE4;
+}
+
+document.oncontextmenu=new Function("return false")
+</script>-->
+	
+</head>
+<% if params['action']=="zip_code_search" %>
+  <body onload="setCursorFocus('zip_code_val')">
+    <%else%>
+  <body onload="setCursorFocus('emailid')">
+    <%end%>
+    	<div id="container" class="container">
+		<%= yield %>
+	</div>
+    <!-- Start of StatCounter Code -->
+<script type="text/javascript">
+var sc_project=6101934;
+var sc_invisible=1;
+var sc_security="0ffa0faa";
+</script>
+
+<script type="text/javascript"
+src="http://www.statcounter.com/counter/counter.js"></script><noscript><div
+class="statcounter"><a title="vBulletin statistics"
+href="http://www.statcounter.com/vbulletin/"
+target="_blank"><img class="statcounter"
+src="http://c.statcounter.com/6101934/0/0ffa0faa/1/"
+alt="vBulletin statistics" ></a></div></noscript>
+<!-- End of StatCounter Code -->
+</body>
+</html>

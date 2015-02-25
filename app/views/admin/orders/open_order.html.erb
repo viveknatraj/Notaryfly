@@ -1,0 +1,102 @@
+<%= stylesheet_link_tag  "notaryfly", "rating" %>
+<%= stylesheet_link_tag "admin/screen" %>
+<div class="block" id="block-tables">
+  <div class="secondary-navigation">
+    <ul>
+      <li class="active"><a href="/admin/orders/open_order">Open Order</a></li>
+      <li class="first"><a href="/admin/orders/index">Completed Order</a></li>
+      <!--<li class="first"><a href="/admin/orders/pending_order">Pending Orders/Notary</a></li>-->
+      <li class="first"><a href="/admin/orders/order_history_paid">Orders History</a></li>
+						<li class="first"><a href="/admin/orders/cancelled_order">Cancelled Orders</a></li>
+      <!--<li class="first"><a href="/admin/orders/accounting">Accounting</a></li>-->
+    </ul>
+    <div class="clear"></div>
+  </div>
+  <div class="content">
+    <% if flash[:notice] %>
+        <div class="success"><%= flash[:notice] %></div>
+    <% end %>
+    <div class="inner">
+      <div class="xsnazzy">
+        <div class="container">
+          <div class="table-view" id="tabs">
+            <ul class="listing-view">
+              <li><a href="javascript:void(0);" id="tabs1">Open Orders</a></li>
+              <li><a href="javascript:void(0);" id="tabs2" class="light-blue">Need Notary</a></li>
+              <li><a href="javascript:void(0);" id="tabs3" class="mid-light-blue">Notary Assigned</a></li>
+              <li><a href="javascript:void(0);" id="tabs4" class="dark-light-blue">Appt Confirmed</a></li>
+              <li><a href="javascript:void(0);" id="tabs5" class="light-green">Attention</a></li>
+              <li><a href="javascript:void(0);" id="tabs6" class="mid-light-green">Cancelled</a></li>
+              <li><a href="javascript:void(0);" id="tabs7" class="dark-light-green">signed</a></li>
+              <li><a href="javascript:void(0);" id="tabs8" class="high-dark-light-green">paid</a></li>
+            </ul>
+            <%= render :partial => 'all_orders' %>
+            <%= render :partial => 'awaiting_notary' %>
+            <%= render :partial => 'notary_assigned' %>
+            <%= render :partial => 'confirmed_orders' %>
+            <%= render :partial => 'attention_orders' %>
+            <%#= render :partial => 'refuse_to_sign' %>
+            <%= render :partial => 'cancelled_orders' %>
+            <%= render :partial => 'signed_orders' %>
+            <%= render :partial => 'paid_orders' %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="clearfix"></div><br/>
+    <div id="pagination_1" class="<%= params[:tab] && params[:tab] != "tabs1" ? 'open_order-page' : '' %>">
+      <%= (will_paginate @orders).to_s.gsub(/<a(.*?)href="([^&]+)&.*?"(.*?)>/, '<a\1href="\2"\3>').gsub(/<a(.*?)href="([^"]+)"/, '<a\1href="\2&' + {:tab => "tabs1"}.to_query + '"') %>
+    </div>
+    <div id="pagination_2" class="<%= params[:tab] && params[:tab] != "tabs2" ? 'open_order-page' : '' %>">
+      <%= (will_paginate @awaiting_notary_orders).to_s.gsub(/<a(.*?)href="([^&]+)&.*?"(.*?)>/, '<a\1href="\2"\3>').gsub(/<a(.*?)href="([^"]+)"/, '<a\1href="\2&' + {:tab => "tabs2"}.to_query + '"') %>
+    </div>
+    <div id="pagination_3" class="<%= params[:tab] && params[:tab] != "tabs3" ? 'open_order-page' : '' %>">
+      <%= (will_paginate @notary_assigned_orders).to_s.gsub(/<a(.*?)href="([^&]+)&.*?"(.*?)>/, '<a\1href="\2"\3>').gsub(/<a(.*?)href="([^"]+)"/, '<a\1href="\2&' + {:tab => "tabs3"}.to_query + '"') %>
+    </div>
+    <div id="pagination_4" class="<%= params[:tab] && params[:tab] != "tabs4" ? 'open_order-page' : '' %>">
+      <%= (will_paginate @appt_confirmed_orders).to_s.gsub(/<a(.*?)href="([^&]+)&.*?"(.*?)>/, '<a\1href="\2"\3>').gsub(/<a(.*?)href="([^"]+)"/, '<a\1href="\2&' + {:tab => "tabs4"}.to_query + '"') %>
+    </div>
+    <div id="pagination_5" class="<%= params[:tab] && params[:tab] != "tabs5" ? 'open_order-page' : '' %>">
+      <%= (will_paginate @attention_orders).to_s.gsub(/<a(.*?)href="([^&]+)&.*?"(.*?)>/, '<a\1href="\2"\3>').gsub(/<a(.*?)href="([^"]+)"/, '<a\1href="\2&' + {:tab => "tabs5"}.to_query + '"') %>
+    </div>
+    <div id="pagination_6" class="<%= params[:tab] && params[:tab] != "tabs6" ? 'open_order-page' : '' %>">
+      <%= (will_paginate @refuse_to_sign_orders).to_s.gsub(/<a(.*?)href="([^&]+)&.*?"(.*?)>/, '<a\1href="\2"\3>').gsub(/<a(.*?)href="([^"]+)"/, '<a\1href="\2&' + {:tab => "tabs6"}.to_query + '"') %>
+    </div>
+    <div id="pagination_7" class="<%= params[:tab] && params[:tab] != "tabs7" ? 'open_order-page' : '' %>">
+      <%= (will_paginate @signed_orders_orders).to_s.gsub(/<a(.*?)href="([^&]+)&.*?"(.*?)>/, '<a\1href="\2"\3>').gsub(/<a(.*?)href="([^"]+)"/, '<a\1href="\2&' + {:tab => "tabs7"}.to_query + '"') %>
+    </div>
+    <div id="pagination_8" class="<%= params[:tab] && params[:tab] != "tabs8" ? 'open_order-page' : '' %>">
+      <%= (will_paginate @paid_orders).to_s.gsub(/<a(.*?)href="([^&]+)&.*?"(.*?)>/, '<a\1href="\2"\3>').gsub(/<a(.*?)href="([^"]+)"/, '<a\1href="\2&' + {:tab => "tabs8"}.to_query + '"') %>
+    </div>
+
+  </div>
+</div>
+
+<script language="JavaScript">
+    ;if(window.jQuery) (function($){
+        $(window).load(function(){
+            <%# if params[:tab].present? %>
+//            var active_tab = "<%= params[:tab]%>";
+//            console.log(active_tab);
+//            document.getElementById(active_tab).click();
+            <%# end %>
+        });
+        $('ul.listing-view a').click(function() {
+            var current_id = $(this).attr('id');
+            var count = 1;
+            $('.default-tabs').each(function(){
+                page = document.getElementById("pagination_" + count)
+                page.setAttribute('style', 'display:none');
+                $(this).attr('style', 'display:none');
+                if ($(this).attr('id') == current_id) {
+                    $(this).attr('style', 'display:block');
+                    page.setAttribute('style', 'display:block');
+                }
+                count++;
+
+            });
+
+        });
+    })(jQuery);
+</script>

@@ -1,0 +1,63 @@
+<%= render :partial => "/notary/header" %>
+<%= stylesheet_link_tag "dhtmlwindow" %>
+<%= javascript_include_tag "defaults"  %>
+<%= javascript_include_tag "prototype"  %>
+<%= javascript_include_tag "form_validation" %>
+<%= javascript_include_tag "dhtmlwindow"%>
+<%= render :partial => "navigation" %>
+<div id="open_orders" class="span-16 last content_container">
+  <% if flash[:notice] %><div class="success"><%= flash[:notice] %></div><% end %>
+  <div class="xsnazzy">
+    <div class="container">
+      <div class="table-view" id="tabs">
+        <ul class="listing-view">
+          <li><a href="javascript:void(0);" id="tabs1">Open orders</a></li>
+          <!--<li><a href="javascript:void(0);" id="tabs2" class="light-blue">Need Notary</a></li>-->
+          <li><a href="javascript:void(0);" id="tabs3" class="mid-light-blue">Assigned Orders</a></li>
+          <li><a href="javascript:void(0);" id="tabs4" class="dark-light-blue">Appt Confirmed</a></li>
+          <li><a href="javascript:void(0);" id="tabs5" class="light-green">Cancelled Orders</a></li>
+          <li><a href="javascript:void(0);" id="tabs6" class="mid-light-green">signed</a></li>
+          <li><a href="javascript:void(0);" id="tabs7" class="dark-light-green">paid</a></li>
+        </ul>
+        <%= render :partial => 'all_orders' %>
+        <%#= render :partial => 'pending_orders' %>
+        <%= render :partial => 'assigned_orders' %>
+        <%= render :partial => 'confirmed_orders' %>
+        <%= render :partial => 'refuse_to_sign_orders' %>
+        <%= render :partial => 'signed_orders' %>
+        <%= render :partial => 'paid_orders' %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script language="JavaScript">
+  ;if(window.jQuery) (function($){
+    $(window).load(function(){
+<% if params[:tab].present? %>
+        var active_tab = "<%= params[:tab]%>";
+        console.log(active_tab);
+        document.getElementById(active_tab).click();
+<% end %>
+    });
+    $('ul.listing-view a').click(function() {
+      var current_id = $(this).attr('id');
+      $('.default-tabs').each(function(){
+        if ($(this).attr('id') == current_id) {
+          $(this).attr('style', 'display:block');
+        }
+        else {
+          $(this).attr('style', 'display:none');
+        }
+
+      });
+
+    });
+  })(jQuery);
+</script>
+
+	<script type="text/javascript" charset="utf-8">
+		jQuery(document).ready(function() {
+jQuery('.success').fadeOut(5000)
+		});
+	</script>

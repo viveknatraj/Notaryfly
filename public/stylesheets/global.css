@@ -1,0 +1,29 @@
+/* - - - - - - CSS Document - - - - - - - - -
+
+Title : Global style sheet for client-side web development standards
+Author : Will Jessup
+
+- - - - - - - - - - - - - - - - - - - - - */
+
+/* these are the styles for the "shadow" graphical style */
+#tweenWindow  .white_bl {height:12px;width:14px;display:block;position:absolute;bottom:1px;left:0px;background:url(../images/white_bl.gif) 0px 0px no-repeat;}
+#tweenWindow  .white_tr {height:13px;width:12px;display:block;position:absolute;top:0px;right:1px;background:url(../images/white_tr.gif) 0px 0px no-repeat;}
+#tweenWindow  .white_tl {height:6px;width:6px;display:block;position:absolute;top:0px;left:0px;background:url(../images/white_tl.gif) 0px 0px no-repeat;}
+
+/* these are the styles for the "plain" graphical style */
+#tweenWindow {overflow:visible;padding:9px 9px 9px 9px;position:absolute;z-index:110;background-color:#ffffff; opacity: 0;filter:alpha(opacity=60);filter:alpha(opacity=0);-moz-opacity: 0;}
+
+/* global tweenbox styles */
+#tweenClose {cursor:arrow;height:30px;width:40px;display:block;position:absolute;top:5px;right:15px;background:url(/images/closebox.gif) 0px 0px no-repeat;}
+#tweenContent {background-color: #fff;display:block;}
+#tweenOverlay {position: absolute;z-index:100;width: 100%;height: 100%;top: 0;left: 0;min-height:100%;background-color:#000;opacity: 0;filter:alpha(opacity=0);-moz-opacity: 0;}
+#tweenLoad {position:absolute;display:none;height:100px;width:100px;z-index:201;}
+
+/* gallery right and left styles */
+#tweenGalleryRight a {position:absolute;right:-41px;display:block;height:90px;width:41px;z-index:411;background:url(../images/images_right.jpg) 0px 0px no-repeat;}
+#tweenGalleryRight a:hover {background:url(../images/images_right.jpg) 0px -90px no-repeat;}
+#tweenGalleryLeft a {position:absolute;left:-35px;display:block;height:87px;width:35px;z-index:411;background:url(../images/images_left.jpg) 0px 0px no-repeat;}
+#tweenGalleryLeft a:hover {background:url(../images/images_left.jpg) 0px -87px no-repeat;}
+
+/* gotta love IE */
+*html #tweenWindow .white_bl {height:12px;width:14px;display:block;position:absolute;bottom:-5px;left:0px;background:url(../images/white_bl.gif) 0px 0px no-repeat;}

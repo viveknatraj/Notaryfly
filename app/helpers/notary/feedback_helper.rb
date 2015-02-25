@@ -1,0 +1,2 @@
+module Notary::FeedbackHelper
+end

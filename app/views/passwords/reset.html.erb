@@ -1,0 +1,93 @@
+<div id="home_header" class="span-24 last">
+	<div class="span-5">
+		<%= link_to image_tag("logo.jpg"),url_for({:controller=>"home",:action=> "index"}) %>
+	</div>
+	<div id="home_navigation" class="span-12 prepend-7 last">
+		<ul class="inline_list">
+			<li><%= link_to "Home", :controller => "home", :action => "index" %></li>
+			<li><%= link_to "Learn More", :controller => "home", :action => "learn_more" %></li>
+			<li><%= link_to "Faq's", :controller => "home", :action => "faqs" %></li>
+			<li><%= link_to "Order Status" %></li>
+		</ul>	
+	</div>
+</div>
+
+<div id="callout" class="span-24 last">
+	<div id="search_and_sign" class="span-8">
+		<h1><%= image_tag("header_search_and_sign.png") %></h1>
+		<%= image_tag("search_and_sign.png") %>
+	</div>
+	<div id="register" class="span-16 last">
+		<h2>Not A NotaryFly Member?</h2>
+		<p>
+			Become a member to get all the benefits of NotaryFly. 
+			<br />Registration is fast, easy, and FREE!
+		</p>
+		<p class="register"><%= link_to (image_tag("button_register_now.png"), :controller => "users", :action => "new_notary" ) %></p>
+		<p class="member"><%= link_to "Company Registration", :controller => "users", :action => "new_client"  %></p>
+	</div>
+</div>
+
+<div id="columns" class="span-24 last">
+	<div id="info" class="span-11">
+		<h3>What can Notary Fly do for you?</h3>
+		<p>NotaryFly has the web’s largest notary database, and it’s growing by more than
+		35,000 mobile notaries.  The depth of NotaryFly’s notary pool means you can trust
+		you’ll find the skills and experience you need in a notary when you conduct
+		a search.</p>
+
+		<p>Our advanced notary search tools allow you to fine-tune your search.  When you
+		search for notaries, you choose the criteria that’s important to you — location,
+		required skills, experience level and more — and our breakthrough technology
+		will instantly zero in on the most qualified notaries.</p>
+	</div>
+	<div id="search" class="span-6">
+		<h3>Notary Search</h3>
+		<form action="/home/zip_code_search" id="zip_code_search">
+			<label id="zip_code">Enter Zip Code</label>
+			<input type="text" name="zip_code" value="" id="zip_code" class="text_field"><br />
+			<input type="image" src="../images/button_search.png" id="button">
+		</form>
+		<p>Post your loan signing and find the notary
+		that is right for you in minutes.  Our hiring
+		tool makes it easy to filter and organize your
+		loan signings from start to finish.</p>
+		<p><%= link_to "Learn More...", :action => "learn_more" %></p>
+	</div>
+	<div id="login" class="span-6 last">
+		<h3 style="font-size:18px;">Reset Password</h3>
+		<% if flash[:notice] %><div style="color:red; margin: 5px 0px 2px 5px; font-size:11px;"><%= flash[:notice] %></div><% end %>	
+		<p style="font-size:11px; margin:10px 20px 10px 15px; font-weight:bold; color:red;">Please enter your new password</p>
+			
+	  <div id="form">
+			<% form_for(:user, :url => { :action => 'update_after_forgetting' }) do |f| %>
+			  <%= f.error_messages %>
+		
+			<%= f.label :password %><br />
+	    <%= f.password_field :password, :class => "text_field", :style=> "background:#FBE3E4;color:#8a1f11; border:3px solid red;" %>
+	
+			 <%= f.label :password_confirmation %><br />
+		   <%= f.password_field :password_confirmation, :class => "text_field", :style=> "background:#FBE3E4;color:#8a1f11; border:3px solid red;" %>
+
+	    <%= hidden_field_tag :reset_code, params[:reset_code] %>
+
+			<%= image_submit_tag("buttons/reset_password.jpg") %>
+		<% end -%>
+		</div>
+	</div>
+</div>
+<div id="footer" class="span-24 last">
+	<div class="span-15">
+		<ul class="inline_list footer">
+			<li><%= link_to "Home", :controller => "home", :action => "index" %> |</li>
+			<li><%= link_to "Learn More", :controller => "home", :action => "learn_more" %> |</li> 
+			<li><%= link_to "Contact Us", "mailto:support@notaryfly.com"  %> |</li>
+			<li><%= link_to "Terms of Use", :controller => "home", :action => "terms_of_use" %> |</li>
+			<li><%= link_to "Privacy Statement", :controller => "home", :action => "privacy_statement"%></li>
+		</ul>
+	</div>
+	<div id="copyright" class="span-9 last">
+		<p style="color:#696969">© 2008-2009 NotaryFly</p>
+	</div>
+</div>
+

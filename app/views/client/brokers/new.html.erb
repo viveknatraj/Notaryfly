@@ -1,0 +1,160 @@
+<%= render :partial => "/client/header" %>
+<%= render :partial => "/client/profile/navigation" %>
+<%= javascript_include_tag "jquery.maskedinput" %>
+<%= javascript_include_tag "notaryfly" %>
+<div id="content_container" class="content_container span-24 last">
+	<!--<h2>My Account</h2>
+	<h3>Add Broker/Loan Officer
+</h3>-->
+	<% if @agent_count.size>0 %>
+	<% form_tag("/client/brokers/edit") do -%>
+	 <p style="margin-right:257px;"><label for="agent" >Edit Brokers: </label><%= select("agent", "id", Agent.find(:all, :conditions => ["client_id = ?", @client.id]).collect {|p| [ p.broker_name, p.id ] }, { :include_blank => false }, :style => "width:200px; margin:-2px;vertical-align:middle;") %>
+    <%= submit_tag("View/Edit") %>  <%= link_to "<input type='button' value='Back to New Order'/>", { :controller => "orders", :action => "new"}%> </p>
+	<% end %>
+           <%else%>
+         <p style="margin-right:257px;"><%= link_to "<input type='button' value='Back to New Order'/>", { :controller => "orders", :action => "new"}%> </p>
+      <%end%>
+ 
+
+          <div id="client_new_broker_orders" style="display:none;width: 750px;">
+            <p>Allowing status notification to the broker will provide the assigned notary’s information to that broker.  The broker will receive email confirmation and a PDF attachment that include the order details.</p>
+
+            <p>After the signing is completed the broker assigned to the order will get email confirmation that the signing is completed.  This will allow your broker to get up to date status of his or her file through the signing process.</p>
+</div>
+	
+         <div id="contact_information" class="span-18 last" style="border:none;">
+          <div class="xsnazzy" style="width:740px">
+<b class="xtop"><b class="xb1"></b><b class="xb2 color_a">
+</b><b class="xb3 color_a"></b><b class="xb4 color_a"></b></b>
+<div class="xboxcontent">
+		<% if flash[:notice] %><div class="success"><%= flash[:notice] %></div><% end %>
+                <div class="errorExplanation" style="display:none; margin-top:0px;" id="signupvalid"></div>
+		<% form_for :agent, :url => "create",:html => {:onsubmit=>"return client_brker_new_validation()"} do |f| -%>
+                <div id="contact_form" class="form span-16 append-2 last" style="margin-top:5px">
+                  <div class="labels notary_text">
+                  <p>Imagine a hassle-free way to keep the Broker or Loan Officer updated.</p>
+                  <p>It's right here!</p>
+
+            <p>Add your Broker/Loan Offer to the Order and they will receive real-time email status updates.</p>
+            <p><b>[Note:  Broker/Loan Officer has NO access to NotaryFly Platform.</b> They get updates via email and they can utilize "Order Status" link on Home Page]</p>
+                  </div>
+
+            <div class="labels wholeform">
+                    <p class="formagent"><label for="notify">Allow status notification<a href="#client_new_broker_orders" class="fancyzoom" style="text-decoration: none">?</a></label></p>
+                    <p class="formright"><%= select_tag "agent_notify_agent", options_for_select([["No" , "No" ],["Yes" , "Yes" ]]), {:name => "agent[notify_agent]", :style => "width:50px; margin-right:10px;"} %></p>
+                  </div>
+                  <div id="client_broker_new_cmpny_brker_label" style="display:inline">
+                    <div class="labels wholeform">
+                                <p class="formagent"><label for="company_name">*Company Name:</label></p>
+				<p class="formright"><%= f.text_field :company_name %></p>
+                  </div>
+                   <div class="labels wholeform">
+                                <p class="formagent"><label for="broker_name">*Broker Name:</label></p>
+				<p class="formright"><%= f.text_field :broker_name  %></p>
+                  </div>
+                  </div>
+                   <div class="labels wholeform">
+                                <p class="formagent"><label for="title">Title: </label></p>
+				<p class="formright"><%= f.text_field :title  %></p>
+                  </div>
+                   <div class="labels wholeform">
+                                <p class="formagent"><label for="address">Address: </label></p>
+				<p class="formright"><%= f.text_field :address%></p>
+                  </div>
+                  <div class="labels wholeform">
+                                <p class="formagent"><label for="city">City: </label></p>
+				<p class="formright"><%= f.text_field :city , :style => "width:156px; margin-left:2px; margin-right:5px;" %>
+					<label for="state">State: </label>
+					<select name="agent[state]" id="agent_state" style="width:100px; margin-right:5px;">
+						<option value="">Select one</option>
+						<option <% if @agent.state == "AL" %> selected<% end %> value="AL">Alabama</option>
+						<option <% if @agent.state == "AK" %> selected<% end %> value="AK">Alaska</option>
+						<option <% if @agent.state == "AZ" %> selected<% end %> value="AZ">Arizona</option>
+						<option <% if @agent.state == "AR" %> selected<% end %> value="AR">Arkansas</option>
+						<option <% if @agent.state == "CA" %> selected<% end %> value="CA">California</option>
+						<option <% if @agent.state == "CO" %> selected<% end %> value="CO">Colorado</option>
+						<option <% if @agent.state == "CT" %> selected<% end %> value="CT">Connecticut</option>
+						<option <% if @agent.state == "DE" %> selected<% end %> value="DE">Delaware</option>
+						<option <% if @agent.state == "DC" %> selected<% end %> value="DC">District of Columbia</option>
+						<option <% if @agent.state == "FL" %> selected<% end %> value="FL">Florida</option>
+						<option <% if @agent.state == "GA" %> selected<% end %> value="GA">Georgia</option>
+						<option <% if @agent.state == "HI" %> selected<% end %> value="HI">Hawaii</option>
+						<option <% if @agent.state == "ID" %> selected<% end %> value="ID">Idaho</option>
+						<option <% if @agent.state == "IL" %> selected<% end %> value="IL">Illinois</option>
+						<option <% if @agent.state == "IN" %> selected<% end %> value="IN">Indiana</option>
+						<option <% if @agent.state == "IA" %> selected<% end %> value="IA">Iowa</option>
+						<option <% if @agent.state == "KS" %> selected<% end %> value="KS">Kansas</option>
+						<option <% if @agent.state == "KY" %> selected<% end %> value="KY">Kentucky</option>
+						<option <% if @agent.state == "LA" %> selected<% end %> value="LA">Louisiana</option>
+						<option <% if @agent.state == "ME" %> selected<% end %> value="ME">Maine</option>
+						<option <% if @agent.state == "MD" %> selected<% end %> value="MD">Maryland</option>
+						<option <% if @agent.state == "MA" %> selected<% end %> value="MA">Massachusetts</option>
+						<option <% if @agent.state == "MI" %> selected<% end %> value="MI">Michigan</option>
+						<option <% if @agent.state == "MN" %> selected<% end %> value="MN">Minnesota</option>
+						<option <% if @agent.state == "MS" %> selected<% end %> value="MS">Mississippi</option>
+						<option <% if @agent.state == "MO" %> selected<% end %> value="MO">Missouri</option>
+						<option <% if @agent.state == "MT" %> selected<% end %> value="MT">Montana</option>
+						<option <% if @agent.state == "NE" %> selected<% end %> value="NE">Nebraska</option>
+						<option <% if @agent.state == "NV" %> selected<% end %> value="NV">Nevada</option>
+						<option <% if @agent.state == "NH" %> selected<% end %> value="NH">New Hampshire</option>
+						<option <% if @agent.state == "NJ" %> selected<% end %> value="NJ">New Jersey</option>
+						<option <% if @agent.state == "NM" %> selected<% end %> value="NM">New Mexico</option>
+						<option <% if @agent.state == "NY" %> selected<% end %> value="NY">New York</option>
+						<option <% if @agent.state == "NC" %> selected<% end %> value="NC">North Carolina</option>
+						<option <% if @agent.state == "ND" %> selected<% end %> value="ND">North Dakota</option>
+						<option <% if @agent.state == "OH" %> selected<% end %> value="OH">Ohio</option>
+						<option <% if @agent.state == "OK" %> selected<% end %> value="OK">Oklahoma</option>
+						<option <% if @agent.state == "OR" %> selected<% end %> value="OR">Oregon</option>
+						<option <% if @agent.state == "PA" %> selected<% end %> value="PA">Pennsylvania</option>
+						<option <% if @agent.state == "RI" %> selected<% end %> value="RI">Rhode Island</option>
+						<option <% if @agent.state == "SC" %> selected<% end %> value="SC">South Carolina</option>
+						<option <% if @agent.state == "SD" %> selected<% end %> value="SD">South Dakota</option>
+						<option <% if @agent.state == "TN" %> selected<% end %> value="TN">Tennessee</option>
+						<option <% if @agent.state == "TX" %> selected<% end %> value="TX">Texas</option>
+						<option <% if @agent.state == "UT" %> selected<% end %> value="UT">Utah</option>
+						<option <% if @agent.state == "VT" %> selected<% end %> value="VT">Vermont</option>
+						<option <% if @agent.state == "VA" %> selected<% end %> value="VA">Virginia</option>
+						<option <% if @agent.state == "WA" %> selected<% end %> value="WA">Washington</option>
+						<option <% if @agent.state == "WV" %> selected<% end %> value="WV">West Virginia</option>
+						<option <% if @agent.state == "WI" %> selected<% end %> value="WI">Wisconsin</option>
+						<option <% if @agent.state == "WY" %> selected<% end %> value="WY">Wyoming</option>
+					</select>
+					<label for="zip_code">Zip Code: </label><%= f.text_field :zip_code, :class => "tiny",:onkeyup=>"validateNum('agent_zip_code')",:maxlength=>5 %>
+				</p>
+                  </div>
+                  <div class="labels wholeform">
+                                <p class="formagent"><label for="home_phone">Telephone #: </label></p>
+				<p class="formright"><%= f.text_field :home_phone  %>
+					<label for="home_extension">Extension: </label>
+					<%= f.text_field :home_extension, :class => "tiny",:maxlength=>3,:onkeyup=>"validateNum('agent_home_extension')" %></p>
+                  </div>
+                  <div class="labels wholeform">
+                                <p class="formagent"><label for="direct_phone">Direct #: </label></p>
+				<p class="formright"><%= f.text_field :direct_phone %></p>
+                  </div>
+                  <div class="labels wholeform">
+                                <p class="formagent"><label for="mobile_phone">Mobile #: </label></p>
+				<p class="formright"><%= f.text_field :mobile_phone %></p>
+                  </div>
+                   <div id="client_broker_new_email_label" style="display:inline">
+                     <div class="labels wholeform">
+				<p class="formagent"><label for="email">*Email Address: </label></p>
+                                <p class="formright"><%= f.text_field :email %></p>
+                     </div></div>
+                  <div class="clr"></div>
+			
+			
+		</div>
+                 <div class="clr"></div>
+        </div>
+<b class="xbottom"><b class="xb4"></b><b class="xb3"></b>
+<b class="xb2"></b><b class="xb1"></b></b>
+</div> 
+	</div>
+	<div id="submit_buttons" class="span-18 last">
+		<p><%= image_submit_tag("button_save_changes.jpg") %></p>
+		<% end %>
+	</div>
+</div>
+
+<%= render :partial => "/shared/footer" %>

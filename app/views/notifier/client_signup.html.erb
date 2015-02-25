@@ -1,0 +1,25 @@
+<p style="margin-bottom:6px;"><strong>This message was sent from a notification-only email address that does not accept incoming email. Please do not reply to this message.</strong></p>
+
+<%client=Client.find_by_user_id(@user.id)%>
+<%@name=""%>
+<% client.client_name.split.each do |n| @name=@name+' '+n.capitalize  end%>
+<p style="margin-bottom:6px;">Dear <%=@name%>, </p>
+
+<p style="margin-bottom:6px;">Welcome to NotaryFly!  We are pleased that you have decided to join our community.  Here are a couple of things you might find useful:</p>
+
+
+<div style="float:left; width:100%;">
+<ul style="padding:0px 20px;">
+<li style="list-style-type:square;">NotaryFly is FREE for Notaries to sign up and be listed to accepts signings.</li>
+<li style="list-style-type:square;">You can search for Notaries based on the specifics of your signing(s).</li>
+<li style="list-style-type:square;">See Feedback for each Notary before hiring.</li>
+<li style="list-style-type:square;">All fees are fixed, so no uncomfortable negotiating with signing service or Notary.</li>
+</ul>
+</div>
+
+<div style="float:left; width:100%;">
+<p style="margin-bottom:6px;">If there is anything we can do better, please let us know. <a href="mailto:Support@NotaryFly.com">Support@NotaryFly.com</p>
+<br/><br/>
+<p style="margin-bottom:6px;">Notaryfly</p>
+</div>
+

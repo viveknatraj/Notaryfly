@@ -1,0 +1,182 @@
+<%= render :partial => "/client/header" %>
+<%= render :partial => "navigation" %>
+
+<div id="content_container" class="content_container span-24 last">
+
+  <!--<h2>My Profile</h2>
+  <h3>Shipping Information (optional)</h3>-->
+  <div id="client_shipping_info" style="display:none;width: 650px" >
+    <p>
+      The shipping information is where you will want your documents returned on a regular basis.  If you are using this feature please remember to keep your account up to date.
+    </p>
+    <p>
+      The return shipping and courier account information will be displayed on the notary’s work order. By displaying the courier account information you are authorizing the assigned notary to use your account information for no other purpose then to send your documents back.
+    </p>
+  </div>
+
+
+  <% form_for :client, :url => "/client/profile/update" do |f| -%>
+    <div id="shipping_information" class="span-18 last" style="border:none; padding:0px;">
+      <div class="xsnazzy">
+        <b class="xtop"><b class="xb1"></b><b class="xb2 color_a">
+          </b><b class="xb3 color_a"></b><b class="xb4 color_a"></b></b>
+        <div class="xboxcontent" style="padding: 10px">
+          <% if flash[:notice] %><div class="success"><%= flash[:notice] %></div><% end %>
+          <p>(OPTIONAL)</br>
+<span style="text-decoration:underline;">Please include "Return Shipping Label" with Docs</span></p>
+          <p>If you <i><b>do not</b></i> include "Return Shipping Label" with Docs, please make sure information below is up to date.</p>
+          <p>[NOTE:  The shipping instructions will show up on all Notary Work Orders.  By displaying the courier account information, you are authorizing the assigned notary to use your account information for no other purpose then to send your documents back.]</p>
+          <p>You CAN make changes on each individual order if necessary.</p>
+          <div id="contact_form" class="form span-16 last">
+            <% if  @client.shipping_same_as_contact_info %>
+              <script type="text/javascript" charset="utf-8">
+                $(document).ready(function () {
+                  $("#client_shipping_company_name").val("<%= @client.company_name %>");
+                  $("#client_shipping_attention").val("<%= @client.client_name %>");
+                  $("#client_shipping_address").val("<%= @client.address %>");
+                  $("#client_shipping_address").val("<%= @client.address %>");
+                  $("#client_shipping_city").val("<%= @client.city %>");
+                  $("#client_shipping_state").val("<%= @client.state %>");
+                  $("#client_shipping_zip_code").val("<%= @client.zip_code %>");
+  
+                });
+              </script>
+            <%end%>
+            <script type="text/javascript" charset="utf-8">
+              $(function(){
+                $('#client_shipping_same_as_contact_info').click(function(){
+                  if(document.getElementById('client_shipping_same_as_contact_info').checked)
+                  {
+                    $("#client_shipping_company_name").val("<%= @client.company_name %>");
+                    $("#client_shipping_attention").val("<%= @client.client_name %>");
+                    $("#client_shipping_address").val("<%= @client.address %>");
+                    $("#client_shipping_address").val("<%= @client.address %>");
+                    $("#client_shipping_city").val("<%= @client.city %>");
+                    $("#client_shipping_state").val("<%= @client.state %>");
+                    $("#client_shipping_zip_code").val("<%= @client.zip_code %>");
+                  }
+                  else
+                  {
+                    $("#client_shipping_company_name").val("");
+                    $("#client_shipping_attention").val("");
+                    $("#client_shipping_address").val("");
+                    $("#client_shipping_address").val("");
+                    $("#client_shipping_city").val("");
+                    $("#client_shipping_state").val("");
+                    $("#client_shipping_zip_code").val("");
+                  }
+                });
+              });
+
+            </script>
+            <div class="labels wholeform">
+              <p class="formaddacc"><label for="shipping_same_as_contact">Same as Contact Info</label></p>
+              <p class="formright"><%= f.check_box :shipping_same_as_contact_info %></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formaddacc"><label for="shipping_company_name">Company Name: </label></p>
+              <p class="formright"><%= f.text_field :shipping_company_name %></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formaddacc"><label for="shipping_attention">Attention: </label></p>
+              <p class="formright"><%= f.text_field :shipping_attention %></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formaddacc"><label for="shipping_address">Address: </label></p>
+              <p class="formright"><%= f.text_field :shipping_address %></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formaddacc"><label for="shipping_city">City: </label></p>
+              <p class="formright"><%= f.text_field :shipping_city, :style => "width:100px; margin-left:2px; margin-right:5px;" %>
+                <label for="shipping_state">State:</label>
+                <select name="client[shipping_state]" id="client_shipping_state">
+                  <option value="">Select your state</option>
+                  <option <% if @client.shipping_state == "AL" %> selected<% end %> value="AL">Alabama</option>
+                  <option <% if @client.shipping_state == "AK" %> selected<% end %> value="AK">Alaska</option>
+                  <option <% if @client.shipping_state == "AZ" %> selected<% end %> value="AZ">Arizona</option>
+                  <option <% if @client.shipping_state == "AR" %> selected<% end %> value="AR">Arkansas</option>
+                  <option <% if @client.shipping_state == "CA" %> selected<% end %> value="CA">California</option>
+                  <option <% if @client.shipping_state == "CO" %> selected<% end %> value="CO">Colorado</option>
+                  <option <% if @client.shipping_state == "CT" %> selected<% end %> value="CT">Connecticut</option>
+                  <option <% if @client.shipping_state == "DE" %> selected<% end %> value="DE">Delaware</option>
+                  <option <% if @client.shipping_state == "DC" %> selected<% end %> value="DC">District of Columbia</option>
+                  <option <% if @client.shipping_state == "FL" %> selected<% end %> value="FL">Florida</option>
+                  <option <% if @client.shipping_state == "GA" %> selected<% end %> value="GA">Georgia</option>
+                  <option <% if @client.shipping_state == "HI" %> selected<% end %> value="HI">Hawaii</option>
+                  <option <% if @client.shipping_state == "ID" %> selected<% end %> value="ID">Idaho</option>
+                  <option <% if @client.shipping_state == "IL" %> selected<% end %> value="IL">Illinois</option>
+                  <option <% if @client.shipping_state == "IN" %> selected<% end %> value="IN">Indiana</option>
+                  <option <% if @client.shipping_state == "IA" %> selected<% end %> value="IA">Iowa</option>
+                  <option <% if @client.shipping_state == "KS" %> selected<% end %> value="KS">Kansas</option>
+                  <option <% if @client.shipping_state == "KY" %> selected<% end %> value="KY">Kentucky</option>
+                  <option <% if @client.shipping_state == "LA" %> selected<% end %> value="LA">Louisiana</option>
+                  <option <% if @client.shipping_state == "ME" %> selected<% end %> value="ME">Maine</option>
+                  <option <% if @client.shipping_state == "MD" %> selected<% end %> value="MD">Maryland</option>
+                  <option <% if @client.shipping_state == "MA" %> selected<% end %> value="MA">Massachusetts</option>
+                  <option <% if @client.shipping_state == "MI" %> selected<% end %> value="MI">Michigan</option>
+                  <option <% if @client.shipping_state == "MN" %> selected<% end %> value="MN">Minnesota</option>
+                  <option <% if @client.shipping_state == "MS" %> selected<% end %> value="MS">Mississippi</option>
+                  <option <% if @client.shipping_state == "MO" %> selected<% end %> value="MO">Missouri</option>
+                  <option <% if @client.shipping_state == "MT" %> selected<% end %> value="MT">Montana</option>
+                  <option <% if @client.shipping_state == "NE" %> selected<% end %> value="NE">Nebraska</option>
+                  <option <% if @client.shipping_state == "NV" %> selected<% end %> value="NV">Nevada</option>
+                  <option <% if @client.shipping_state == "NH" %> selected<% end %> value="NH">New Hampshire</option>
+                  <option <% if @client.shipping_state == "NJ" %> selected<% end %> value="NJ">New Jersey</option>
+                  <option <% if @client.shipping_state == "NM" %> selected<% end %> value="NM">New Mexico</option>
+                  <option <% if @client.shipping_state == "NY" %> selected<% end %> value="NY">New York</option>
+                  <option <% if @client.shipping_state == "NC" %> selected<% end %> value="NC">North Carolina</option>
+                  <option <% if @client.shipping_state == "ND" %> selected<% end %> value="ND">North Dakota</option>
+                  <option <% if @client.shipping_state == "OH" %> selected<% end %> value="OH">Ohio</option>
+                  <option <% if @client.shipping_state == "OK" %> selected<% end %> value="OK">Oklahoma</option>
+                  <option <% if @client.shipping_state == "OR" %> selected<% end %> value="OR">Oregon</option>
+                  <option <% if @client.shipping_state == "PA" %> selected<% end %> value="PA">Pennsylvania</option>
+                  <option <% if @client.shipping_state == "RI" %> selected<% end %> value="RI">Rhode Island</option>
+                  <option <% if @client.shipping_state == "SC" %> selected<% end %> value="SC">South Carolina</option>
+                  <option <% if @client.shipping_state == "SD" %> selected<% end %> value="SD">South Dakota</option>
+                  <option <% if @client.shipping_state == "TN" %> selected<% end %> value="TN">Tennessee</option>
+                  <option <% if @client.shipping_state == "TX" %> selected<% end %> value="TX">Texas</option>
+                  <option <% if @client.shipping_state == "UT" %> selected<% end %> value="UT">Utah</option>
+                  <option <% if @client.shipping_state == "VT" %> selected<% end %> value="VT">Vermont</option>
+                  <option <% if @client.shipping_state == "VA" %> selected<% end %> value="VA">Virginia</option>
+                  <option <% if @client.shipping_state == "WA" %> selected<% end %> value="WA">Washington</option>
+                  <option <% if @client.shipping_state == "WV" %> selected<% end %> value="WV">West Virginia</option>
+                  <option <% if @client.shipping_state == "WI" %> selected<% end %> value="WI">Wisconsin</option>
+                  <option <% if @client.shipping_state == "WY" %> selected<% end %> value="WY">Wyoming</option>
+                </select>
+                <label for="shipping_zip_code">Zip Code: </label>
+                <%= f.text_field :shipping_zip_code, :class => "tiny",:onkeyup=>"validateNum('client_shipping_zip_code')",:maxlength=>5%>
+              </p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formaddacc"><label for="shipping_courier">Courier: </label></p>
+              <p class="formright"><%= select_tag "client_shipping_courier", options_for_select(["Select one" , "FedEx", "UPS", "GSO", "OnTrac"], @client.shipping_courier), {:name => "client[shipping_courier]",:onchange => "client_profile_shipping_cour()"} %></p>
+            </div>
+            <div class="labels wholeform">
+              <p class="formaddacc"><label for="shipping_account_number">Account #:</label></p>
+              <p class="formright">
+                <% if @client.shipping_courier=="Select one" %>
+                  <%= f.text_field :shipping_account_number,:disabled=>'false' %>
+                <%else%>
+                  <%= f.text_field :shipping_account_number%>
+                <%end%>
+              </p>
+            </div>
+            <div class="clr"></div>
+
+
+          </div>
+          <div class="clr"></div>
+        </div>
+        <b class="xbottom"><b class="xb4"></b><b class="xb3"></b>
+          <b class="xb2"></b><b class="xb1"></b></b>
+      </div>
+    </div>
+
+    <div id="submit_buttons" class="span-18 last">
+      <p><%= image_submit_tag("button_save_changes.jpg") %></p>
+    </div>
+    <%= hidden_field :user, :password, :value => session[:password] %>
+  <% end %>
+</div>
+
+<%= render :partial => "/shared/footer" %>

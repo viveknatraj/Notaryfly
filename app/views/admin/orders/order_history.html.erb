@@ -1,0 +1,61 @@
+<%= stylesheet_link_tag  "notaryfly", "rating" %>
+<%= stylesheet_link_tag "admin/screen" %>
+<div class="block" id="block-tables">
+  <div class="secondary-navigation">
+    <ul>
+      <li class="first"><a href="/admin/orders/open_order">Open Order</a></li>
+      <li class="first"><a href="/admin/orders/index">Completed Order</a></li>
+      <!--<li class="first"><a href="/admin/orders/pending_order">Pending Orders/Notary</a></li>-->
+      <li class="active"><a href="/admin/orders/order_history_paid">Orders History</a></li>
+      <li class="first"><a href="/admin/orders/cancelled_order">Cancelled Orders</a></li>
+      <li class="first"><a href="/admin/orders/accounting">Accounting</a></li>
+    </ul>
+    <div class="clear"></div>
+  </div>
+  <div class="content">
+    <% if flash[:notice] %>
+      <div class="success"><%= flash[:notice] %></div>
+    <% end %>
+    <div class="inner">
+      <div class="xsnazzy">
+        <div class="container">
+          <div class="table-view" id="tabs">
+            <ul class="listing-view">
+              <li><a href="javascript:void(0);" id="tabs1" class="dark-light-green">Paid Orders</a></li>
+              <li><a href="javascript:void(0);" id="tabs2" class="light-red">Cancelled Orders</a></li>
+              <li><a href="javascript:void(0);" id="tabs2" class="light-red">Accounting</a></li>
+            </ul>
+            <%= render :partial => 'history_paid_orders' %>
+            <%= render :partial => 'history_cancelled_orders' %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="clearfix"></div><br/>
+  </div>
+</div>
+
+<script language="JavaScript">
+  ;if(window.jQuery) (function($){
+    $(window).load(function(){
+<% if params[:tab].present? %>
+        var active_tab = "<%= params[:tab]%>";
+        console.log(active_tab);
+        document.getElementById(active_tab).click();
+<% end %>
+    });
+    $('ul.listing-view a').click(function() {
+      var current_id = $(this).attr('id');
+      $('.default-tabs').each(function(){
+        if ($(this).attr('id') == current_id) {
+          $(this).attr('style', 'display:block');
+        }
+        else {
+          $(this).attr('style', 'display:none');
+        }
+
+      });
+
+    });
+  })(jQuery);
+</script>

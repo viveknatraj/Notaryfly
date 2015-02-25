@@ -1,0 +1,82 @@
+<%= render :partial => "/notary/header" %>
+<%= render :partial => "/notary/orders/navigation" %>
+
+<div id="order_history" class="span-18 last content_container">
+	<div class="span-16 last">
+		<div class="span-16 last">
+			<h2>Leave Order Feedback</h2>
+			<h3>Order History</h3>
+		</div>
+	</div>
+	
+	<div class="span-16 last dashboard_order feedback_form" style="border:none; margin:0px; padding: 0px">
+          <div class="xsnazzy" style="width:700px">
+          <b class="xtop"><b class="xb1"></b><b class="xb2 color_a">
+          </b><b class="xb3 color_a"></b><b class="xb4 color_a"></b></b>
+             <div class="xboxcontent" style="padding:10px;" >
+		<% form_for :order_feedback, :url => "detail" do |f| -%>
+		<h5 style="font-size:16px;"><strong>Order Feedback</strong></h5>
+
+		<p><strong>Overall rating of this notary</strong></p>
+                <p><% if @order_feedback.overall!=nil%><%= @order_feedback.overall.capitalize %><%else%>Not Provided<%end%></p>
+		
+		<p><strong>Comments</strong></p>
+		<p><%= @order_feedback.comments %></p>
+		
+		<p><strong>Were the documents executed accurately?</strong></p>
+		<p>
+			<%= f.radio_button :accuracy, "1", :class => "star" , :disabled => true, :title=> "Very inaccurate"%>
+			<%= f.radio_button :accuracy, "2", :class => "star" , :disabled => true, :title=> "Inaccurate"%>
+			<%= f.radio_button :accuracy, "3", :class => "star" , :disabled => true, :title=> "Neither inaccurate nor accurate"%>
+			<%= f.radio_button :accuracy, "4", :class => "star" , :disabled => true, :title=> "Accurate"%>
+			<%= f.radio_button :accuracy, "5", :class => "star" , :disabled => true, :title=> "Very accurate"%>
+		</p>
+		<div style="clear:both;"></div>
+		<p><strong>Was the Notary professional?</strong></p>
+		<p>
+			<%= f.radio_button :professionalism, "1", :class => "star", :disabled => true, :title=> "Very unsatisfied" %>
+			<%= f.radio_button :professionalism, "2", :class => "star", :disabled => true, :title=> "Unsatisfied" %>
+			<%= f.radio_button :professionalism, "3", :class => "star", :disabled => true, :title=> "Neither unsatisfied nor satisfied" %>
+			<%= f.radio_button :professionalism, "4", :class => "star", :disabled => true, :title=> "Satisfied" %>
+			<%= f.radio_button :professionalism, "5", :class => "star", :disabled => true, :title=> "Very satisfied" %>
+		</p>
+		<div style="clear:both;"></div>
+		
+		<p><strong>Promptness of the notary?</strong></p>
+		<p>
+			<%= f.radio_button :punctuality, "1", :class => "star", :disabled => true, :title=> "Very unsatisfied"%>
+			<%= f.radio_button :punctuality, "2", :class => "star", :disabled => true, :title=> "Unsatisfied"%>
+			<%= f.radio_button :punctuality, "3", :class => "star", :disabled => true, :title=> "Neither unsatisfied nor satisfied"%>
+			<%= f.radio_button :punctuality, "4", :class => "star", :disabled => true, :title=> "Satisfied"%>
+			<%= f.radio_button :punctuality, "5", :class => "star", :disabled => true, :title=> "Very satisfied"%>
+		</p>
+		<div style="clear:both;"></div>
+		
+		<p><strong>How satisfied were you of the notary's communication?</strong></p>
+		<p>
+			<%= f.radio_button :communication, "1", :class => "star", :disabled => true, :title=> "Very unsatisfied"%>
+			<%= f.radio_button :communication, "2", :class => "star", :disabled => true, :title=> "Unsatisfied"%>
+			<%= f.radio_button :communication, "3", :class => "star", :disabled => true, :title=> "Neither unsatisfied nor satisfied"%>
+			<%= f.radio_button :communication, "4", :class => "star", :disabled => true, :title=> "Satisfied"%>
+			<%= f.radio_button :communication, "5", :class => "star", :disabled => true, :title=> "Very satisfied"%>
+		</p>
+		<div style="clear:both;"></div>
+		<p><strong>How reasonable was the notary fees?</strong></p>
+		<p>
+			<%= f.radio_button :fees, "1", :class => "star", :disabled => true, :title=> "Very unreasonable" %>
+			<%= f.radio_button :fees, "2", :class => "star", :disabled => true, :title=> "Unreasonable" %>
+			<%= f.radio_button :fees, "3", :class => "star", :disabled => true, :title=> "Neither unreasonable nor reasonable" %>
+			<%= f.radio_button :fees, "4", :class => "star", :disabled => true, :title=> "Reasonable" %>
+			<%= f.radio_button :fees, "5", :class => "star", :disabled => true, :title=> "Very reasonable" %>
+		</p>                                             
+		<div style="clear:both;"></div>
+		
+		<% end %>
+                 <div class="clr"></div>
+            </div>
+   <div class="clr"></div>
+<b class="xbottom"><b class="xb4"></b><b class="xb3"></b>
+<b class="xb2"></b><b class="xb1"></b></b>
+</div>
+	</div>
+</div>

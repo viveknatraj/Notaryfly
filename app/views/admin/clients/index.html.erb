@@ -1,0 +1,295 @@
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/redmond/jquery-ui.css" rel="stylesheet" type="text/css"/>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<script type="text/javascript">
+  function customer_fee_edit(client_id){
+    $("#customer_fee_edit"+client_id).dialog({modal: true, height: 100, width: 400})
+  }
+  function show_order_details(order_id,order_id_arr){
+    for(i=0;i<order_id_arr.length;i++)
+    {
+      if (order_id_arr[i]!=order_id)
+        $('#client_order_rightcnt_'+order_id_arr[i]).hide();
+      else
+        $('#client_order_rightcnt_'+order_id_arr[i]).show();
+    }
+  }
+  function showfirstdiv(orderid){
+    $('#client_order_rightcnt_'+orderid).show();
+  }
+</script>
+<style type="text/css">
+  div.flash.notice {
+    background-color: lightgreen;
+    padding: 1% 0 1% 1%;
+    border: 1px solid green;
+    border-radius: 5px;
+    width: 400px;
+    margin-bottom: 10px;
+  }
+  .order_number_list {
+    float: left;
+    width: 50px;
+  }
+</style>
+<% if @notice_msg.present? %>
+  <center>
+    <div class="flash notice">
+      <%= @notice_msg %>
+    </div>
+  </center>
+  <% @notice_msg=nil %>
+<% end %>
+<div class="block" id="block-tables">
+  <div style="padding-left:538px;padding-bottom:5px">
+    <% form_for :notaries, :url => "/admin/clients/index/",:html=>{:method=>'get'} do %>
+      <input type="text" name="keyword" style="vertical-align: middle"/><%=submit_tag "Search",:style=>"vertical-align: middle;"%>
+    <% end %>
+  </div>
+  <div class="content">
+    <div class="inner">
+      <table class="table" id="myTable">
+        <colgroup>
+          <col id="col1_1"></col>
+          <col id="col1_2"></col>
+          <col id="col1_3"></col>
+          <col id="col1_4"></col>
+          <col id="col1_5"></col>
+          <col id="col1_6"></col>
+          <col id="col1_7"></col>
+        </colgroup>
+        <thead>
+          <tr>
+            <td>Customer ID #</td>
+            <td>Customer Name</td>
+            <td>Customer Price</td>
+            <td>Contact Info</td>
+            <td>Order History</td>
+            <td>Map Executive</td>
+            <td>Delete Customer</td>
+          </tr>
+        </thead>
+        <tbody>
+          <% for client in @clients %>
+            <tr class="even">
+              <td><%= client.id %></td>
+              <td><a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'view_client<%= client.id %>', '', 'width=530px,height=700px,left=200px,top=50px,resize=0,scrolling=1');" title="View Client Profile" style="color: #000;font-size: 12px;"><%= client.client_name%></a></td>
+              <td><a href="javascript:void(0)" onClick="customer_fee_edit(<%=client.id%>)" style="color: #000;font-size: 12px;"><%="$"%><%=number_with_precision(client.customer_fee,:precision=>2)%></a></td>
+              <td><a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'contact_info<%= client.id %>', '', 'width=530px,height=200px,left=200px,top=50px,resize=0,scrolling=1');" title="View Client Profile" style="color: #000;font-size: 12px;">Contact Info</a></td>
+              <td> <a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'view_orderinfo_<%= client.id %>', '', 'width=720px,height=530px,left=200px,top=150px,resize=0,scrolling=50');showfirstdiv(<%=client_order_id(client.id)[0]%>);" title="View Order History" style="color: #000;font-size: 12px;">Order History</a></td>
+              <td> <a href="/admin/clients/assign_executive?client_id=<%= client.id %>" title="Map Executive" style="color: #000;font-size: 12px;">Map Executive</a></td>
+              <td><%= link_to "X", { :controller => "/admin/clients", :action => "destroy", :id => client.id}, :confirm => "Are you sure you want to delete this client?", :style =>"margin-left:70px",:title=>"Destroy";%></td>
+            </tr>
+          <div id="customer_fee_edit<%=client.id%>" style="display:none;" >
+            <%form_tag ("/admin/clients/edit_customer_fee")do %>
+              Customer fee: <%= text_field_tag 'customer_fee','' %>
+              <%= hidden_field_tag 'client_id',client.id %>&nbsp;<%=submit_tag 'submit'%>
+            <%end%>
+          </div>
+          <div class="view_det" id="contact_info<%= client.id %>" style="display:none">
+            <div style="text-align:center;margin-left:-35px;"><b> Contact Information</b></div>
+            <div class="view_det_left">
+              <ul>
+                <li><label># of Orders:</label></li>
+                <li><label >Email: </label></li>
+                <li><label >Signed up date:</label></li>
+              </ul>
+            </div>
+            <div class="view_det_right">
+              <ul>
+                <li><%=Order.find_all_by_client_id(client.id).count%> </li>
+                <li><%= client.user.login %> </li>
+                <li><%= client.created_at.strftime '%m-%d-%Y' %> </li>
+              </ul>
+            </div>
+          </div>
+          <div class="view_det" id="view_client<%= client.id %>" style="display:none">
+            <div style="text-align:center;margin-left:-35px;"><b> Client Information</b></div>
+            <div class="view_det_left">
+              <ul>
+                <li><label>ID         :</label></li>
+                <li><label >Client Name: </label></li>
+                <li><label >Company Name:</label></li>
+                <li><label >Title      : </label></li>
+                <li><label >Address    :</label> </li>
+                <li><label >City       :</label> </li>
+                <li><label > State      :</label></li>
+                <li><label >Zip Code    :</label></li>
+                <li><label >Telephone#  :</label></li>
+                <li><label >Extension  :</label></li>
+                <li><label > Direct#  :</label></li>
+                <li><label >Mobile# :</label></li>
+                <li><label >Fax#     :</label></li>
+                <li><label > Email  :</label></li>
+                <li style="text-align:left;margin-left:155px;"><b> Shipping</b> </li>
+                <li><label > Company Name:</label></li>
+                <li><label > Attention:</label></li>
+                <li><label > Address:</label></li>
+                <li><label > City:</label></li>
+                <li><label > State:</label></li>
+                <li><label > Zip Code:</label></li>
+                <li><label > Courier:</label></li>
+                <li><label > Account#</label></li>
+                <% if client.client_executives.present? %>
+                  <li style="text-align:left;margin-left:145px;"><b> Account</b></li>
+                  <li><label > Amount Percentage:</label></li>
+                  <li><label > Static Amount:</label></li>
+                  <li><label > Executives List:</label></li>
+                <% end %>
+              </ul>
+            </div>
+            <div class="view_det_right">
+              <ul>
+                <li><%= client.id %> </li>
+                <li><%=  client.client_name %> </li>
+                <li><%= client.company_name.blank? ? "Not Available" : client.company_name %> </li>
+                <li><%= client.title.blank? ? "Not Available" : client.title %> </li>
+                <li><%= client.address.blank? ? "Not Available" : client.address %> </li>
+                <li><%= client.city.blank? ? "Not Available" : client.city %> </li>
+                <li><%= client.state.blank? ? "Not Available" :statename(client.state) %></li>
+                <li><%= client.zip_code.blank? ? "Not Available" : client.zip_code %> </li>
+                <li><%= client.home_phone.blank? ? "Not Available" : client.home_phone %> </li>
+                <li><%= client.home_extension.blank? ? "Not Available" : client.home_extension %> </li>
+                <li><%= client.direct_phone.blank? ? "Not Available" : client.direct_phone %> </li>
+                <li><%= client.mobile_phone.blank? ? "Not Available" : client.mobile_phone %> </li>
+                <li><%= client.fax_number.blank? ? "Not Available" : client.fax_number %> </li>
+                <li><%= client.user.login.blank? ? "Not Available" : client.user.login %> </li>
+                <li><label style="text-align:left;"><b>&nbsp;&nbsp;&nbsp;&nbsp;Information</b> </label> </li>
+                <li><%= client.shipping_company_name.blank? ? "Not Available" : client.shipping_company_name %> </li>
+                <li><%= client.shipping_attention.blank? ? "Not Available" : client.shipping_attention %> </li>
+                <li><%= client.shipping_address.blank? ? "Not Available" : client.shipping_address %> </li>
+                <li><%= client.shipping_city.blank? ? "Not Available" : client.shipping_city %> </li>
+                <li><%= client.shipping_state.blank? ? "Not Available" : statename(client.shipping_state )%> </li>
+                <li><%= client.shipping_zip_code.blank? ? "Not Available" : client.shipping_zip_code %> </li>
+                <li><%= client.shipping_courier.blank? ? "Not Available" : client.shipping_courier %> </li>
+                <li><%= client.shipping_account_number.blank? ? "Not Available" : client.shipping_account_number %> </li>
+                <% if client.client_executives.present? %>
+                  <li><label style="text-align:left;"><b>Executive Details</b></label> </li>
+                  <% ce=client.client_executives.first %>
+                  <li><%= ce.share_percentage.blank? ? "Not Available" : ce.share_percentage %> </li>
+                  <li><%= ce.share_value.blank? ? "Not Available" : ce.share_value %> </li>
+                  <div>
+                    <ul>
+                      <% client.client_executives.each{|ce| %>
+                        <li><%= ce.executive.name %></li>
+                      <%		} %>
+                    </ul>
+                  </div>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+          <div id="view_orderinfo_<%= client.id %>" style="display:none;">
+            <%order1=client_order(client.id)%>
+            <%order_arr=client_order_id(client.id)%>
+            <%unless order1.empty? %>
+              <h1> Order #</h1>
+              <div class="order_number_list">
+                <%order1.each do |order|%>
+                  <%=link_to order.id,'#',:onclick=>"show_order_details(#{order.id},#{order_arr.to_json});"%> <br></br>
+                <%end%>
+              </div>
+              <%order1.each do |order|%>
+                <div  class="order_list" id="client_order_rightcnt_<%=order.id%>"style="display:none;">
+                  <h1>NotaryFLY.com</h1><br></br>
+                  Please visit http://www.notaryfly.com and login with your username and password so yo can provide up to date status on the signing.<br></br>
+                  <li><label>Notary Username:</label><%if order.notary_id!=nil%><%=Notary.find_by_id(order.notary_id).user.email%><%else%><%="Not Provided"%><%end%></li>
+                  <li><label>Notary Password:</label><%=client.user.password%></li><br></br>
+                  <div class='order_credentials'>
+                    <div class="work_details">
+                      <div class="order_details">
+                        <h1>Work Order details:</h1>
+                        <div class="order_details_box">
+                          <ul>
+                            <li><label>NF Order #:</label><%=order.id%></li>
+                            <li><label>  Escrow #:</label><%=order.loan_number%></li>
+                            <li><label> Scheduled By #:</label><%=order.client.company_name%>&nbsp;<%=order.client.address%>&nbsp;<%if order.client.city!=nil%><%=order.client.city%><%=","%><%end%><%=order.client.state%><%=order.client.zip_code%></li>
+                            <li><label>  Contact Name #:</label><%=order.client.client_name%></li>
+                            <li><label>  Telephone #:</label><%=order.client.home_phone.blank? ? "Not Provided" :order.client.home_phone%>&nbsp;&nbsp;&nbsp;<label>Ext:</label><%=order.client.home_extension.blank? ? "Not Provided" :order.client.home_extension%></li>
+                            <li><label>  Direct #:</label><%=order.client.direct_phone.blank? ? "Not Provided" :order.client.direct_phone %></li>
+                            <li><label>  Mobile #:</label><%=order.client.mobile_phone.blank? ? "Not Provided" :order.client.mobile_phone%></li><br></br>
+                            <li><label> Notary:</label><%if order.notary!=nil%><%=order.notary.first_name.blank? ? "Not provided":order.notary.first_name%>&nbsp;<%=order.notary.last_name.blank? ? "Not provided":order.notary.last_name%><%else%>Not provided<%end%></li>
+                            <li><label>  NotaryFly ID #:</label><%if order.notary!=nil%><%=order.notary.id.blank? ? "Not provided":order.notary.id%><%else%>Not Provided<%end%></li>
+                            <li><label> Signing Fee:</label><% if order.order_notary_fee.blank?%> <%="Not Provided"%><%else%><%='$ '%><%=number_with_precision(order.order_notary_fee,:precision=>2)%><%end%></li>
+                            <li><label> Day #:</label><%if order.notary!=nil%><%= order.notary.day_phone.blank? ? "Not Provided" : order.notary.day_phone %> <%else%>Not provided<%end%></li>
+                            <li><label>  Evening #:</label><%if order.notary!=nil%><%= order.notary.evening_phone.blank? ? "Not Provided" : order.notary.day_phone %> <%else%>Not provided<%end%></li>
+                            <li><label >Mobile #: </label><%if order.notary!=nil%><%= order.notary.mobile_phone.blank? ? "Not Provided" : order.notary.mobile_phone %> <%else%>Not Provided<%end%></li>
+                            <li><label >WorkPhone: </label><%if order.notary!=nil%><%= order.notary.work_phone.blank? ? "Not Provided" : order.notary.work_phone %><%else%>Not Provided<%end%></li>
+                            <li><label> Email:</label><%if order.notary!=nil%><%=order.notary.user.email%><%else%>Not Provided<%end%></li>
+                        </div>
+                      </div>
+                      <div class="order_details">
+                        <h1>Return Documents To:</h1>
+                        <div class="order_details_box">
+                          <li><%=order.return_company_name%></li>
+                          <li><%=order.return_attention%></li>
+                          <li><%=order.return_address%></li>
+                          <li><%=order.return_city%>&nbsp;<%=order.return_state%>&nbsp;<%=order.return_zip_code%></li>
+                          <br></br>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="work_details">
+                      <div class="order_details" >
+                        <h1>Signing Information</h1>
+                        <div class="order_details_box">
+                          <li><label>Signing date:</label><%=  order.signing_date.blank? ? "Not Provided": order.signing_date %></li>
+                          <li><label>Signing Time:</label><%=  order.signing_time.blank? ? "Not Provided": order.signing_time %></li>
+                          <li><label>Transaction Type:</label><%=  order.loan_type.blank? ? "Not Provided": order.loan_type %></li>
+                          <li><label>Delivery Option:</label><%=  order.delivery_options.blank? ? "Not Provided": order.delivery_options %></li>
+                          <li><label>Document Sets(s):</label><%=  order.sets_of_docs.blank? ? "Not Provided": order.sets_of_docs %></li>
+                          <li><label>Docs sent via:</label><%=  order.shipped_via.blank? ? "Not Provided": order.shipped_via %></li>
+                          <li><label>Tracking #:</label><%=  order.tracking_number.blank? ? "Not Provided": order.tracking_number %></li><br></br>
+                          <li><label>Signing Location:</label><%= order.signing_location_address%>&nbsp;<%order.signing_location_city%>&nbsp;<%=order.signing_location_state%><%= "," %><%= order.signing_location_zip_code %></li>
+                          <br></br>
+                          <li><label>Signer #1:</label><% if (order.borrower_1_first_name.blank? && order.borrower_1_last_name.blank?)%><%= "Not Provided"%><%else%> <%= order.borrower_1_first_name%>&nbsp;<%=order.borrower_1_last_name %><%end%></li>
+                          <li><label>Work #:</label><%=  order.borrower_1_work_phone.blank? ? "Not Provided": order.borrower_1_work_phone %></li>
+                          <li><label>Home #:</label><%=  order.borrower_1_home_phone.blank? ? "Not Provided": order.borrower_1_home_phone %></li>
+                          <li><label>Mobile #:</label><%=  order.borrower_1_mobile_phone.blank? ? "Not Provided": order.borrower_1_mobile_phone %></li><br></br>
+                          <li><label>Signer #2:</label><%=  order.borrower_2_first_name.blank? && order.borrower_2_last_name.blank? ? "Not Provided":  order.borrower_2_first_name+' '+order.borrower_2_last_name %></li>
+                          <li><label>Work #:</label><%=  order.borrower_2_work_phone.blank? ? "Not Provided": order.borrower_2_work_phone %></li>
+                          <li><label>Home #:</label><%=  order.borrower_2_home_phone.blank? ? "Not Provided": order.borrower_2_home_phone %></li>
+                          <li><label>Mobile #:</label><%=  order.borrower_2_mobile_phone.blank? ? "Not Provided": order.borrower_2_mobile_phone %></li><br></br>
+                        </div>
+                      </div>
+                      <div class="order_details">
+                        <h1> Agent Contact Information:</h1>
+                        <div class="order_details_box">
+                          <%agent= Agent.find_by_id(order.agent_id)%>
+                          <%if agent!=nil%>
+                            <li><%=agent.company_name.blank? ? "Not Provided" : agent.company_name%></li>
+                            <li><%=agent.broker_name.blank? ? "Not Provided" : agent.broker_name%></li>
+                            <li><%=agent.address.blank? ? "Not Provided" : agent.address%></li>
+                            <li><%=agent.city%><%=','%><%=agent.state%>&nbsp;<%=agent.zip_code%></li>
+                            <li><label>Telephone #:</label><%= agent.home_phone.blank? ? "Not Provided":agent.home_phone%> &nbsp;&nbsp:<label>Ext:</label><%= agent.home_extension.blank? ? "Not provided": agent.home_extension%></li>
+                            <li><label>Cell #:</label><%= agent.mobile_phone.blank? ? "Not Provided":agent.mobile_phone %></li>
+                          <%else%>
+                            Not provided
+                          <%end%>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="sign_details">
+                      <h1>Signing Instructions:</h1>
+                      <div class="order_details_box">
+                        <li><%=order.special_instructions%></li>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <%end%>
+            <%else%>
+              <h1>No orders found</h1>
+            <%end%>
+          </div>
+        <%  end %>
+        </tbody>
+      </table>
+      <script type="text/javascript">
+        initSortTable('myTable',Array('N','S','S','S','','N','N'));
+      </script>
+      <%= will_paginate @clients %>
+    </div>
+  </div>
+</div>

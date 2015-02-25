@@ -1,0 +1,211 @@
+.dhtmlwindow{
+position: absolute;
+border: 2px solid #999999;
+visibility: hidden;
+background-color: white;
+
+   -moz-box-shadow: 0px 0px 20px #666666;
+    -webkit-box-shadow: 0px 0px 20px #666666;
+    box-shadow: 0px 0px 20px #666666;
+	padding:10px 0px 10px 15px;
+
+
+}
+
+.drag-handle{ /*CSS for Drag Handle*/
+padding: 1px;
+text-indent: 3px;
+font: bold 14px Arial;
+background-color: #FFFFFF;
+color: white;
+cursor: move;
+overflow: hidden;
+width: auto;
+filter:progid:DXImageTransform.Microsoft.alpha(opacity=100);
+-moz-opacity: 1;
+opacity: 1;
+}
+
+.drag-handle .drag-controls{ /*CSS for controls (min, close etc) within Drag Handle*/
+position: absolute;
+right: 1px;
+top: 2px;
+cursor: hand;
+cursor: pointer;
+}
+
+* html .drag-handle{ /*IE6 and below CSS hack. Width must be set to 100% in order for opaque title bar to render*/
+width: 100%;
+}
+
+
+.drag-contentarea{ /*CSS for Content Display Area div*/
+border-top: 1px solid white;
+background-color: white;
+color: black;
+height: 150px;
+overflow: auto;
+}
+.drag-contentarea form
+{
+	float: left;
+    margin-bottom: 10px;
+    width: 635px;
+}
+
+.order_mane {
+    clear: both;
+    float: left;
+    margin: 10px 0;
+}
+
+.order_mane b
+{
+	 float: left;
+    width: 99px;
+}
+
+.order_mane input
+{
+	border: 1px solid #AFB9BC;
+    box-shadow: 0 0 6px #D1D1D1 inset;
+    float: left;
+    padding: 4px;
+}
+.drag-contentarea form center
+{
+	clear:both;
+}
+
+.drag-statusarea{ /*CSS for Status Bar div (includes resizearea)*/
+border-top: 1px solid gray;
+background-color: #F8F8F8;
+height: 13px; /*height of resize image*/
+}
+
+
+.drag-resizearea{ /*CSS for Resize Area itself*/
+float: right;
+width: 13px; /*width of resize image*/
+height: 13px; /*height of resize image*/
+cursor: nw-resize;
+font-size: 0;
+}
+
+.order_number {
+    float: left;
+    margin: 0 0 10px 5px;
+    padding: 0 10px 10px;
+    width: 30px;
+}
+.order_list
+{
+	float: left;
+    text-align: left;
+    width: 636px;
+}
+.order_list h1
+{
+	margin:0;
+}
+.order_list li
+{
+	list-style-type:none;
+}
+
+.order_credentials {
+    float: left;
+}
+.work_details {
+    float: left;
+    width: 317px;
+}
+
+
+.order_details_box label {
+    font-weight: bold;
+}
+
+.sign_details {
+    clear: both;
+    float: left;
+  
+    width: 97%;
+}
+.order_details {
+    float: left;
+    margin-right: 20px;
+    width: 296px;
+	margin-bottom:15px;
+}
+.order_details_box {
+    border: 1px solid #C6C6C6;
+    padding: 10px;
+}
+
+.notary_number_head 	h1
+{
+	margin:0 0 10px 0;
+	color: #6A97AF;
+    font-size: 23px;
+    font-weight: bold;
+}
+
+.notary_number {
+    color: #77BB41;
+    font-weight: bold;
+}
+.notary_number b
+{
+	color:#2978FF;
+}
+
+
+.view_det_left1 {
+    float: left;
+    padding: 10px;
+    width: 332px;
+}
+
+.view_det_left1 > span {
+    color: #6A97AF;
+    font-size: 21px;
+    font-weight: bold;
+}
+
+.view_det_left1 label {
+    font-weight: bold;
+}
+
+.view_det_left1 span
+{
+	
+}
+
+.center_head  h1
+{
+	 color: #567789;
+    font-size: 24px;
+
+}
+.center_head  h1 span
+{
+	color:#222f54;
+}
+.center_subhead
+{
+	 color: #2475AC;
+    font-weight: bold;
+    margin: 0 auto;
+    width: 100%;
+}
+.view_det_left1 span
+{
+	color:#597AB2;
+}
+.view_det_right1 span
+{
+	color:#597AB2;
+	 font-size: 18px;
+    font-weight: bold;
+}

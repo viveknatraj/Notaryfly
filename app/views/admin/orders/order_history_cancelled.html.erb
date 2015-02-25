@@ -1,0 +1,97 @@
+<%= stylesheet_link_tag  "notaryfly", "rating" %>
+<%= stylesheet_link_tag "admin/screen" %>
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/redmond/jquery-ui.css" rel="stylesheet" type="text/css"/>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<style>
+  #myTable thead {
+    background-color: #92d050;
+    color: #fff;
+  }
+  .odd:nth-child(2n) {
+    background-color: #f5f5c1;
+  }
+  #myTable tbody {
+    background-color: #DBEC99;
+  }
+	#ajax-loader {
+    background-color: gray;
+    height: 400px;
+    left: 450px;
+    position: absolute;
+    z-index: 99;
+}
+.loading {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto; /* presto! */
+}
+</style>
+<div class="block" id="block-tables">
+  <div class="secondary-navigation">
+    <ul>
+      <li class="first"><a href="/admin/orders/open_order">Open Orders</a></li>
+      <li class="first"><a href="/admin/orders/index">Completed Orders</a></li>
+      <!--<li class="first"><a href="/admin/orders/pending_order">Pending Orders/Notary</a></li>-->
+      <li class="active"><a href="/admin/orders/order_history_paid">Orders History</a></li>
+      <li class="first"><a href="/admin/orders/cancelled_order">Cancelled Orders</a></li>
+      <!--<li class="active"><a href="/admin/orders/accounting">Accounting</a></li>-->
+    </ul>
+    <div class="clear"></div>
+  </div>
+	<div id="ajax-loader" style="display:none"><%= image_tag "loader.jpeg", :class=>"loading" %></div>
+  <div class="content" id="orderhis_paid">
+    <ul class='sub_tab_list'>
+      <li class="sub_tab comp-ordr"><%= paid_in_full %></li>
+      <li class="sub_tab can-ord"><%=cancelled_orders %></li>
+      <li class="sub_tab acc"><%=order_history_accounting %></li>
+    </ul>
+    <div class="inner">
+      <table class="table" id="myTable">
+        <colgroup>
+          <col id="col1_1"></col>
+          <col id="col1_2"></col>
+          <col id="col1_3"></col>
+          <col id="col1_4"></col>
+          <col id="col1_5"></col>
+        </colgroup>
+        <thead>
+          <tr>
+            <td>NF#</td>
+            <td>SIGNER NAME</td>
+            <td>ORDER OPENED</td>
+            <td>APPOINTMENT SCHEDULED</td>
+            <td>SIGNING LOCATION</td>
+            <td>CUSTOMER NAME</td>
+            <td>DOCS?</td>
+          </tr>
+        </thead>
+        <tbody>
+          <% @orders.each do |order| %>
+            <tr class="odd">
+              <td><a href="/admin/orders/order_details/<%=order.id%>"><%=order.id%></a></td>
+              <td><%=order.borrower_1_last_name%>&nbsp;<%=order.borrower_1_first_name%></td>
+              <td><%= order.created_at.strftime('%m/%d/%Y')%></td>
+              <td><%if order.signing_date%><%= order.signing_date.strftime('%m/%d/%Y') %>&nbsp;&nbsp;<%=order.signing_time %><%end%></td>
+              <td><%= order.signing_location_city+"," %>&nbsp;<%= order.signing_location_state %>&nbsp;&nbsp;<%=order.signing_location_zip_code%></td>
+              <td><%=order.client.client_name %></td>
+              <td><%= order.attachments_count.nil? ? "--" : (order.attachments_count > 0 ? image_tag("doc_icon.png")  : '--') %> </td>
+            </tr>
+          <% end %>
+          <% if @orders.blank? %>
+            <tr class="odd">
+              <td colspan='7' style="text-align: center">You currently have no cancelled orders.</td>
+            </tr>
+          <%end%>
+        </tbody>
+      </table>
+      <script type="text/javascript">
+        initSortTable('myTable',Array('N','S','S','S','S'));
+      </script>
+      <%= will_paginate @orders %>
+    </div>
+  </div>
+</div>

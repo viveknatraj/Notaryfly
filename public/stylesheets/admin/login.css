@@ -1,0 +1,173 @@
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+.login_main_bg{
+	background: url(/images/admin/login_main_bg.gif) no-repeat bottom right;
+        padding:0px 58px 0px 0px;
+	width: 905px;
+}
+.login_main_repeat{
+	background: url(/images/admin/login_main_repeat.gif) repeat-x bottom right;
+}
+.login_tleft_curve{
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale);
+	height: 10px;
+	width:10px;
+}
+html>body .login_tleft_curve{
+	background: url(/images/admin/login_tleft_curve.png) right top no-repeat;
+	height: 10px;
+	width:10px;
+}
+.login_tright_curve{
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale);
+	height: 10px;
+	width:10px;
+}
+html>body .login_tright_curve{
+	background: url(/images/admin/login_tright_curve.png) left top no-repeat;
+	height: 10px;
+	width:10px;
+}
+.login_bleft_curve{
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale);
+	height: 10px;
+	width:10px;
+}
+html>body .login_bleft_curve{
+	background: url(/images/admin/login_bleft_curve.png) right top no-repeat;
+	height: 10px;
+	width:10px;
+}
+.login_bright_curve{
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale);
+	height: 10px;
+	width:10px;
+}
+html>body .login_bright_curve{
+	background: url(/images/admin/login_bright_curve.png) left top no-repeat;
+	height: 10px;
+	width:10px;
+}
+.login_top_side{
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale);
+	background-repeat:repeat-x;
+	height: 10px;
+}
+html>body .login_top_side{
+	background: url(/images/admin/login_top_side.png) left top repeat-x;
+	height: 10px;
+}
+.login_bottom_side{
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale);
+	background-repeat:repeat-x;
+	height: 10px;
+}
+html>body .login_bottom_side{
+	background: url(/images/admin/login_bottom_side.png) left top repeat-x;
+	height: 10px;
+}
+.login_left_side{
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale);
+	background-repeat:repeat-y;
+	width: 10px;
+}
+html>body .login_left_side{
+	background: url(/images/admin/login_left_side.png) left top repeat-y;
+	width: 10px;
+}
+.login_right_side{
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale);
+	background-repeat:repeat-y;
+	width: 10px;
+}
+html>body .login_right_side{
+	background: url(/images/admin/login_right_side.png) left top repeat-y;
+	width: 10px;
+}
+.login_box_bg{
+	background: url(/images/admin/login_box_bg.png);
+}
+.txtbox{
+	font: 11px Verdana, Arial, Helvetica, sans-serif;
+	color: #000000;
+	background: #FFFFFF;
+	border-top: 1px solid #CCCCCC;
+	border-right: 1px solid #CCCCCC;
+	border-bottom: 1px solid #CCCCCC;
+	border-left: 1px solid #CCCCCC;
+}
+.formtext{
+	font: 11px Verdana, Arial, Helvetica, sans-serif;
+	color: #FFFFFF;
+}
+.login_btn{
+	background: url(/images/admin/login_btn.png)  left top no-repeat;
+	width: 90px;
+	height:24px;
+	border: 0px;
+	cursor:pointer;
+}
+.login_logo{
+	position:relative;
+	float:left;
+	top: 85px;
+	left: 48px;
+	
+	width:207px;
+	height:66px;
+}
+.login_first{
+	width:212px;
+	height:57px;
+	border:1px solid #5594c7;
+}
+.login_info{
+	font: 11px Verdana, Arial, Helvetica, sans-serif;
+	color:#d3d3d3;
+	text-align:left;
+	line-height:20px;
+}
+.login_forgot,.login_forgot a{
+	font: 11px Verdana, Arial, Helvetica, sans-serif;
+	text-align:left;
+	line-height:28px;
+	cursor:pointer;
+	text-decoration:none;
+}
+.localauth{
+	background:#e0eaf4;
+}
+.admin_btn,.guest_btn,.padmin_btn,.paudit_btn{
+	height: 39px;
+	cursor: pointer;
+	font-weight: bold;
+	background-color:#CAE9FB ;
+	background-repeat: no-repeat;
+	background-attachment: scroll;
+	border: 0px;
+	width: 302px;
+}
+.admin_btn{
+	background-image: url("/images/admin/administrator_login.png");
+}
+.guest_btn{
+	background-image: url("/images/admin/puser_login.png");
+}
+.padmin_btn{
+	background-image: url("/images/admin/padministrator_login.png");
+}
+.paudit_btn{
+	background-image: url("/images/admin/pauditor_login.png");
+}
+.listforms{font-size:12px; font-weight:bold; text-align:right; color:#FFFFFF; padding-right:5px}
+.inputbg{ background:url("/images/admin/inputbg.gif") top repeat-x; height:20px; border:#2b79b9 1px solid}
+.inputbg focus{ background:#FFFFFF}
+
+
+.validation_ind{  float:left; width:210px; height:auto; border:#bba300 1px solid; background-color:#fdf6c5; background-image:url(/images/admin/error_msg1.gif); background-position:3px center; background-repeat: no-repeat;  margin:0px 0 5px 10px; padding:0px 0 5px 20px;  }
+.validation_ind ul{  margin:0px; padding:0px; list-style:none; }
+.validation_ind li{ display:block; padding:0px; clear:left; margin:0px; width:100%; font-size:11px; color:#FF0000; line-height:14px; height:14px; text-align:left;}

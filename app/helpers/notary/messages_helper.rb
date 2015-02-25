@@ -1,0 +1,2 @@
+module Notary::MessagesHelper
+end

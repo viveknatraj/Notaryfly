@@ -1,0 +1,143 @@
+<%= stylesheet_link_tag "dhtmlwindow" %>
+<%#= javascript_include_tag "defaults"  %>
+<%= javascript_include_tag "prototype"  %>
+<%= javascript_include_tag "dhtmlwindow"%>
+
+
+<style type="text/css" media="screen">
+	body {background: #f4f3ed url(../images/sub_bg_2.jpg) repeat-x;}
+</style>
+<div id="home_header" class="span-24 last">
+	<div class="span-5">
+		<%= link_to image_tag("logo.jpg"),url_for({:controller=>"home",:action=> "index"}) %>
+	</div>
+	<div id="home_navigation" class="span-12 prepend-7 last">
+		<ul class="inline_list">
+			<li><%= link_to "Home", :controller => "home", :action => "index" %></li>
+			<li><%= link_to "Learn More", :controller => "home", :action => "learn_more" %></li>
+			<li><%= link_to "Faq's", :controller => "home", :action => "faqs" %></li>
+			<li><a id="order_status" href="#"   onClick="divwin=dhtmlwindow.open('divbox', 'div', 'check_status', '', 'width=575px,height=280px,left=200px,top=150px,resize=0,scrolling=0,center=1'); myFunction();return false">Order Status</a></li>
+                </ul>
+		</ul>	
+	</div>
+</div>
+
+<div id="callout" class="span-24 last">
+	<div id="search_and_sign" class="span-8">
+		<h1><%= image_tag("header_search_and_sign.png") %></h1>
+		<%= image_tag("search_and_sign.png") %>
+	</div>
+	<div id="register" class="span-16 last">
+		<h2>Not A NotaryFly Member?</h2>
+		<p>
+			Become a member to get all the benefits of NotaryFly. 
+			<br />Registration is fast, easy, and FREE!
+		</p>
+		<p class="register">
+		<%= link_to(image_tag("button_register_now.png"), :controller => "users", :action => "new_notary" ) %>
+		<%= link_to(image_tag("button_registercustomer_now.png"), :controller => "users", :action => "new_client" ) %>
+		</p>
+		<%#= link_to "Company Registration", :controller => "users", :action => "new_client"  %>
+		
+                <p class="register_test"><strong>* Title, Escrow, or Lender</strong></p>
+
+	</div>
+</div>
+
+<div id="columns" class="span-24 last">
+	
+	<div class="span-23" style="border:1px solid #e7dfcc; background-color:#FFF; padding:20px 30px 20px 30px;">
+		<h3 style="color:#a0522d; font-family:Georgia; font-weight:bold; font-style:italic;">
+			<span style="float:left; width:50%; padding-top:10px;">Terms of Use</span>
+			<%= link_to(image_tag("buttons/notary_sign_up.jpg", :style=> "float:right; padding-bottom:5px;"), :controller => "users", :action => "new_notary") %>
+		</h3>
+		<style type="text/css" media="screen">
+			h4 {color:#154B66; margin:0px 0px 5px 0px; font-size:13px; font-weight:bold;}
+		</style>
+		<hr>
+		<p>The materials on this Web site (“NotaryFly.com” or "Website") are provided by NotaryFly.com as a service to its users and may be used for informational purposes only subject to the provisions below. By downloading any materials from or otherwise using this website, you as a user ("You") agree to these terms and conditions ("Agreement"). The terms ("You" and "User") as used herein refer to all individuals and/or entities accessing this website for any reason.  IF YOU DO NOT AGREE TO BE BOUND BY THIS AGREEMENT, DO NOT USE THE SITE OR THE SERVICES. NotaryFly.com may revise this agreement at any time by updating this posting.  Please consult the end of this Agreement to determine when the Agreement was last revised.</p>
+
+		<p>Trademark Information 
+NotaryFly.com is a trademark of Select Signings, Inc, and the other trademarks, logos, and service marks (collectively the "Trademarks") used in this site is the property of Select Signings or their respective owners. Nothing contained in this website should be construed as granting by implication, estoppels, or otherwise, a license or right of use of NotaryFly.com any other Trademark displayed in the website without the written permission of Select Signings, Inc. or its respective owner.</p>
+
+		<p>Exclusive Use
+If you are a Registered User, NotaryFly.com will issue to you certain passwords and user identification numbers for access to certain areas of the website. You agree not to disclose such passwords and user identification numbers issued to you to any third party.  You acknowledge that NotaryFly.com is not responsible for third party access to your account that results from theft or misappropriation of your user names and passwords.</p>
+
+		<h4>Information Submitted</h4>
+		<p>You are solely responsible for, and assume all liability regarding, (i) the information and content you contribute to the Service; (ii) the information and content you post, transmit, publish, or otherwise make available (hereinafter “post”) through the Services; and (iii) your interactions with other Registered Users through the Services.</p>
+
+		<p>Use of Personally Identifiable Information 
+Personally identifiable information submitted by you to NotaryFly.com through forms on the website is treated according to NotaryFly.com’s Privacy Policy located on this website. You agree you have read and understand the Privacy Policy.</p> 
+
+		<h4>Content Removal</h4>
+		<p>NotaryFly.com reserves the right, but has no obligation, to monitor the information or material you submit to the Services or post in the public areas of the Services. NotaryFly.com will have the right to remove any such information or material that in its sole opinion violates, or may violate any applicable law or either the letter or spirit of this Agreement or upon the request of any third party.</p>
+
+		<h4>No False Information</h4>
+		<p>You will not provide inaccurate, misleading or false information to NotaryFly.com or to any other user. If information provided to NotaryFly.com or another user subsequently becomes inaccurate, misleading or false, you will promptly notify NotaryFly.com of such change.</p>
+
+		<h4>Reporting of Violations</h4>
+		<p>You will promptly report to NotaryFly.com any violation of the Agreement by others, including but not limited to, Registered Users.</p>
+
+		<h4>No Advertising or Commercial Solicitation</h4>
+		<p>You will not advertise or solicit any user to buy or sell any products or services through the Site or Services. You may not transmit any chain letters, junk or spam e-mail to other users. Further, you will not use any information obtained from the Services in order to contact, advertise to, solicit, or sell to any user without their prior explicit consent. If you breach the terms of this subsection and send or post unsolicited bulk email, “spam” or other unsolicited communications of any kind through the Services, you acknowledge that you will have caused substantial harm to NotaryFly.com, but that the amount of such harm would be extremely difficult to ascertain. As a reasonable estimation of such harm, you agree to pay NotaryFly.com $250 for each such unsolicited communication you send through the Services.</p>
+
+		<h4>Submission of Ideas</h4>
+		<p>We welcome your comments about our website, products and services ("Comments"). However, we ask you limit your Comments to your experiences with our website, products and services. Please do not send us any unsolicited creative ideas, suggestions, or materials, including but not limited to creative artwork, samples, feedback, data, answers, questions, comments, suggestions, plans, ideas for new products, promotions, product names, advertising campaigns, technologies or processes ("Ideas"). The Comments and Ideas that you may submit shall in no way prevent the purchase, manufacture or use of similar products, services, plans and ideas by NotaryFly.com for any purpose whatever. Please understand that NotaryFly.com makes no assurances that your Comments and Ideas will be treated as confidential or proprietary. Please also understand that NotaryFly.com shall be free to copy, use, modify, disclose and distribute of your Comments and Ideas without restriction for any purposes whatsoever, commercial or otherwise, without compensation to you.</p>
+
+		<h4>Disclaimer of Liability</h4>
+		<p>THE USER OF THIS SITE ASSUMES ALL RESPONSIBILITY AND RISK FOR THE USE OF THIS SERVER AND THE INTERNET GENERALLY. NOTARYFLY.COM AND ITS AFFILIATES DISCLAIM ALL WARRANTIES, REPRESENTATIONS OR ENDORSEMENTS, EXPRESS OR IMPLIED, WITH REGARD TO THE CONTENT, INCLUDING BUT NOT LIMITED TO THE DOCUMENTATION AND RELATED GRAPHICS, ACCESSED FROM, OR VIA, THIS SERVER OR THE INTERNET, INCLUDING, BUT NOT LIMITED TO, ALL IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT. NOTARYFLY.COM DOES NOT ASSUME ANY LEGAL LIABILITY OR RESPONSIBILITY FOR THE ACCURACY, COMPLETENESS, OR USEFULNESS OF ANY CONTENT, APPARATUS, PRODUCT OR PROCESS DISCLOSED ON THE SERVER OR OTHER MATERIAL ACCESSIBLE FROM THE SERVER. IN NO EVENT SHALL NOTARYFLY.COM BE LIABLE FOR ANY SPECIAL, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA, OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THE CONTENT, THIS SERVER OR THE INTERNET GENERALLY.</p>
+
+		<h4>No Warranties</h4>
+		<p>THIS SECTION WILL APPLY TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW. NOTARYFLY.COM PROVIDES THE SERVICES ON AN “AS IS” AND “AS AVAILABLE” BASIS AND GRANTS NO WARRANTIES OF ANY KIND, WHETHER EXPRESS, IMPLIED, STATUTORY OR OTHERWISE WITH RESPECT TO THE SERVICES OR THE SITE (INCLUDING ALL INFORMATION CONTAINED THEREIN), INCLUDING ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT. NOTARYFLY.COM DOES NOT WARRANT THAT YOUR USE OF THE SERVICES WILL BE SECURE, UNINTERRUPTED, ALWAYS AVAILABLE, ERROR-FREE OR WILL MEET YOUR REQUIREMENTS, OR THAT ANY DEFECTS IN THE SERVICES WILL BE CORRECTED. NOTARYFLY.COM DISCLAIMS LIABILITY FOR, AND NO WARRANTY IS MADE WITH RESPECT TO, THE CONNECTIVITY AND AVAILABILITY OF THE SERVICES.</p>
+
+		<h4>Third Party Content</h4>
+		<p>Opinions, advice, statements, offers, or other information or content made available through the Services, but not directly by NotaryFly.com, are those of their respective authors, and should not necessarily be relied upon. Such authors are solely responsible for such content. NOTARYFLY.COM DOES NOT: (i) GUARANTEE THE ACCURACY, COMPLETENESS OR USEFULNESS OF ANY INFORMATION PROVIDED ON THE SERVICES, OR (ii) ADOPT, ENDORSE OR ACCEPT RESPONSIBILITY FOR THE ACCURACY OR RELIABILITY OF ANY OPINION, ADVICE, OR STATEMENT MADE BY ANY PARTY OTHER THAN NOTARYFLY.COM. UNDER NO CIRCUMSTANCES WILL NOTARYFLY.COM BE RESPONSIBLE FOR ANY LOSS OR DAMAGE RESULTING FROM ANYONE’S RELIANCE ON INFORMATION OR OTHER CONTENT POSTED ON THE SERVICES, OR TRANSMITTED TO OR BY ANY USERS.</p>
+
+		<p>Links to Other Sites 
+Any links on this website may let you leave the NotaryFly.com’s Site and go to other websites. The linked websites are not under the control of NotaryFly.com, and NotaryFly.com is not responsible for the content, the accuracy thereof or any other aspect of any linked website or any link contained in a linked website. NotaryFly.com reserves the right to terminate any link or linking program at any time. NotaryFly.com does not endorse companies or products to which it links and reserves the right to note as such on its website. If you decide to access any of the third party websites linked to this website, you do this entirely at your own risk.</p>
+
+		<h4>Communication and Privacy</h4>
+		<p>We may use your email address to send you messages notifying you of important changes to the Services or special offers. Further, we may contact you by telephone if you voluntarily provide us with your telephone number, in order to communicate with you regarding the Services. If you do not want to receive such email messages or telephone calls (including at any wireless number you may have voluntarily provided us), please refer to our Privacy Statement to review your options.</p> 
+
+		<p>Termination of Access 
+If you breach any of the terms or conditions of this Agreement, NotaryFly.com may, at its sole discretion, (a) suspend your access to certain areas of the website or (b) terminate your access to certain areas of the website. Whether or not a breach results in suspension or termination depends on several factors, including but not limited to the severity of the breach, the potential harm to other users or to NotaryFly.com, and whether or not the breach is repeated or cured. Upon termination, you must destroy all materials obtained from this website and all copies thereof, whether made under the terms of this agreement or otherwise.</p>
+
+		<p>Governing Law 
+Except for trademark and copyright matters governed by the federal laws of the United States, the foregoing provisions shall be governed by and construed in accordance with the substantive laws of the State of California, without regard to the principles of conflict of law thereof.</p>
+
+		<h4>Revision Date</h4>
+		<p>This Agreement was last revised on JUNE 28, 2010.</p>
+		
+	</div>
+</div>
+
+<div id="footer" class="span-24 last">
+	<div class="span-15">
+		<ul class="inline_list footer">
+			<li><%= link_to "Home", :controller => "home", :action => "index" %> |</li>
+			<li><%= link_to "Learn More", :controller => "home", :action => "learn_more" %> |</li> 
+			<li><%= link_to "Contact Us", :controller => "home", :action => "contact_us" %> |</li>
+			<li><%= link_to "Terms of Use", :controller => "home", :action => "terms_of_use" %> |</li>
+			<li><%= link_to "Privacy Statement", :controller => "home", :action => "privacy_statement"%> |</li>
+                        <li><%= link_to "Disclaimer", :controller => "home", :action => "disclaimer"%></li>
+		</ul>
+	</div>
+	<div id="copyright" class="span-9 last">
+		<p style="color:#696969">© Copyright 2012-2014 NotaryFly</p>
+	</div>
+</div>
+
+
+
+
+  <div id="check_status" style="display:none;">
+          <div id ="error" style ="color:red;"></div>
+          <center class="order_status"> Order Status </center>
+          <% form_remote_for :user, :url => {:controller => "users", :action => "check_status"} do |f| %>
+            <div class="order_mane"> <span>*Last Name Signer/Borrower</span> <%= text_field_tag "last_name"%></div>
+            <div class="order_mane"> <span>*Order Number</span> <%= text_field_tag "order_number" %><%= image_submit_tag "checkst.jpg",:id=>'check_status_button',:class=>'check_status_button' %> </div>
+            
+          <% end %>
+          <div id ="notary123"></div>
+          <div id="empty"></div>
+  </div>

@@ -1,0 +1,412 @@
+<% p '?????????????????????' %>
+<% p params[:redirect_to] %>
+<%= stylesheet_link_tag "notaryfly", "ui.datepicker" %>
+<%= stylesheet_link_tag "admin/screen" %>
+<%= javascript_include_tag "file_tags" %>
+<%= javascript_include_tag "notaryfly", "jqueryui", "jquery-ui" %>
+
+<div class="block" id="block-tables">
+<div class="secondary-navigation">
+  <ul>
+    <li class="active"><a href="/admin/orders/open_order">Open Order</a></li>
+    <li class="first"><a href="/admin/orders/index">Completed Order</a></li>
+    <li class="first"><a href="/admin/orders/pending_order">Pending Orders/Notary</a></li>
+    <li class="first"><a href="/admin/orders/cancelled_order">Cancelled Orders</a></li>
+    <li class="first"><a href="/admin/orders/accounting">Accounting</a></li>
+  </ul>
+  <div class="clear"></div>
+</div>
+<% form_for :order, :url => "/admin/orders/update/#{@order.id}?redirect_to=#{params[:redirect_to]}", :html => {:multipart => true, :name => "new_order_form"} do |f| -%>
+    <div class="content">
+    <div id="order_form" class="content_container span-16 last">
+        <h2>Edit Order</h2>
+        <h3><strong>Order Information</strong></h3>
+
+        <div id="new_order" class="new_order_container form span-16 append-2 last" style="border:none;margin-top:0px;padding-top: 0px;">
+            <div class="xsnazzy" id="new_order_signer" style="width:822px;">
+        <b class="xtop"><b class="xb1"></b><b class="xb2 color_a"></b><b class="xb3 color_a"></b><b class="xb4 color_a"></b></b>
+
+        <div class="xboxcontent" style="padding:10px; width:800px;">
+        <div class="labels wholeform">
+          <% if @notary %> <p class="formagent"><label for="agent">Notary Fee $:</label></p>
+          <% end %>
+          <% if @notary %>
+              <p class="formright"><%= f.text_field :order_notary_fee, :disabled => :disabled %></p>
+          <% end %>
+        </div>
+        <div class="labels wholeform">
+          <p class="formagent"><label for="agent">Agent:</label></p>
+
+          <p class="formright"><%= f.select("agent_id", Agent.find(:all, :conditions => ["client_id = ?", @order.client.id]).collect {|p| [ p.broker_name, p.id ] }, {},  {:disabled => :true} ) %>
+            <span><%#= link_to "(add an agent)", {}, :href => "javascript:void(0)" %></span></p>
+        </div>
+        <div class="labels wholeform">
+          <p class="formagent"><label for="loan_number">*Loan/Escrow #:</label></p>
+
+          <p class="formright"><%= f.text_field :loan_number, :disabled => :disabled %></p>
+        </div>
+        <div class="labels wholeform">
+          <p class="formagent"><label for="signing_date">*Signing Date:</label></p>
+          <% if @order.signing_date %>
+              <p class="formright"><%= f.text_field :signing_date, :class => "datepicker", :value => @order.signing_date.strftime("%m/%d/%Y") %></p>
+          <% else %>
+              <p><%= f.text_field :signing_date, :class => "datepicker" %></p>
+          <% end %>
+        </div>
+        <div class="labels wholeform">
+          <p class="formagent"><label for="signing_time">*Signing Time:</label></p>
+
+          <p class="formright"><%= f.select(:signing_time, time_dropdown) %></p>
+        </div>
+        <!--<div class="labels wholeform">-->
+        <!--<p class="formagent"><label for="loan_type">*Loan Type:</label></p>-->
+        <!--<p class="formright"><%#= select_tag "order_loan_type", options_for_select([["Select one" , "" ],["Refinance" , "Refinance" ], ["Reverse Mortgage" , "Reverse Mortgage" ], ["Purchase" , "Purchase" ], ["Sellers Package" , "Sellers Package" ], ["HELOC" , "HELOC" ], ["Grant Deed Only" , "Grant Deed Only" ], ["Application" , "Application" ], ["Power of Attorney" , "Power of Attorney" ], ["Life Settlement" , "Life Settlement" ], ["Other" , "Other" ]], @order.loan_type), {:name => "order[loan_type]"} %></p>-->
+        <!--</div>-->
+
+        <div class="labels wholeform">
+          <p class="formagent"><label for="loan_type">*Transaction Type:</label></p>
+
+          <p class="formright"><%= f.select(:loan_type, order_transction_types, {}, {:class => "formfield", :disabled => :disabled}) %></p>
+        </div>
+        <div class="clr"></div>
+        </br>
+
+        <h3 style="text-decoration:none;margin-left: 20px;"><strong>Signing Party Information</strong></h3>
+
+        <div class="labels wholeform">
+          <p class="formagent"><label for="borrower_1_first_name">*Signer First Name:</label></p>
+
+          <p class="formright"><%= f.text_field :borrower_1_first_name, :disabled => :disabled %></p>
+        </div>
+        <div class="labels wholeform">
+          <p class="formagent"><label for="borrower_1_last_name">*Signer Last Name:</label></p>
+
+          <p class="formright"><%= f.text_field :borrower_1_last_name, :disabled => :disabled %></p>
+        </div>
+        <div class="labels wholeform">
+          <p class="formagent"><label for="borrower_2_work_phone">Work Phone:</label></p>
+
+          <p class="formright"><%= f.text_field :borrower_1_work_phone, :disabled => :disabled %>
+            <label for="borrower_1_extension">Ext.</label> <%= f.text_field :borrower_1_extension, :class => "tiny", :maxlength => 3, :onkeyup => "validateNum('order_borrower_1_extension')", :disabled => :disabled %>
+          </p>
+        </div>
+        <div class="labels wholeform">
+          <p class="formagent"><label for="borrower_1_home_phone">*Home Phone:</label></p>
+
+          <p class="formright"><%= f.text_field :borrower_1_home_phone, :disabled => :disabled %></p>
+        </div>
+        <div class="labels wholeform" style="width:730px;">
+          <p class="formagent"><label for="borrower_1_mobile_phone">Mobile Phone:</label></p>
+
+          <p class="formright"><%= f.text_field :borrower_1_mobile_phone, :disabled => :disabled %></p>
+          <!--<% if @order.borrower_2_first_name.length!=0 or @order.borrower_2_last_name.length!=0 or @order.borrower_2_work_phone.length!=0 or @order.borrower_2_extension.length!=0 or @order.borrower_2_home_phone.length!=0 or @order.borrower_2_mobile_phone.length!=0 %>
+              <div id="add" style="cursor: pointer;"><%= image_tag("remove_signer.jpg", :id => "addsigner") %></div>
+          <% else %>
+              <div id="add" style="cursor: pointer;"><%= image_tag("add_signer.jpg", :id => "addsigner") %></div>
+          <% end %>-->
+        </div>
+        <div id="signer2"
+             <% if @order.borrower_2_first_name.length!=0 or @order.borrower_2_last_name.length!=0 or @order.borrower_2_work_phone.length!=0 or @order.borrower_2_extension.length!=0 or @order.borrower_2_home_phone.length!=0 or @order.borrower_2_mobile_phone.length!=0 %>style="display:inline"
+             <% else %>style="display:none"
+             <% end %>>
+          <div class="labels wholeform">
+            <p class="formagent"><label for="borrower_2_first_name">Signer #2 First Name:</label></p>
+
+            <p class="formright"><%= f.text_field :borrower_2_first_name, :disabled => :disabled %></p>
+          </div>
+          <div class="labels wholeform">
+            <p class="formagent"><label for="borrower_2_last_name">Signer #2 Last Name:</label></p>
+
+            <p class="formright"><%= f.text_field :borrower_2_last_name, :disabled => :disabled %></p>
+          </div>
+          <div class="labels wholeform">
+            <p class="formagent"><label for="borrower_2_work_phone">Work Phone:</label></p>
+
+            <p class="formright"><%= f.text_field :borrower_2_work_phone, :disabled => :disabled %>
+              <label for="borrower_2_extension">Ext.</label> <%= f.text_field :borrower_2_extension, :class => "tiny", :maxlength => 3, :onkeyup => "validateNum('order_borrower_2_extension')", :disabled => :disabled %>
+            </p>
+          </div>
+          <div class="labels wholeform">
+            <p class="formagent"><label for="borrower_2_home_phone">Home Phone:</label></p>
+
+            <p class="formright"><%= f.text_field :borrower_2_home_phone, :disabled => :disabled %></p>
+          </div>
+          <div class="labels wholeform">
+            <p class="formagent"><label for="borrower_2_mobile_phone">Mobile Phone:</label></p>
+
+            <p class="formright"><%= f.text_field :borrower_2_mobile_phone, :disabled => :disabled %></p>
+          </div>
+        </div>
+        <div class="clr"></div>
+        <br/>
+
+        <h3 style="text-decoration:none;margin-left: 20px;"><strong>Signing Location</strong></h3>
+
+        <div class="labels wholeform">
+          <p class="formagent"><label for="signing_location_address">*Address:</label></p>
+
+          <p class="formright"><%= f.text_field :signing_location_address, :disabled => true %></p>
+        </div>
+        <div class="labels wholeform">
+        <p class="formagent"><label for="signing_location_city">*City:</label></p>
+
+        <p class="formright"><%= f.text_field :signing_location_city, :disabled => true, :style => "width:85px; margin-left:2px; margin-right:5px;" %>
+        <label for="signing_location_state">*State:</label>
+        <select name="order_signing_location_state" id="order_signing_location_state" disabled="disabled">
+        <option value="">Select State</option>
+        <option value="AL"
+                <% if @order.signing_location_state == "AL" %>selected
+                <% end %>>Alabama
+        </option>
+        <option value="AK"
+                <% if @order.signing_location_state == "AK" %>selected
+                <% end %>>Alaska
+        </option>
+        <option value="AZ"
+                <% if @order.signing_location_state == "AZ" %>selected
+                <% end %>>Arizona
+        </option>
+        <option value="AR"
+                <% if @order.signing_location_state == "AR" %>selected
+                <% end %>>Arkansas
+        </option>
+        <option value="CA"
+                <% if @order.signing_location_state == "CA" %>selected
+                <% end %>>California
+        </option>
+        <option value="CO"
+                <% if @order.signing_location_state == "CO" %>selected
+                <% end %>>Colorado
+        </option>
+        <option value="CT"
+                <% if @order.signing_location_state == "CT" %>selected
+                <% end %>>Connecticut
+        </option>
+        <option value="DE"
+                <% if @order.signing_location_state == "DE" %>selected
+                <% end %>>Delaware
+        </option>
+        <option value="DC"
+                <% if @order.signing_location_state == "DC" %>selected
+                <% end %>>District of Columbia
+        </option>
+        <option value="FL"
+                <% if @order.signing_location_state == "FL" %>selected
+                <% end %>>Florida
+        </option>
+        <option value="GA"
+                <% if @order.signing_location_state == "GA" %>selected
+                <% end %>>Georgia
+        </option>
+        <option value="HI"
+                <% if @order.signing_location_state == "HI" %>selected
+                <% end %>>Hawaii
+        </option>
+        <option value="ID"
+                <% if @order.signing_location_state == "ID" %>selected
+                <% end %>>Idaho
+        </option>
+        <option value="IL"
+                <% if @order.signing_location_state == "IL" %>selected
+                <% end %>>Illinois
+        </option>
+        <option value="IN"
+                <% if @order.signing_location_state == "IN" %>selected
+                <% end %>>Indiana
+        </option>
+        <option value="IA"
+                <% if @order.signing_location_state == "IA" %>selected
+                <% end %>>Iowa
+        </option>
+        <option value="KS"
+                <% if @order.signing_location_state == "KS" %>selected
+                <% end %>>Kansas
+        </option>
+        <option value="KY"
+                <% if @order.signing_location_state == "KY" %>selected
+                <% end %>>Kentucky
+        </option>
+        <option value="LA"
+                <% if @order.signing_location_state == "LA" %>selected
+                <% end %>>Louisiana
+        </option>
+        <option value="ME"
+                <% if @order.signing_location_state == "ME" %>selected
+                <% end %>>Maine
+        </option>
+        <option value="MD"
+                <% if @order.signing_location_state == "MD" %>selected
+                <% end %>>Maryland
+        </option>
+        <option value="MA"
+                <% if @order.signing_location_state == "MA" %>selected
+                <% end %>>Massachusetts
+        </option>
+        <option value="MI"
+                <% if @order.signing_location_state == "MI" %>selected
+                <% end %>>Michigan
+        </option>
+        <option value="MN"
+                <% if @order.signing_location_state == "MN" %>selected
+                <% end %>>Minnesota
+        </option>
+        <option value="MS"
+                <% if @order.signing_location_state == "MS" %>selected
+                <% end %>>Mississippi
+        </option>
+        <option value="MO"
+                <% if @order.signing_location_state == "MO" %>selected
+                <% end %>>Missouri
+        </option>
+        <option value="MT"
+                <% if @order.signing_location_state == "MT" %>selected
+                <% end %>>Montana
+        </option>
+        <option value="NE"
+                <% if @order.signing_location_state == "NE" %>selected
+                <% end %>>Nebraska
+        </option>
+        <option value="NV"
+                <% if @order.signing_location_state == "NV" %>selected
+                <% end %>>Nevada
+        </option>
+        <option value="NH"
+                <% if @order.signing_location_state == "NH" %>selected
+                <% end %>>New Hampshire
+        </option>
+        <option value="NJ"
+                <% if @order.signing_location_state == "NJ" %>selected
+                <% end %>>New Jersey
+        </option>
+        <option value="NM"
+                <% if @order.signing_location_state == "NM" %>selected
+                <% end %>>New Mexico
+        </option>
+        <option value="NY"
+                <% if @order.signing_location_state == "NY" %>selected
+                <% end %>>New York
+        </option>
+        <option value="NC"
+                <% if @order.signing_location_state == "NC" %>selected
+                <% end %>>North Carolina
+        </option>
+        <option value="ND"
+                <% if @order.signing_location_state == "ND" %>selected
+                <% end %>>North Dakota
+        </option>
+        <option value="OH"
+                <% if @order.signing_location_state == "OH" %>selected
+                <% end %>>Ohio
+        </option>
+        <option value="OK"
+                <% if @order.signing_location_state == "OK" %>selected
+                <% end %>>Oklahoma
+        </option>
+        <option value="OR"
+                <% if @order.signing_location_state == "OR" %>selected
+                <% end %>>Oregon
+        </option>
+        <option value="PA"
+                <% if @order.signing_location_state == "PA" %>selected
+                <% end %>>Pennsylvania
+        </option>
+        <option value="RI"
+                <% if @order.signing_location_state == "RI" %>selected
+                <% end %>>Rhode Island
+        </option>
+        <option value="SC"
+                <% if @order.signing_location_state == "SC" %>selected
+                <% end %>>South Carolina
+        </option>
+        <option value="SD"
+                <% if @order.signing_location_state == "SD" %>selected
+                <% end %>>South Dakota
+        </option>
+        <option value="TN"
+                <% if @order.signing_location_state == "TN" %>selected
+                <% end %>>Tennessee
+        </option>
+        <option value="TX"
+                <% if @order.signing_location_state == "TX" %>selected
+                <% end %>>Texas
+        </option>
+        <option value="UT"
+                <% if @order.signing_location_state == "UT" %>selected
+                <% end %>>Utah
+        </option>
+        <option value="VT"
+                <% if @order.signing_location_state == "VT" %>selected
+                <% end %>>Vermont
+        </option>
+        <option value="VA"
+                <% if @order.signing_location_state == "VA" %>selected
+                <% end %>>Virginia
+        </option>
+        <option value="WA"
+                <% if @order.signing_location_state == "WA" %>selected
+                <% end %>>Washington
+        </option>
+        <option value="WV"
+                <% if @order.signing_location_state == "WV" %>selected
+                <% end %>>West Virginia
+        </option>
+        <option value="WI"
+                <% if @order.signing_location_state == "WI" %>selected
+                <% end %>>Wisconsin
+        </option>
+        <option value="WY"
+                <% if @order.signing_location_state == "WY" %>selected
+                <% end %>>Wyoming
+        </option>
+        </select>
+        <label for="signing_location_zip_code">*Zip Code:</label>
+        <%= f.text_field :signing_location_zip_code, :class => "tiny", :disabled => false, :onkeyup => "validateNum('order_signing_location_zip_code')", :maxlength => 5, :disabled => :disabled %>
+        </p>
+        </div>
+        <div class="clr"></div>
+        </br>
+        <h3 style="text-decoration:none;margin-left: 20px;"><strong>Order Specific Instructions</strong></h3>
+
+        <div class="labels wholeform">
+        <p class="formagent"></p>
+        <p class="formright">
+          <%= f.text_area :special_instructions, :value => @order.special_instructions, :style => "height:100px;", :disabled => :disabled %>
+        </p>
+        </div>
+
+        <div class="span-11 last">
+
+        <!--<div class="labels wholeform">
+          <p class="formaddacc">
+            <%= link_to "UPLOAD DOCS", {}, :href => "Javascript:void(0)" %>
+          </p>
+          <p class="formright" style="text-align:left">
+            (If uploading more than one attachment, <b>please label</b> 1 of 3, 2 of 3, etc)<br/>
+            <span id="attachment_count-error" style="color:#FF0000"></span>
+          </p>
+        </div>-->
+        </div>
+
+        <div class="clr"></div>
+
+        </div>
+        <b class="xbottom"><b class="xb4"></b><b class="xb3"></b><b class="xb2"></b><b class="xb1"></b></b>
+        </div>
+        </div>
+
+        <div class="span-18 last" style="margin-top:10px;">
+          <div class="errorExplanation" style="display:none" id="signupvalid"></div>
+        </div>
+        <div class="clr"></div><br/>
+
+        <div id="submit_buttons" class="span-18 last">
+          <%= image_submit_tag("buttons/update_order.jpg") %>
+        </div>
+    </div>
+    <div class="clr"></div><br/>
+    <div class="span-3 prepend-3 last" style="margin-top:60px;display: none">
+      <a href="mailto:support@notaryfly.com"><%= image_tag("prevent_abuse.jpg") %></a>
+    </div>
+    </div>
+<% end %>
+</div>

@@ -1,0 +1,171 @@
+<%= render :partial => "/notary/header" %>
+<%= render :partial => "/notary/orders/navigation" %>
+
+<div id="order_history" class="span-18 last content_container">
+	<div class="span-16 last">
+		<div class="span-12">
+			<h2>My Feedback</h2>
+			<h3>Recent Feedback</h3>
+		</div>
+	</div>
+       <div class="xsnazzy" style="width:700px">
+          <b class="xtop"><b class="xb1"></b><b class="xb2 color_a">
+          </b><b class="xb3 color_a"></b><b class="xb4 color_a"></b></b>
+             <div class="xboxcontent" style="padding:2px; margin: 0px">
+	<% if @order_feedbacks.size < 1 %>
+	<div class="last">
+		<p class="notice">You currently have no feedback.</p>
+	</div>
+	<% end %>
+
+  
+	<% for order_feedback in @order_feedbacks %>
+	<% 	@total_feedbacks = order_feedback.accuracy.to_i + order_feedback.communication.to_i + order_feedback.punctuality.to_i + order_feedback.professionalism.to_i + order_feedback.fees.to_i %>
+	<% @overall_rating = (@total_feedbacks.to_f / 5 ) %>
+  
+	<div class="dashboard_order" style="border:none; margin:0px; padding: 3px">
+           <div class="xsnazzy_1">
+          <b class="xtop_1"><b class="xb1_1"></b><b class="xb2_1 color_a">
+          </b><b class="xb3_1 color_a"></b><b class="xb4_1 color_a"></b></b>
+             <div class="xboxcontent_1" style="padding:5px;" >
+		<div>
+			<p>
+                        <div>
+                        
+                          <div style="float:left;">
+                          <strong>Overall rating average:</strong>
+                       <% @ratings =@overall_rating*20
+                             @rating_percentage =sprintf('%0.0f',@ratings)
+                           %>
+                          </div>
+
+                          <div style="float:left;  margin-top: -10px;">
+                        
+                            <div id="star">
+   <ul id="star4" class="star">
+  <li id="starCur4" class="curr" style="width:<%=@rating_percentage.to_s+'%'%>"></li>
+ </ul>
+ <div style="float: left; margin-top: 10px; padding-left: 15px;"><%=@overall_rating%> stars</div>
+</div>
+                           </div>
+                          <div style="clear:both"></div>
+
+                        </div>
+
+                            
+                        </p>
+
+			<p><strong>Overall opinion:</strong> <% if order_feedback.overall!=nil%> <%= order_feedback.overall.capitalize %><%else%>Not Provided<%end%> </p>
+		</div>
+		<div class="span-8 last">
+			<p><strong>Created On:</strong> <%= order_feedback.created_at.strftime("%B %d, %Y") %></p>
+		</div>
+		<div class="span-16 last" style="margin-top:5px;">
+			<p><strong>Comments:</strong></p>
+			<p><%= order_feedback.comments %></p>
+                        <p style="margin-top:10px;"><a href="#credit_info<%=order_feedback.id%>" class="fancyzoom" style="font-size:11px; color:#154b66;z-index:999">View Full Feedback</a>
+                        <% if !order_feedback.response_from_notary.blank? %>
+                          Response from Notary                      
+                        <%else%>
+                        <a href="#response_from_notary<%=order_feedback.id%>" class="fancyzoom" style="font-size:11px; color:#154b66;z-index:999">Response from Notary</a>
+                        <%  end %></p>
+		</div>
+            <div class="clr"></div>
+            </div>
+              <div class="clr"></div>
+            <b class="xbottom_1"><b class="xb4_1"></b><b class="xb3_1"></b>
+            <b class="xb2_1"></b><b class="xb1_1"></b></b>
+         </div>
+	</div>
+        <div id="response_from_notary<%=order_feedback.id%>" style="display:none;">
+          <% form_tag("/notary/feedback") do %>
+          <p>Response from Notary</p>
+            <%= text_area_tag 'response_from_notary','' %>
+            <%= hidden_field_tag 'orderid',order_feedback.order_id %>
+            <%= submit_tag "Submit" %>
+	  <% end %>
+        </div>
+               <div id="credit_info<%=order_feedback.id%>" style="display:none;">
+                 <% @order_feedback = OrderFeedback.find(order_feedback.id) %>
+		<div class="span-16 last dashboard_order feedback_form" style="border:none; margin:0px; padding: 0px">
+          <div class="xsnazzy" style="width:625px">
+          <b class="xtop"><b class="xb1"></b><b class="xb2 color_a">
+          </b><b class="xb3 color_a"></b><b class="xb4 color_a"></b></b>
+             <div class="xboxcontent" style="padding:10px;" >
+		<% form_for :order_feedback, :url => "detail" do |f| -%>
+		<h5 style="font-size:16px;"><strong>Order Feedback</strong></h5>
+
+		<p><strong>Overall rating of this notary</strong></p>
+                <p><% if @order_feedback.overall!=nil%><%= @order_feedback.overall.capitalize %><%else%>Not Provided<%end%></p>
+
+		<p><strong>Comments</strong></p>
+		<p><%= @order_feedback.comments %></p>
+
+		<p><strong>Were the documents executed accurately?</strong></p>
+		<p>
+			<%= f.radio_button :accuracy, "1", :class => "star" , :disabled => true, :title=> "Very inaccurate"%>
+			<%= f.radio_button :accuracy, "2", :class => "star" , :disabled => true, :title=> "Inaccurate"%>
+			<%= f.radio_button :accuracy, "3", :class => "star" , :disabled => true, :title=> "Neither inaccurate nor accurate"%>
+			<%= f.radio_button :accuracy, "4", :class => "star" , :disabled => true, :title=> "Accurate"%>
+			<%= f.radio_button :accuracy, "5", :class => "star" , :disabled => true, :title=> "Very accurate"%>
+		</p>
+		<div style="clear:both;"></div>
+		<p><strong>Was the Notary professional?</strong></p>
+		<p>
+			<%= f.radio_button :professionalism, "1", :class => "star", :disabled => true, :title=> "Very unsatisfied" %>
+			<%= f.radio_button :professionalism, "2", :class => "star", :disabled => true, :title=> "Unsatisfied" %>
+			<%= f.radio_button :professionalism, "3", :class => "star", :disabled => true, :title=> "Neither unsatisfied nor satisfied" %>
+			<%= f.radio_button :professionalism, "4", :class => "star", :disabled => true, :title=> "Satisfied" %>
+			<%= f.radio_button :professionalism, "5", :class => "star", :disabled => true, :title=> "Very satisfied" %>
+		</p>
+		<div style="clear:both;"></div>
+
+		<p><strong>Promptness of the notary?</strong></p>
+		<p>
+			<%= f.radio_button :punctuality, "1", :class => "star", :disabled => true, :title=> "Very unsatisfied"%>
+			<%= f.radio_button :punctuality, "2", :class => "star", :disabled => true, :title=> "Unsatisfied"%>
+			<%= f.radio_button :punctuality, "3", :class => "star", :disabled => true, :title=> "Neither unsatisfied nor satisfied"%>
+			<%= f.radio_button :punctuality, "4", :class => "star", :disabled => true, :title=> "Satisfied"%>
+			<%= f.radio_button :punctuality, "5", :class => "star", :disabled => true, :title=> "Very satisfied"%>
+		</p>
+		<div style="clear:both;"></div>
+
+		<p><strong>How satisfied were you of the notary's communication?</strong></p>
+		<p>
+			<%= f.radio_button :communication, "1", :class => "star", :disabled => true, :title=> "Very unsatisfied"%>
+			<%= f.radio_button :communication, "2", :class => "star", :disabled => true, :title=> "Unsatisfied"%>
+			<%= f.radio_button :communication, "3", :class => "star", :disabled => true, :title=> "Neither unsatisfied nor satisfied"%>
+			<%= f.radio_button :communication, "4", :class => "star", :disabled => true, :title=> "Satisfied"%>
+			<%= f.radio_button :communication, "5", :class => "star", :disabled => true, :title=> "Very satisfied"%>
+		</p>
+		<div style="clear:both;"></div>
+		<p><strong>How reasonable was the notary fees?</strong></p>
+		<p>
+			<%= f.radio_button :fees, "1", :class => "star", :disabled => true, :title=> "Very unreasonable" %>
+			<%= f.radio_button :fees, "2", :class => "star", :disabled => true, :title=> "Unreasonable" %>
+			<%= f.radio_button :fees, "3", :class => "star", :disabled => true, :title=> "Neither unreasonable nor reasonable" %>
+			<%= f.radio_button :fees, "4", :class => "star", :disabled => true, :title=> "Reasonable" %>
+			<%= f.radio_button :fees, "5", :class => "star", :disabled => true, :title=> "Very reasonable" %>
+		</p>
+		<div style="clear:both;"></div>
+
+		<% end %>
+                 <div class="clr"></div>
+            </div>
+   <div class="clr"></div>
+<b class="xbottom"><b class="xb4"></b><b class="xb3"></b>
+<b class="xb2"></b><b class="xb1"></b></b>
+</div>
+	</div>
+			</div>
+               
+	<% end %>
+               <div class="clr"></div>
+           </div>
+              <div class="clr"></div>
+            <b class="xbottom"><b class="xb4"></b><b class="xb3"></b>
+            <b class="xb2"></b><b class="xb1"></b></b>
+         </div>
+              
+</div>
+ 
