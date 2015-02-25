@@ -37,7 +37,7 @@
         <td>APPOINTMENT SCHEDULED</td>
         <td>SIGNING LOCATION</td>
         <td>CUSTOMER NAME</td>
-        <td>DOCS?</td>
+								<!--<td>DOCS?</td>-->
       </tr>
     </thead>
     <tbody>
@@ -49,7 +49,7 @@
           <td><%if order.signing_date%><%= order.signing_date.strftime('%m/%d/%Y') %>&nbsp;&nbsp;<%=order.signing_time %><%end%></td>
           <td><%= order.signing_location_city+"," %>&nbsp;<%= order.signing_location_state %>&nbsp;&nbsp;<%=order.signing_location_zip_code%></td>
           <td><%=order.client.client_name %></td>
-          <td><%= order.attachments_count.nil? ? "--" : (order.attachments_count > 0 ? image_tag("doc_icon.png")  : '--') %> </td>
+										<!--<td><%= order.attachments_count.nil? ? "--" : (order.attachments_count > 0 ? image_tag("doc_icon.png")  : '--') %> </td> -->
         </tr>
       <% end %>
       <% if @orders.blank? %>

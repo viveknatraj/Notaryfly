@@ -25,7 +25,7 @@
     <td>APPOINTMENT SCHEDULED</td>
     <td>SIGNING LOCATION</td>
     <td>NOTARY</td>
-				<!--<td>DOCS?</td>-->
+				<td>DOCS?</td>
   </tr>
   <% @paid_orders = Order.find(:all, :conditions => ["client_id = ? AND admin_approve IS NULL AND status != 'closed' AND (status_timeline = ? ) ", @client.id, "Notary Paid in Full" ], :order => @filter) %>
   <% if @paid_orders.blank? %>

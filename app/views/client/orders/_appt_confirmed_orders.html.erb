@@ -25,7 +25,7 @@
     <td>APPOINTMENT SCHEDULED</td>
     <td>SIGNING LOCATION</td>
     <td>NOTARY</td>
-				<!--<td>DOCS?</td>-->
+				<td>DOCS?</td>
   </tr>
   <% @appt_confirmed_orders = Order.find(:all, :conditions => ["client_id = ? AND admin_approve IS NULL AND status != 'closed' AND (status_timeline = ? ) AND status != ? ", @client.id, 'Time/Date Signing Set', "Refuse To Sign"], :order => @filter) %>
   <% if @appt_confirmed_orders.blank? %>

@@ -183,7 +183,7 @@
               <%= link_to "Edit this order", { :action => "edit", :id => @order.id }%>
             <% end %>
             &nbsp;<%= link_to "Re-send Email confirmation", { :action => "resend_confirmation", :id => @order.id }  %>
-            <% if @order.cancel_order.nil? %> <a href="#" onClick="divwin=dhtmlwindow.open('divbox', 'div', 'cancel_order<%=@order.id%>', '', 'width=550px,height=310px,left=200px,top=150px,resize=0,scrolling=0'); return false">Cancel Order</a><%else%><%= link_to "Order Cancelled", " javascript:void(0)", :class=>"arr-default" %><% end %></p>
+												<% if @order.cancel_order.nil? %> <a href="#" onClick="divwin=dhtmlwindow.open('divbox', 'div', 'cancel_order<%=@order.id%>', '', 'width=550px,height=310px,left=200px,top=150px,resize=0,scrolling=0'); return false">Cancel Order</a><%else%><%= link_to "Order Cancelled", " javascript:void(0)", :class=>"arr-default", :style => 'text-decoration: none' %><% end %></p>
           <div id="cancel_order<%=@order.id%>" style="display:none;">
             <% form_tag("/client/orders/cancel_order") do %>
               <p><b>Why Do You Want To Cancel?</b></p>

@@ -83,7 +83,7 @@ module Client::OrdersHelper
      end +
      content_tag(:td) do
        obj.client.client_name
-     end
+     end +
      #~ content_tag(:td) do
        #~ if obj.client
         #~ %Q(
@@ -143,10 +143,10 @@ module Client::OrdersHelper
           #~ )
        #~ end
      #~ end +
-     #content_tag(:td) do
-     #  obj.attachments_count.nil? ? "--" : (obj.attachments_count > 0 ? image_tag("doc_icon.png") : '--')
+     content_tag(:td) do
+       obj.attachments_count.nil? ? "--" : (obj.attachments_count > 0 ? image_tag("doc_icon.png") : '--')
 
-     #end
+     end
 
    end
 end
