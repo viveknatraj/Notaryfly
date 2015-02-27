@@ -396,8 +396,8 @@
             &nbsp;<%= link_to "Re-send Email confirmation", {:controller => "client/orders", :action => "resend_confirmation"}, :id => @order.id   %>
 				<% if @order.admin_order_cancel.nil? %> <a href="#" onClick="divwin=dhtmlwindow.open('divbox', 'div', 'cancel_order<%=@order.id%>', '', 'width=550px,height=310px,left=200px,top=150px,resize=0,scrolling=0'); return false">Cancel Order</a><%else%>
 												<% cancel_msg = 'Order Cancelled(<small>' %>
-												<% cancel_msg += ( @order.admin_approve == 1 ) ? 'Approved by admin with fee: ' : 'Rejected by admin with fee:' %>
-												<% cancel_msg += @order.travel_fee.to_i > 0 ? @order.travel_fee : '0'  %>
+												<% cancel_msg += ( @order.admin_approve == 1 ) ? 'Approved by admin' : 'Rejected by admin' %>
+												<% cancel_msg += @order.travel_fee.to_i > 0 ? " with fees: #{@order.travel_fee}" : ' without any fees'  %>
 												<% cancel_msg += ')</small>' %>
 												<%= link_to cancel_msg, " javascript:void(0)", :class=>"arr-default", :style => 'text-decoration: none' %><% end %></p>
 						<div id="cancel_order<%=@order.id%>" style="display:none;">
