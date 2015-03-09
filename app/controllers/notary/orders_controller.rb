@@ -27,7 +27,7 @@ class Notary::OrdersController < ApplicationController
       @pending_orders   << order if order.status == "need notary" && !order.notary_id.present?
       @assigned_orders  << order if order.status == "filled" && order.status_timeline == "Notary Assigned" && order.notary_id.present?
       @confirmed_orders << order if order.status != "Refuse To Sign" && order.status_timeline == "Time/Date Signing Set" && order.notary_id.present?
-      @rts_orders       << order if order.status == "Refuse To Sign" && order.notary_id.present?
+      @rts_orders       << order if order.status == "Refuse To Sign" && order.notary_id.present? (cancel_order IS NOT NULL  admin_order_cancel is not null ) 
       @signed_orders    << order if ["signing_completed", "Signing Completed"].include?(order.status_timeline) && order.notary_id.present?
       @paid_orders      << order if ["notary_paid_full", "Notary Paid in Full"].include?(order.status_timeline) && order.notary_id.present?
     end
@@ -245,6 +245,8 @@ class Notary::OrdersController < ApplicationController
     @notes.order_id = params[:id]
     @notes.user_id = self.current_user.id
     @notes.notes = params["notes"][:notes]
+				# set require_attention to display the order in attention tab
+				@notes.require_attention = true
     @notes.save
     if params[:redirect_to].present?
       redirect_to params[:redirect_to]

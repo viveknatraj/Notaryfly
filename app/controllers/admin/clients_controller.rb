@@ -131,6 +131,10 @@ layout "adminpanel"
 					if params[:client][:executives].blank?
 									flash[:errors].push("Please select atleast one executive")
 					end
+					# restrict user to map maximum of 3 executives for a client
+					if params[:client][:executives].count > 3
+									flash[:errors].push("Only maximum of 3 executives can be mapped")
+					end
 					if params[:client][:percentage].blank? and params[:client][:amount].blank?
 									flash[:errors].push("Please provide either static amount or amount percentage")
 					end

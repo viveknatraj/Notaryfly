@@ -63,7 +63,7 @@ function travel_fee_edit(order_id){
 
 																																								<tr class="odd">
 
-																																								<td><a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'order_number<%= order.id %>', '', 'width=800px,height=600px,left=200px,top=150px,resize=0,scrolling=10');" title="View Order Details" style="color: #000;font-size: 12px;"><%= order.id %></a></td>
+																																																<td><%= link_to(order.id, :controller => 'admin/orders', :action => 'order_detail', :order_id => order.id, :tab => 'tabs6', :title => 'View Order Details', :style => 'color: #000;font-size: 12px;') %></td>
 																																								<td><a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'client_name<%= order.client.client_name %>', '', 'width=800px,height=600px,left=200px,top=150px,resize=0,scrolling=10');" title="View Client Profile" style="color: #000;font-size: 12px;"><%= order.client.client_name %></a></td>
 																																								<% if order.notary!=nil %>
 																																																<td><a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'notary_name_<%= order.notary.first_name %>_<%= order.notary.last_name %>', '', 'width=800px,height=1100px,left=200px,top=150px,resize=0,scrolling=10');" title="View Notary Profile" style="color: #000;font-size: 12px;"><%= order.notary.first_name %>&nbsp;<%= order.notary.last_name %></a></td>

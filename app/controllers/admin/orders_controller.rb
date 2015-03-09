@@ -70,7 +70,7 @@ end
   def open_order
     redirect_to session[:url] if session[:admin_user] == nil
 
-    @orders = Order.find(:all, :conditions => ["status!='closed'"], :order => "updated_at DESC")
+    @orders = Order.find(:all, :conditions => ["status!='closed' and move_to_order_history_by_admin = false"], :order => "updated_at DESC")
     @awaiting_notary_orders = []
     @notary_assigned_orders = []
     @appt_confirmed_orders  = []
@@ -80,16 +80,16 @@ end
     @paid_orders            = []
 
     @orders.each do |order|
-      @awaiting_notary_orders << order if order.status == "need notary"
-      @notary_assigned_orders << order if order.status == "filled" && order.status_timeline == "Notary Assigned"
-      @appt_confirmed_orders  << order if order.status != "Refuse To Sign" && order.status_timeline == "Time/Date Signing Set" && order.notary_id.present?
+      @awaiting_notary_orders << order if order.status == "need notary" && order.move_to_order_history_by_admin == false
+      @notary_assigned_orders << order if order.status == "filled" && order.status_timeline == "Notary Assigned" && order.move_to_order_history_by_admin == false
+      @appt_confirmed_orders  << order if order.status != "Refuse To Sign" && order.status_timeline == "Time/Date Signing Set" && order.notary_id.present? && order.move_to_order_history_by_admin == false
       #@attention_orders       << order if order.status != "Refuse To Sign" && order.status_timeline == "Documents Received by Notary" && order.notary_id.present?
       #@refuse_to_sign_orders  << order if order.status == "Refuse To Sign" && order.notary_id.present?
-      @signed_orders_orders   << order if ["signing_completed", "Signing Completed"].include?(order.status_timeline) && order.notary_id.present?
+      @signed_orders_orders   << order if ["signing_completed", "Signing Completed"].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false
       @paid_orders            << order if ["notary_paid_full", "Notary Paid in Full"].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false
     end
     
-      attention_orders = Order.find_by_sql("select o.id as order_id from orders o LEFT JOIN messages m ON o.id=m.order_id LEFT JOIN notes n ON o.id=n.order_id where o.status != 'Refuse To Sign' AND o.status_timeline ='Documents Received by Notary' AND o.notary_id IS NOT NULL")
+      attention_orders = Order.find_by_sql("select o.id as order_id from orders o LEFT JOIN messages m ON o.id=m.order_id LEFT JOIN notes n ON o.id=n.order_id where o.status != 'Refuse To Sign' AND o.status_timeline ='Documents Received by Notary' AND move_to_order_history_by_admin=false AND n.require_attention = true and o.notary_id IS NOT NULL")
       attention_orders.each do |order|
         @attention_orders << Order.find(order.order_id)
        end
@@ -102,7 +102,7 @@ end
     @appt_confirmed_orders  = @appt_confirmed_orders.paginate :page => params[:page], :per_page => per_page
     @attention_orders       = @attention_orders.paginate :page => params[:page], :per_page => per_page
     #@refuse_to_sign_orders  = @refuse_to_sign_orders.paginate :page => params[:page], :per_page => per_page
-    @refuse_to_sign_orders  = Order.paginate :page => params[:page], :per_page => per_page, :conditions => ["cancel_order IS NOT NULL AND move_to_order_history_by_admin=false"], :order => "updated_at DESC"
+    @refuse_to_sign_orders  = Order.paginate :page => params[:page], :per_page => per_page, :conditions => ["(cancel_order IS NOT NULL  AND admin_order_cancel IS NOT NULL ) AND move_to_order_history_by_admin=false"], :order => "updated_at DESC"
     @signed_orders_orders   = @signed_orders_orders.paginate :page => params[:page], :per_page => per_page
     @paid_orders            = @paid_orders.paginate :page => params[:page], :per_page => per_page
 
@@ -134,7 +134,7 @@ end
     end
     paid_orders            = []
     per_page = 20
-    @orders = Order.find(:all, :conditions => ["status!='closed'"], :order => "updated_at DESC")
+    @orders = Order.find(:all, :conditions => ["status!='closed' and move_to_order_history_by_admin = true"], :order => "updated_at DESC")
     @orders.each do |order|
       paid_orders            << order if ["notary_paid_full", "Notary Paid in Full"].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false
     end
@@ -721,6 +721,14 @@ end
     @order = Order.find(params[:order_id])
     @order_feedback = OrderFeedback.find(:all, :conditions => ["order_id = ?", @order.id]).first
 
+    # find whether the order detail page fetched from Attention tab ( tabs5 )
+    if params[:tab] == 'tabs5'
+												@notes=Notes.find_all_by_order_id(params[:order_id])
+												# update all notes of the order require_attention to false
+												@notes.each { |note|
+																				note.update_attribute(:require_attention, false)
+												}
+				end
     @client = @order.client
     @notary = @order.notary
     @agent = @order.agent

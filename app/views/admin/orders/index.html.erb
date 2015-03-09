@@ -176,13 +176,13 @@
                 <% end %>
 
                 <% if order.client.executives.present? %>
-                  <td title='Map Executives to Order'>
-                    <a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'assign_executive_<%= order.id%>', '', 'width=450px,height=270px,left=320px,top=290px,resize=0,scrolling=10');" style="color: #000;font-size: 12px;"><%= order.executives.present? ? "Update" : "Assign" %></a>
+                  <td>
+																										<% order.client.executives.each do |e| %>
+																																		<small><%= e.name %></small><br/>
+																										<% end %>
                   </td>
                 <% else %>
-                  <td title='Map Executives to client'>
-                    <a href="/admin/clients/assign_executive?client_id=<%= order.client.id %>" style="color: #000;font-size: 12px;">Map
-                      Executive</a></td>
+                  <td/>
                 <% end %>
                 <td><%= order.read_attribute_before_type_cast("created_at").to_date.strftime '%m-%d-%Y' %></td>
                 <td><%= signing_type(order.id) %> &nbsp; <%= no_of_doc(order.id) %></td>

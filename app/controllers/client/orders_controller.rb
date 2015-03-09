@@ -743,6 +743,8 @@ class Client::OrdersController < ApplicationController
     @notes.order_id = params[:id]
     @notes.user_id = self.current_user.id
     @notes.notes = params["notes"][:notes]
+				# set require_attention to display the order in attention tab
+				@notes.require_attention = true
     @notes.save
     redirect_to(:action => 'order_detail', :order_id => params[:id], :tab => params[:tab])
   end

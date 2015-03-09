@@ -382,7 +382,7 @@
                   <span style="margin-top:10px;clear:both"><% if !@order.status_timeline.nil? %><%= @order.status_timeline.upcase if @order.status_timeline %>: <%= @agent.updated_at.strftime("%m/%d/%Y %I:%M %p") %> - <%= @agent.broker_name %><%end%></span><br/>
                 <% end %>
                 <% if @notary %>
-                  <span style="margin-top:10px;clear:both"><% if !@order.status_timeline.nil? %><%= @order.status_timeline if @order.status_timeline %>: <%= @notary.updated_at.strftime("%m/%d/%Y %I:%M %p") %> - <%= "#{@notary.first_name} #{@notary.last_name}" %><%end%></span><br/>
+                  <span style="margin-top:10px;clear:both"><% if !@order.status_timeline.nil? %><%= @order.status_timeline.upcase if @order.status_timeline %>: <%= @notary.updated_at.strftime("%m/%d/%Y %I:%M %p") %> - <%= "#{@notary.first_name} #{@notary.last_name}" %><%end%></span><br/>
                 <% end %>
                 <% if @client %>
                   <span style="margin-top:10px;clear:both"><% if !@order.status_timeline.nil? %><%= @order.status_timeline.upcase if @order.status_timeline %>: <%= @client.updated_at.strftime("%m/%d/%Y %I:%M %p") %> - <%= @client.client_name %><%end%></span><br/>
@@ -394,10 +394,14 @@
               <%= link_to "Edit this order", { :action => "edit", :id => @order.id }%>
             <% end %>
             &nbsp;<%= link_to "Re-send Email confirmation", {:controller => "client/orders", :action => "resend_confirmation"}, :id => @order.id   %>
-				<% if @order.admin_order_cancel.nil? %> <a href="#" onClick="divwin=dhtmlwindow.open('divbox', 'div', 'cancel_order<%=@order.id%>', '', 'width=550px,height=310px,left=200px,top=150px,resize=0,scrolling=0'); return false">Cancel Order</a><%else%>
+				<% if @order.admin_order_cancel.nil? and @order.cancel_order.nil? %> <a href="#" onClick="divwin=dhtmlwindow.open('divbox', 'div', 'cancel_order<%=@order.id%>', '', 'width=550px,height=310px,left=200px,top=150px,resize=0,scrolling=0'); return false">Cancel Order</a><%else%>
 												<% cancel_msg = 'Order Cancelled(<small>' %>
-												<% cancel_msg += ( @order.admin_approve == 1 ) ? 'Approved by admin' : 'Rejected by admin' %>
-												<% cancel_msg += @order.travel_fee.to_i > 0 ? " with fees: #{@order.travel_fee}" : ' without any fees'  %>
+												<% if @order.admin_approve.present? %>
+												  <% cancel_msg += ( @order.admin_approve == 1 ) ? 'Approved by admin' : 'Rejected by admin' %>
+												  <% cancel_msg += @order.travel_fee.to_i > 0 ? " with fees: #{@order.travel_fee}" : ' without any fees'  if @order.admin_approve > 0%>
+				        <% else %>
+              <% cancel_msg += 'Waiting for admin' %>
+				        <% end %>
 												<% cancel_msg += ')</small>' %>
 												<%= link_to cancel_msg, " javascript:void(0)", :class=>"arr-default", :style => 'text-decoration: none' %><% end %></p>
 						<div id="cancel_order<%=@order.id%>" style="display:none;">
