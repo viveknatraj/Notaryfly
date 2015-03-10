@@ -398,7 +398,7 @@
 				<% elsif @order.admin_order_cancel.present? && @order.cancel_order.nil? %>
 												<% cancel_msg = 'Order Cancelled' %>
 				<%= link_to cancel_msg, {}, :href => "javascript:void(0)", :class=>"arr-default", :style => 'text-decoration: none' %></p>
-				<% elsif @order.cancel_order.present? %>
+				<% elsif !@order.cancel_order.nil? %>
 												<% cancel_msg = 'Order Cancelled(<small>' %>
 												<% if @order.admin_approve.present? %>
 												  <% cancel_msg += ( @order.admin_approve == 1 ) ? 'Approved by admin' : 'Rejected by admin' %>
