@@ -28,7 +28,8 @@
               <li><a href="javascript:void(0);" id="tabs5" class="light-green">Attention</a></li>
               <li><a href="javascript:void(0);" id="tabs6" class="mid-light-green">Cancelled</a></li>
               <li><a href="javascript:void(0);" id="tabs7" class="dark-light-green">signed</a></li>
-              <li><a href="javascript:void(0);" id="tabs8" class="high-dark-light-green">paid</a></li>
+              <li><a href="javascript:void(0);" id="tabs8" class="dark-light-green">Completed</a></li>
+              <li><a href="javascript:void(0);" id="tabs9" class="high-dark-light-green">paid</a></li>
             </ul>
             <%= render :partial => 'all_orders' %>
             <%= render :partial => 'awaiting_notary' %>
@@ -38,6 +39,7 @@
             <%#= render :partial => 'refuse_to_sign' %>
             <%= render :partial => 'cancelled_orders' %>
             <%= render :partial => 'signed_orders' %>
+            <%= render :partial => 'completed_orders' %>
             <%= render :partial => 'paid_orders' %>
           </div>
         </div>
@@ -67,7 +69,10 @@
       <%= (will_paginate @signed_orders_orders).to_s.gsub(/<a(.*?)href="([^&]+)&.*?"(.*?)>/, '<a\1href="\2"\3>').gsub(/<a(.*?)href="([^"]+)"/, '<a\1href="\2&' + {:tab => "tabs7"}.to_query + '"') %>
     </div>
     <div id="pagination_8" class="<%= params[:tab] && params[:tab] != "tabs8" ? 'open_order-page' : '' %>">
-      <%= (will_paginate @paid_orders).to_s.gsub(/<a(.*?)href="([^&]+)&.*?"(.*?)>/, '<a\1href="\2"\3>').gsub(/<a(.*?)href="([^"]+)"/, '<a\1href="\2&' + {:tab => "tabs8"}.to_query + '"') %>
+      <%= (will_paginate @completed_orders).to_s.gsub(/<a(.*?)href="([^&]+)&.*?"(.*?)>/, '<a\1href="\2"\3>').gsub(/<a(.*?)href="([^"]+)"/, '<a\1href="\2&' + {:tab => "tabs8"}.to_query + '"') %>
+    </div>
+    <div id="pagination_9" class="<%= params[:tab] && params[:tab] != "tabs9" ? 'open_order-page' : '' %>">
+      <%= (will_paginate @paid_orders).to_s.gsub(/<a(.*?)href="([^&]+)&.*?"(.*?)>/, '<a\1href="\2"\3>').gsub(/<a(.*?)href="([^"]+)"/, '<a\1href="\2&' + {:tab => "tabs9"}.to_query + '"') %>
     </div>
 
   </div>

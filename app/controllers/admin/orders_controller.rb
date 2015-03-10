@@ -18,9 +18,9 @@ end
     # @orders = Order.find(:all,:conditions=>["status='closed'"])
     #@orders = Order.paginate :page => params[:page], :conditions => ["status='closed'"]
     if params[:per_page] == "All"
-      @orders = Order.find(:all,:conditions=>["status='closed'"])
+      @orders = Order.find(:all,:conditions=>["status='closed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false"])
     else
-      @orders = Order.find(:all,:conditions=>["status='closed'"]).paginate(:page => params[:page], :per_page => params[:per_page] || 25)
+      @orders = Order.find(:all,:conditions=>["status='closed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false"]).paginate(:page => params[:page], :per_page => params[:per_page] || 25)
     end
     @feedback_average=[]
     @orders.each do |f|
@@ -70,7 +70,7 @@ end
   def open_order
     redirect_to session[:url] if session[:admin_user] == nil
 
-    @orders = Order.find(:all, :conditions => ["status!='closed' and move_to_order_history_by_admin = false"], :order => "updated_at DESC")
+    @orders = Order.find(:all, :conditions => ["status!='closed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false"], :order => "updated_at DESC")
     @awaiting_notary_orders = []
     @notary_assigned_orders = []
     @appt_confirmed_orders  = []
@@ -89,7 +89,8 @@ end
       @paid_orders            << order if ["notary_paid_full", "Notary Paid in Full"].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false
     end
     
-      attention_orders = Order.find_by_sql("select o.id as order_id from orders o LEFT JOIN messages m ON o.id=m.order_id LEFT JOIN notes n ON o.id=n.order_id where o.status != 'Refuse To Sign' AND o.status_timeline ='Documents Received by Notary' AND move_to_order_history_by_admin=false AND n.require_attention = true and o.notary_id IS NOT NULL")
+      #attention_orders = Order.find_by_sql("select o.id as order_id from orders o LEFT JOIN messages m ON o.id=m.order_id LEFT JOIN notes n ON o.id=n.order_id where o.status != 'Refuse To Sign' AND o.status_timeline ='Documents Received by Notary' AND move_to_order_history_by_admin=false AND n.require_attention = true and o.notary_id IS NOT NULL")
+      attention_orders = Order.find_by_sql("select o.id as order_id from orders o LEFT JOIN messages m ON o.id=m.order_id LEFT JOIN notes n ON o.id=n.order_id where move_to_order_history_by_admin=false AND n.require_attention = true and o.notary_id IS NOT NULL")
       attention_orders.each do |order|
         @attention_orders << Order.find(order.order_id)
        end
@@ -102,7 +103,7 @@ end
     @appt_confirmed_orders  = @appt_confirmed_orders.paginate :page => params[:page], :per_page => per_page
     @attention_orders       = @attention_orders.paginate :page => params[:page], :per_page => per_page
     #@refuse_to_sign_orders  = @refuse_to_sign_orders.paginate :page => params[:page], :per_page => per_page
-    @refuse_to_sign_orders  = Order.paginate :page => params[:page], :per_page => per_page, :conditions => ["(cancel_order IS NOT NULL  AND admin_order_cancel IS NOT NULL ) AND move_to_order_history_by_admin=false"], :order => "updated_at DESC"
+    @refuse_to_sign_orders  = Order.paginate :page => params[:page], :per_page => per_page, :conditions => ["cancel_order IS NOT NULL  AND move_to_order_history_by_admin=false"], :order => "updated_at DESC"
     @signed_orders_orders   = @signed_orders_orders.paginate :page => params[:page], :per_page => per_page
     @paid_orders            = @paid_orders.paginate :page => params[:page], :per_page => per_page
 

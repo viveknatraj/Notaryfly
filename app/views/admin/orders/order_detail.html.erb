@@ -394,7 +394,11 @@
               <%= link_to "Edit this order", { :action => "edit", :id => @order.id }%>
             <% end %>
             &nbsp;<%= link_to "Re-send Email confirmation", {:controller => "client/orders", :action => "resend_confirmation"}, :id => @order.id   %>
-				<% if @order.admin_order_cancel.nil? and @order.cancel_order.nil? %> <a href="#" onClick="divwin=dhtmlwindow.open('divbox', 'div', 'cancel_order<%=@order.id%>', '', 'width=550px,height=310px,left=200px,top=150px,resize=0,scrolling=0'); return false">Cancel Order</a><%else%>
+				<% if @order.admin_order_cancel.nil? && @order.cancel_order.nil? %> <a href="#" onClick="divwin=dhtmlwindow.open('divbox', 'div', 'cancel_order<%=@order.id%>', '', 'width=550px,height=310px,left=200px,top=150px,resize=0,scrolling=0'); return false">Cancel Order</a>
+				<% elsif @order.admin_order_cancel.present? && @order.cancel_order.nil? %>
+												<% cancel_msg = 'Order Cancelled' %>
+				<%= link_to cancel_msg, {}, :href => "javascript:void(0)", :class=>"arr-default", :style => 'text-decoration: none' %></p>
+				<% elsif @order.cancel_order.present? %>
 												<% cancel_msg = 'Order Cancelled(<small>' %>
 												<% if @order.admin_approve.present? %>
 												  <% cancel_msg += ( @order.admin_approve == 1 ) ? 'Approved by admin' : 'Rejected by admin' %>
@@ -403,13 +407,14 @@
               <% cancel_msg += 'Waiting for admin' %>
 				        <% end %>
 												<% cancel_msg += ')</small>' %>
-												<%= link_to cancel_msg, " javascript:void(0)", :class=>"arr-default", :style => 'text-decoration: none' %><% end %></p>
+				<%= link_to cancel_msg, {}, :href => "javascript:void(0)", :class=>"arr-default", :style => 'text-decoration: none' %></p>
+				<% end %>
 						<div id="cancel_order<%=@order.id%>" style="display:none;">
             <% form_tag("/admin/orders/approve_to_cancel_message") do %>
               <p><b>Why Do You Want To Cancel?</b></p>
               <%= text_area_tag 'admin_order_cancel','' %>
               <%= hidden_field_tag 'orderid',@order.id %><br/><br/>
-              <div style="margin-bottom:-23px;"><b>Are You Sure You Want To Cancel?</b></div><div style="margin-left:200px;"> &nbsp; <%= image_submit_tag "yes_button.jpg" %> <%= link_to image_tag("no_button.jpg") %></div>
+              <div style="margin-bottom:-23px;"><b>Are You Sure You Want To Cancel?</b></div><div style="margin-left:210px;"> &nbsp; <%= image_submit_tag "yes_button.jpg" %> <%= link_to image_tag("no_button.jpg") %></div>
             <% end %>
           </div>
               </div>
