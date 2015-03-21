@@ -377,11 +377,15 @@
               <div class="clearfix"></div><br/>
               <div class="list-details">
                 <h3>History of all actions taken on signing and by whom:</h3>
-																<% order_history = @order.status_log.split('#') %>
-																<% order_history.compact! %>
-																<% order_history.each do |status| %>
-																				<span style="margin-top:10px;clear:both"><%= status %></span>
-																<% end %>
+																<% if @order.status_log.present? %>
+																  <% order_history = @order.status_log.split('#') %>
+																  <% order_history.compact! %>
+																  <% order_history.each do |status| %>
+																  				<span style="margin-top:10px;clear:both"><%= status %></span>
+																  <% end %>
+										      <% else %>
+																  				<span style="margin-top:10px;clear:both">No actions found</span>
+								        <% end %>
               </div>
               <div>
                 <p class="link-style"><%= link_to "PDF Format", {:action => "details", :id => @order.id , :format => "pdf"}, :target=>'_blank' %>
