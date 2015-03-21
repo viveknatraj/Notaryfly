@@ -150,6 +150,8 @@ class Client::OrdersController < ApplicationController
       @order.attachment_6_file_name = params['fileName6']
       @order.attachment_6_file_url = params['fileUrl6']
 
+      # following is a code to update status log value
+      @order.status_log = "Placed New Order: #{Time.now.strftime('%m/%d/%y - %H:%M %p')} - #{@client.client_name}"
       # End
 
       if @order.save
@@ -181,6 +183,8 @@ class Client::OrdersController < ApplicationController
       @order.attachment_6_file_name = params['fileName6']
       @order.attachment_6_file_url = params['fileUrl6']
 
+      # following is a code to update status log value
+      @order.status_log = "Placed New Order: #{Time.now.strftime('%m/%d/%y - %H:%M %p')} - #{@client.client_name}"
       # End
       if @order.save
         @note = Notes.new(:notes => params[:notes].first, :order_id => @order.id, :user_id => self.current_user.id)
@@ -519,7 +523,9 @@ class Client::OrdersController < ApplicationController
         @order.update_attributes(:order_notary_contact_address => params[:order_notary_payment_address], :order_notary_contact_city => params[:order_notary_payment_city], :order_notary_contact_state => params[:order_notary_payment_state], :order_notary_contact_zip_code => params[:order_notary_payment_zip_code])
       end
 
-      @order.update_attributes(:notary_id => params[:id], :status => "filled", :status_timeline => "Notary Assigned", :doc_delivery_address_option => params[:address])
+      # update status log for showing action history properly
+      status_log = @order.status_log.to_s + "#Notary Assigned: #{Time.now.strftime('%m/%d/%y - %H:%M %p')} - #{@order.client.client_name}"
+      @order.update_attributes(:notary_id => params[:id], :status => "filled", :status_timeline => "Notary Assigned", :doc_delivery_address_option => params[:address], :status_log => status_log)
 
       #notary_fee_calculation & signing fee calculation
       current_fee= notary_fee(params[:id])[2]
@@ -782,7 +788,10 @@ class Client::OrdersController < ApplicationController
 
   def send_mail_for_documents_received
     @order = Order.find_by_id(params[:id])
-    @order.update_attributes(:status_timeline => "Documents Received by Title/Escrow")
+    # update status log for showing action history properly
+				updated_by = @order.agent_id.present? ? @order.agent.broker_name : @order.notary.first_name
+    status_log = @order.status_log.to_s + "#Appt Confirmed: #{Time.now.strftime('%m/%d/%y - %H:%M %p')} - #{updated_by}"
+    @order.update_attributes(:status_timeline => "Documents Received by Title/Escrow", :status_log => status_log)
 
     if @order
       agent = Agent.find(@order.agent_id).email if !@order.agent_id.blank?

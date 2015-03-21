@@ -680,7 +680,8 @@ end
   
     notary_email = User.find(@notary.user_id)
     notary_email = notary_email.email
-    @order.update_attributes(:notary_id => params[:notary_id], :status => "filled", :status_timeline=> "Notary Assigned", :signing_fee => signing_fee, :customer_fee => signing_fee)
+				status_log = @order.status_log.to_s + "#Notary Assigned: #{Time.now.strftime('%m/%d/%y - %H:%M %p')} -#{session[:admin_user]} Admin"
+    @order.update_attributes(:notary_id => params[:notary_id], :status => "filled", :status_timeline=> "Notary Assigned", :signing_fee => signing_fee, :customer_fee => signing_fee, :status_log => status_log)
     Notifier.deliver_notary_assign_order_confirmation(@order, @notary, notary_email)
     flash[:notice] = "Notary Assigned"
     redirect_to({:controller => '/admin/orders', :action => 'open_order', :tab => 'tabs3'})
@@ -864,7 +865,8 @@ end
 
   def create_feedback
     @order = Order.find(params[:order_feedback][:order_id])
-    @order.update_attributes(:feedback => "completed", :status_timeline => "Feedback Complete") #as per client requirement  status changed
+				status_log = @order.status_log.to_s + "#Order Completed: #{Time.now.strftime('%m/%d/%y - %H:%M %p')} - #{session[:admin_user]} Admin"
+    @order.update_attributes(:feedback => "completed", :status_timeline => "Feedback Complete", :status_log => status_log) #as per client requirement  status changed
 
     params[:order_feedback].merge!(:fees => params[:order_feedback_fees],
                                    :communication => params[:order_feedback_communication],
@@ -929,10 +931,12 @@ end
       # agent = Agent.find(@order.agent_id).email if !@order.agent_id.blank?
       agent = Agent.find(@order.agent_id) if !@order.agent_id.blank?
       client_email = User.find(client.user_id).email
+				  status_log = @order.status_log.to_s + "#Signing Completed: #{Time.now.strftime('%m/%d/%y - %H:%M %p')} - #{session[:admin_user]} Admin"
       @order.update_attributes(:status_timeline => "Signing Completed",
                                :return_account_number => params[:order][:return_account_number],
                                :return_shipping_courier => params[:order][:return_shipping_courier],
-                               :signing_comments => params[:order][:signing_comments]
+                               :signing_comments => params[:order][:signing_comments],
+                               :status_log => status_log
       )
 
       if @order.status_timeline=="Signing Completed"
@@ -987,6 +991,7 @@ end
 
 
       if @order.status_timeline == "Time/Date Signing Set"
+				    status_log = @order.status_log.to_s + "#Appt Confirmed: #{Time.now.strftime('%m/%d/%y - %H:%M %p')} - #{session[:admin_user]} Admin"
         Notifier.deliver_mail_to_client_for_date_confirmed(@order, client_email)
         Notifier.deliver_mail_to_agent_for_date_confirmed(@order, agent) if !@order.agent_id.blank?
 

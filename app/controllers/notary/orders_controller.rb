@@ -194,7 +194,8 @@ class Notary::OrdersController < ApplicationController
       client = Client.find_by_id(@order.client_id)
       agent = Agent.find(@order.agent_id).email if !@order.agent_id.blank?
       client_email = User.find(client.user_id).email
-      @order.update_attributes(:status_timeline => "Signing Completed")
+      status_log = @order.status_log.to_s + "#Signing Completed: #{Time.now.strftime('%m/%d/%y - %H:%M %p')} - #{@order.notary.first_name} Notary"
+      @order.update_attributes(:status_timeline => "Signing Completed", :status_log => status_log)
       @order.update_attribute(:return_account_number, params[:order][:return_account_number])
       @order.update_attribute(:return_shipping_courier, params[:order][:return_shipping_courier])
       @order.update_attribute(:signing_comments, params[:order][:signing_comments])
@@ -338,7 +339,8 @@ class Notary::OrdersController < ApplicationController
     mul_notaries.update_attributes(:accept_status => "1")
     order=Order.find_by_id(params[:id])
     signing_fee = order.client.customer_fee
-    order.update_attributes(:status => "filled", :status_timeline=> "Notary Assigned", :notary_id => notary.id, :signing_fee => signing_fee, :customer_fee => signing_fee)
+				status_log = @order.status_log.to_s + "#Notary Assigned: #{Time.now.strftime('%m/%d/%y - %H:%M %p')} - #{notary.first_name} Notary"
+    order.update_attributes(:status => "filled", :status_timeline=> "Notary Assigned", :notary_id => notary.id, :signing_fee => signing_fee, :customer_fee => signing_fee, :status_log => status_log)
     order.save
     render :js => "window.location = '#{request.referer}'"
     flash[:notice] = "You have been assigned this Order. Details in Open Orders"
@@ -361,6 +363,8 @@ class Notary::OrdersController < ApplicationController
 
 
       if @order.status_timeline == "Time/Date Signing Set"
+								status_log = @order.status_log.to_s + "#Appt Confirmed: #{Time.now.strftime('%m/%d/%y - %H:%M %p')} - #{@order.notary.first_name} Notary"
+								@order.update_attributes(:status_log => status_log)
         Notifier.deliver_mail_to_client_for_date_confirmed(@order, client_email)
         Notifier.deliver_mail_to_agent_for_date_confirmed(@order, agent) if !@order.agent_id.blank?
 

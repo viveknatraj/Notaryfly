@@ -377,16 +377,11 @@
               <div class="clearfix"></div><br/>
               <div class="list-details">
                 <h3>History of all actions taken on signing and by whom:</h3>
-                <span style="margin-top:10px;clear:both"><% if !@order.status_timeline.nil? %><%= @order.status_timeline.upcase if @order.status_timeline%>: <%= @order.updated_at.strftime("%m/%d/%Y %I:%M %p") %> - <%= "#{@order.borrower_1_first_name} #{@order.borrower_1_last_name}" %><%end%></span><br/>
-                <% if @agent %>
-                  <span style="margin-top:10px;clear:both"><% if !@order.status_timeline.nil? %><%= @order.status_timeline.upcase if @order.status_timeline %>: <%= @agent.updated_at.strftime("%m/%d/%Y %I:%M %p") %> - <%= @agent.broker_name %><%end%></span><br/>
-                <% end %>
-                <% if @notary %>
-                  <span style="margin-top:10px;clear:both"><% if !@order.status_timeline.nil? %><%= @order.status_timeline.upcase if @order.status_timeline %>: <%= @notary.updated_at.strftime("%m/%d/%Y %I:%M %p") %> - <%= "#{@notary.first_name} #{@notary.last_name}" %><%end%></span><br/>
-                <% end %>
-                <% if @client %>
-                  <span style="margin-top:10px;clear:both"><% if !@order.status_timeline.nil? %><%= @order.status_timeline.upcase if @order.status_timeline %>: <%= @client.updated_at.strftime("%m/%d/%Y %I:%M %p") %> - <%= @client.client_name %><%end%></span><br/>
-                <% end %>
+																<% order_history = @order.status_log.split('#') %>
+																<% order_history.compact! %>
+																<% order_history.each do |status| %>
+																				<span style="margin-top:10px;clear:both"><%= status %></span>
+																<% end %>
               </div>
               <div>
                 <p class="link-style"><%= link_to "PDF Format", {:action => "details", :id => @order.id , :format => "pdf"}, :target=>'_blank' %>
