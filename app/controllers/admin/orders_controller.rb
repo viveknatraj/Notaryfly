@@ -6,6 +6,7 @@ class Admin::OrdersController < ApplicationController
 
 def order_update
   @order=Order.find_by_id(params[:order_id])
+		status_log = @order.status_log.to_s + "#Moved to Order History: #{Time.now.strftime('%m/%d/%y - %H:%M %p')} -#{session[:admin_user]} Admin"
   @order.update_attributes(:move_to_order_history_by_admin => true)
   flash[:notice] = "Successfully Order moved to order history"
   redirect_to(:controller => "admin/orders", :action => :open_order, :tab => params[:tab])
