@@ -339,7 +339,7 @@ class Notary::OrdersController < ApplicationController
     mul_notaries.update_attributes(:accept_status => "1")
     order=Order.find_by_id(params[:id])
     signing_fee = order.client.customer_fee
-				status_log = @order.status_log.to_s + "#Notary Assigned: #{Time.now.strftime('%m/%d/%y - %H:%M %p')} - #{notary.first_name} Notary"
+    status_log = order.status_log.to_s + "#Notary Assigned: #{Time.now.strftime('%m/%d/%y - %H:%M %p')} - #{notary.first_name} Notary"
     order.update_attributes(:status => "filled", :status_timeline=> "Notary Assigned", :notary_id => notary.id, :signing_fee => signing_fee, :customer_fee => signing_fee, :status_log => status_log)
     order.save
     render :js => "window.location = '#{request.referer}'"
