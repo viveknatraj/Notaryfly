@@ -43,20 +43,22 @@
               <div id="tabs">
                 <ul class="list-arrow-menu">
                   <li class="<%= open_order_details_first_tab %>"><a href="javascript:void(0)" style="cursor:not-allowed;">Notary Assigned</a></li>
-                  <% if (@order.status_timeline == "Time/Date Signing Set") || (@order.status == "filled" && @order.status_timeline == "Signing Completed") || (@order.status == 'Refuse to Sign' && @order.status_timeline == 'Notary Assigned') || @order.status_timeline == "Documents Received by Notary" || @order.status_timeline == 'Notary Paid in Full' %>
+                  <% if (@order.status_timeline == "Time/Date Signing Set" || @order.status_timeline == 'Order Completed') || (@order.status == "filled" && @order.status_timeline == "Signing Completed") || (@order.status == 'Refuse to Sign' && @order.status_timeline == 'Notary Assigned') || @order.status_timeline == "Documents Received by Notary" || @order.status_timeline == 'Notary Paid in Full' %>
                     <li class="active-second"><a href="javascript:void(0)" style="cursor:not-allowed;">Appt Confirmed</a></li>
                   <% else %>
                     <li class="active-not"><%= link_to "Appt Confirmed", "javascript:void(0)" ,:onClick=> remote_function(:url => { :controller => "admin/orders",:action=> "send_mail_for_date_confirmed",:id => @order.id, :display => "1"},:confirm => "Are you sure you want to confirm the date/time for the signing?")%></li>
                   <% end %>
-                  <% if (@order.status == "filled" && @order.status_timeline == "Signing Completed") || (@order.status_timeline == 'Notary Paid in Full')  %>
+                  <% if (@order.status == "filled" && @order.status_timeline == "Signing Completed") || (@order.status_timeline == 'Notary Paid in Full' || @order.status_timeline == 'Order Completed')  %>
                     <li class="active-third"><a href="javascript:void(0)" style="cursor:not-allowed;">Signing Completed</a></li>
                   <% else %>
                     <li class="active-not"><%= link_to "Signing Completed", "javascript:void(0)", :onClick=> "signing_complete_popup('#{@order.id}');" %></li>
                   <% end %>
-                  <% if @order.status_timeline == 'Notary Paid in Full' %>
-                    <li class="active-four"><a href="javascript:void(0)" style="cursor:not-allowed;">Order Completed</a></li>
-                  <% else %>
-                    <li class="active-not"><a href="javascript:void(0)" style="cursor:not-allowed;">Order Completed</a></li>
+												      <% if @order.status_timeline == 'Order Completed' || @order.status_timeline == 'Notary Paid in Full' %>
+										          <li class="active-four"><a href="javascript:void(0)" style="cursor:not-allowed;">Order Completed</a></li>
+      												<% elsif @order.status_timeline == 'Signing Completed' %>
+                    <li class="active-not"><%= link_to "Order Completed", "javascript:void(0)" ,:onClick=> remote_function(:url => { :controller => "admin/orders",:action=> "mark_completed",:id => @order.id, :display => "1"})%></li>
+																		<% else %>
+										          <li class="active-not"><a href="javascript:void(0)" style="cursor:not-allowed;">Order Completed</a></li>
                   <% end %>
                 </ul>
               </div>

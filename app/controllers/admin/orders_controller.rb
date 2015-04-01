@@ -6,7 +6,7 @@ class Admin::OrdersController < ApplicationController
 
 def order_update
   @order=Order.find_by_id(params[:order_id])
-		status_log = @order.status_log.to_s + "#Moved to Order History: #{Time.now.strftime('%m/%d/%y - %H:%M %p')} -#{session[:admin_user]} Admin"
+		status_log = @order.status_log.to_s + "#Moved to Order History: #{Time.now.strftime('%m/%d/%y - %I:%M %p')} -#{session[:admin_user]} Admin"
   @order.update_attributes(:move_to_order_history_by_admin => true)
   flash[:notice] = "Successfully Order moved to order history"
   redirect_to(:controller => "admin/orders", :action => :open_order, :tab => params[:tab])
@@ -87,6 +87,7 @@ end
       #@attention_orders       << order if order.status != "Refuse To Sign" && order.status_timeline == "Documents Received by Notary" && order.notary_id.present?
       #@refuse_to_sign_orders  << order if order.status == "Refuse To Sign" && order.notary_id.present?
       @signed_orders_orders   << order if ["signing_completed", "Signing Completed"].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false
+      @completed_orders   << order if ["Order Completed"].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false
       @paid_orders            << order if ["notary_paid_full", "Notary Paid in Full"].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false
     end
     
@@ -681,7 +682,7 @@ end
   
     notary_email = User.find(@notary.user_id)
     notary_email = notary_email.email
-				status_log = @order.status_log.to_s + "#Notary Assigned: #{Time.now.strftime('%m/%d/%y - %H:%M %p')} -#{session[:admin_user]} Admin"
+				status_log = @order.status_log.to_s + "#Notary Assigned: #{Time.now.strftime('%m/%d/%y - %I:%M %p')} -#{session[:admin_user]} Admin"
     @order.update_attributes(:notary_id => params[:notary_id], :status => "filled", :status_timeline=> "Notary Assigned", :signing_fee => signing_fee, :customer_fee => signing_fee, :status_log => status_log)
     Notifier.deliver_notary_assign_order_confirmation(@order, @notary, notary_email)
     flash[:notice] = "Notary Assigned"
@@ -866,7 +867,7 @@ end
 
   def create_feedback
     @order = Order.find(params[:order_feedback][:order_id])
-				status_log = @order.status_log.to_s + "#Order Completed: #{Time.now.strftime('%m/%d/%y - %H:%M %p')} - #{session[:admin_user]} Admin"
+				status_log = @order.status_log.to_s + "#Order Completed: #{Time.now.strftime('%m/%d/%y - %I:%M %p')} - #{session[:admin_user]} Admin"
     @order.update_attributes(:feedback => "completed", :status_timeline => "Feedback Complete", :status_log => status_log) #as per client requirement  status changed
 
     params[:order_feedback].merge!(:fees => params[:order_feedback_fees],
@@ -932,7 +933,7 @@ end
       # agent = Agent.find(@order.agent_id).email if !@order.agent_id.blank?
       agent = Agent.find(@order.agent_id) if !@order.agent_id.blank?
       client_email = User.find(client.user_id).email
-				  status_log = @order.status_log.to_s + "#Signing Completed: #{Time.now.strftime('%m/%d/%y - %H:%M %p')} - #{session[:admin_user]} Admin"
+				  status_log = @order.status_log.to_s + "#Signing Completed: #{Time.now.strftime('%m/%d/%y - %I:%M %p')} - #{session[:admin_user]} Admin"
       @order.update_attributes(:status_timeline => "Signing Completed",
                                :return_account_number => params[:order][:return_account_number],
                                :return_shipping_courier => params[:order][:return_shipping_courier],
@@ -992,7 +993,8 @@ end
 
 
       if @order.status_timeline == "Time/Date Signing Set"
-				    status_log = @order.status_log.to_s + "#Appt Confirmed: #{Time.now.strftime('%m/%d/%y - %H:%M %p')} - #{session[:admin_user]} Admin"
+				    status_log = @order.status_log.to_s + "#Appt Confirmed: #{Time.now.strftime('%m/%d/%y - %I:%M %p')} - #{session[:admin_user]} Admin"
+        @order.update_attributes(:status_log => status_log)
         Notifier.deliver_mail_to_client_for_date_confirmed(@order, client_email)
         Notifier.deliver_mail_to_agent_for_date_confirmed(@order, agent) if !@order.agent_id.blank?
 
@@ -1015,4 +1017,12 @@ end
     end
   end
 
+  def mark_completed
+    @order = Order.find_by_id(params[:id])
+    if @order.present?
+      status_log = @order.status_log.to_s + "#Order Completed: #{Time.now.strftime('%m/%d/%y - %I:%M %p')} - #{session[:admin_user]} Admin"
+      @order.update_attributes(:status_timeline => "Order Completed", :status_log => status_log)
+    end
+    render :js => "window.location = '#{request.referer}'"
+  end
 end

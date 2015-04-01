@@ -22,6 +22,7 @@ class Notary::OrdersController < ApplicationController
     @rts_orders       = []
     @signed_orders    = []
     @paid_orders      = []
+				@completed_orders = []
 
     @orders.each do |order|
       @pending_orders   << order if order.status == "need notary" && !order.notary_id.present?
@@ -29,6 +30,7 @@ class Notary::OrdersController < ApplicationController
       @confirmed_orders << order if order.status != "Refuse To Sign" && order.status_timeline == "Time/Date Signing Set" && order.notary_id.present?
       @rts_orders       << order if (order.status == "Refuse To Sign" || order.cancel_order != '' ||  order.admin_order_cancel != '' )&& order.notary_id.present? 
       @signed_orders    << order if ["signing_completed", "Signing Completed"].include?(order.status_timeline) && order.notary_id.present?
+      @completed_orders   << order if ["Order Completed"].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false
       @paid_orders      << order if ["notary_paid_full", "Notary Paid in Full"].include?(order.status_timeline) && order.notary_id.present?
     end
 
@@ -39,6 +41,7 @@ class Notary::OrdersController < ApplicationController
     @confirmed_orders = @confirmed_orders.paginate :page => params[:page], :per_page => per_page
     @rts_orders       = @rts_orders.paginate :page => params[:page], :per_page => per_page
     @signed_orders    = @signed_orders.paginate :page => params[:page], :per_page => per_page
+    @completed_orders = @completed_orders.paginate :page => params[:page], :per_page => per_page
     @paid_orders      = @paid_orders.paginate :page => params[:page], :per_page => per_page
   end
 
@@ -194,7 +197,7 @@ class Notary::OrdersController < ApplicationController
       client = Client.find_by_id(@order.client_id)
       agent = Agent.find(@order.agent_id).email if !@order.agent_id.blank?
       client_email = User.find(client.user_id).email
-      status_log = @order.status_log.to_s + "#Signing Completed: #{Time.now.strftime('%m/%d/%y - %H:%M %p')} - #{@order.notary.first_name} Notary"
+      status_log = @order.status_log.to_s + "#Signing Completed: #{Time.now.strftime('%m/%d/%y - %I:%M %p')} - #{@order.notary.first_name} Notary"
       @order.update_attributes(:status_timeline => "Signing Completed", :status_log => status_log)
       @order.update_attribute(:return_account_number, params[:order][:return_account_number])
       @order.update_attribute(:return_shipping_courier, params[:order][:return_shipping_courier])
@@ -339,7 +342,7 @@ class Notary::OrdersController < ApplicationController
     mul_notaries.update_attributes(:accept_status => "1")
     order=Order.find_by_id(params[:id])
     signing_fee = order.client.customer_fee
-    status_log = order.status_log.to_s + "#Notary Assigned: #{Time.now.strftime('%m/%d/%y - %H:%M %p')} - #{notary.first_name} Notary"
+    status_log = order.status_log.to_s + "#Notary Assigned: #{Time.now.strftime('%m/%d/%y - %I:%M %p')} - #{notary.first_name} Notary"
     order.update_attributes(:status => "filled", :status_timeline=> "Notary Assigned", :notary_id => notary.id, :signing_fee => signing_fee, :customer_fee => signing_fee, :status_log => status_log)
     order.save
     render :js => "window.location = '#{request.referer}'"
@@ -358,17 +361,19 @@ class Notary::OrdersController < ApplicationController
     if @order
       client = Client.find_by_id(@order.client_id)
 
-      agent = Agent.find(@order.agent_id).email if !@order.agent_id.blank?
+      agent = Agent.find(@order.agent_id) if !@order.agent_id.blank?
       client_email = User.find(client.user_id).email
 
 
       if @order.status_timeline == "Time/Date Signing Set"
-								status_log = @order.status_log.to_s + "#Appt Confirmed: #{Time.now.strftime('%m/%d/%y - %H:%M %p')} - #{@order.notary.first_name} Notary"
+								status_log = @order.status_log.to_s + "#Appt Confirmed: #{Time.now.strftime('%m/%d/%y - %I:%M %p')} - #{@order.notary.first_name} Notary"
 								@order.update_attributes(:status_log => status_log)
         Notifier.deliver_mail_to_client_for_date_confirmed(@order, client_email)
         Notifier.deliver_mail_to_agent_for_date_confirmed(@order, agent) if !@order.agent_id.blank?
 
       elsif @order.status_timeline == "Documents Received by Notary"
+								status_log = @order.status_log.to_s + "#Appt Confirmed: #{Time.now.strftime('%m/%d/%y - %I:%M %p')} - #{@order.notary.first_name} Notary"
+								@order.update_attributes(:status_log => status_log)
         Notifier.deliver_mail_to_client_for_documents_received_notary(@order, client_email)
         Notifier.deliver_mail_to_agent_for_documents_received_notary(@order, agent) if !@order.agent_id.blank?
         #elsif @order.status_timeline == "Signing Completed"

@@ -9,14 +9,14 @@
       <td>CLIENT NAME</td>
       <td>MOVE TO PAID</td>
     </tr>
-    <% @signed_orders_orders.each do |order| %>
+    <% @completed_orders.each do |order| %>
       <tr class='<%= order_status_class(order) %>'>
         <%= admin_order_table_data(order, 'tabs8') %>
       </tr>
     <% end %>
-    <% if @signed_orders_orders.blank? %>
+    <% if @completed_orders.blank? %>
       <tr class="dark-light-green">
-        <td colspan='7' style="text-align: center">You currently have no open orders.</td>
+        <td colspan='7' style="text-align: center">You currently have no completed orders.</td>
       </tr>
     <% end %>
   </table>

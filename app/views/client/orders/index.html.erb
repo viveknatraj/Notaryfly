@@ -22,7 +22,8 @@
         <li><a href="javascript:void(0);" id="tabs4" class="dark-light-blue">appt confirmed</a></li>
         <li><a href="javascript:void(0);" id="tabs5" class="light-green">Cancelled Orders</a></li>
         <li><a href="javascript:void(0);" id="tabs6" class="mid-light-green">signed</a></li>
-        <li><a href="javascript:void(0);" id="tabs7" class="dark-light-green">paid</a></li>
+								<li><a href="javascript:void(0);" id="tabs7" class="dark-light-green">Completed</a></li>
+        <li><a href="javascript:void(0);" id="tabs8" class="dark-light-green">paid</a></li>
       </ul>
 				<%= render :partial => 'all_orders' %>
         <%= render :partial => 'awaiting_notary_orders' %>
@@ -30,6 +31,7 @@
         <%= render :partial => 'appt_confirmed_orders' %>
         <%= render :partial => 'refused_to_sign_orders' %>
         <%= render :partial => 'signed_orders' %>
+								<%= render :partial => 'completed_orders' %>
         <%= render :partial => 'paid_orders' %>
     </div>
   </div>

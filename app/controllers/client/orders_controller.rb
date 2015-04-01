@@ -23,6 +23,7 @@ class Client::OrdersController < ApplicationController
 
     @orders = Order.find(:all, :conditions => ["client_id = ? AND admin_approve IS NULL AND cancel_order_date IS NULL and status != 'closed'", @client.id], :order => @filter).paginate :page => params[:page], :per_page => per_page
     @refuse_to_sign_orders  = Order.paginate :page => params[:page], :per_page => per_page, :conditions => ["cancel_order_date IS NOT NULL AND move_to_order_history_by_admin=false"], :order => "updated_at DESC"
+				@completed_orders = Order.find(:all, :conditions => ["client_id = ? AND status_timeline = 'Order Completed'", @client.id], :order => @filter).paginate :page => params[:page], :per_page => per_page
   end
 
 
@@ -151,7 +152,7 @@ class Client::OrdersController < ApplicationController
       @order.attachment_6_file_url = params['fileUrl6']
 
       # following is a code to update status log value
-      @order.status_log = "Placed New Order: #{Time.now.strftime('%m/%d/%y - %H:%M %p')} - #{@client.client_name} Customer"
+      @order.status_log = "Placed New Order: #{Time.now.strftime('%m/%d/%y - %I:%M %p')} - #{@client.client_name} Customer"
       # End
 
       if @order.save
@@ -184,7 +185,7 @@ class Client::OrdersController < ApplicationController
       @order.attachment_6_file_url = params['fileUrl6']
 
       # following is a code to update status log value
-      @order.status_log = "Placed New Order: #{Time.now.strftime('%m/%d/%y - %H:%M %p')} - #{@client.client_name} Customer"
+      @order.status_log = "Placed New Order: #{Time.now.strftime('%m/%d/%y - %I:%M %p')} - #{@client.client_name} Customer"
       # End
       if @order.save
         @note = Notes.new(:notes => params[:notes].first, :order_id => @order.id, :user_id => self.current_user.id)
@@ -524,7 +525,7 @@ class Client::OrdersController < ApplicationController
       end
 
       # update status log for showing action history properly
-      #status_log = @order.status_log.to_s + "#Notary Assigned: #{Time.now.strftime('%m/%d/%y - %H:%M %p')} - #{@order.client.client_name} Customer"
+      #status_log = @order.status_log.to_s + "#Notary Assigned: #{Time.now.strftime('%m/%d/%y - %I:%M %p')} - #{@order.client.client_name} Customer"
       @order.update_attributes(:notary_id => params[:id], :status => "filled", :status_timeline => "Notary Assigned", :doc_delivery_address_option => params[:address])
 
       #notary_fee_calculation & signing fee calculation
@@ -790,8 +791,8 @@ class Client::OrdersController < ApplicationController
     @order = Order.find_by_id(params[:id])
     # update status log for showing action history properly
 				updated_by = @order.agent_id.present? ? @order.agent.broker_name : @order.notary.first_name
-    status_log = @order.status_log.to_s + "#Appt Confirmed: #{Time.now.strftime('%m/%d/%y - %H:%M %p')} - #{updated_by} Customer"
-    @order.update_attributes(:status_timeline => "Documents Received by Title/Escrow", :status_log => status_log)
+    #status_log = @order.status_log.to_s + "#Appt Confirmed: #{Time.now.strftime('%m/%d/%y - %I:%M %p')} - #{updated_by} Customer"
+    @order.update_attributes(:status_timeline => "Documents Received by Title/Escrow")
 
     if @order
       agent = Agent.find(@order.agent_id).email if !@order.agent_id.blank?
@@ -820,7 +821,7 @@ class Client::OrdersController < ApplicationController
       @order.update_attributes(:status_timeline => "Notary Paid in Full")
     end
     if @order
-      agent = Agent.find(@order.agent_id).email if !@order.agent_id.blank?
+      agent = Agent.find(@order.agent_id) if !@order.agent_id.blank?
       client = Client.find_by_id(@order.client_id)
       client_email = User.find(client.user_id).email
       if @order.status_timeline == "Loan Funded"

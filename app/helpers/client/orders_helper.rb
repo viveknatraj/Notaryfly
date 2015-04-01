@@ -143,10 +143,9 @@ module Client::OrdersHelper
           #~ )
        #~ end
      #~ end +
-     content_tag(:td) do
-       obj.attachments_count.nil? ? "--" : (obj.attachments_count > 0 ? image_tag("doc_icon.png") : '--')
-
-     end
-
+					content_tag(:td) do
+					obj.attachments_count.nil? ? "--" : (obj.attachments_count > 0 ? image_tag("doc_icon.png") : '--')
+					
+					end
    end
 end

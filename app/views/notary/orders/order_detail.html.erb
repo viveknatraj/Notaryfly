@@ -52,7 +52,7 @@
             <% else %>
               <li class="active-not"><%= link_to "Signing <br>Completed", "javascript:void(0)", :onClick=> "signing_complete_popup('#{@order.id}');" %></li>
             <% end %>
-            <% if @order.status_timeline == 'Notary Paid in Full' %>
+												<% if @order.status_timeline == 'Order Completed' || @order.status_timeline == 'Notary Paid in Full' %>
               <li class="active-four"><a href="javascript:void(0)" style="cursor:not-allowed;">Order<br> Completed</a></li>
             <% else %>
               <li class="active-not"><a href="javascript:void(0)" style="cursor:not-allowed;">Order<br> Completed</a></li>

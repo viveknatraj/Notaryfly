@@ -1,7 +1,7 @@
 <p style="margin-bottom:6px;">
   <strong>This message was sent from a notification-only email address that does not accept incoming email. Please do not reply to this message.</strong>
 </p>
-<p style="margin-bottom:6px;">Dear <%= link_to @agent.nil? ? "" : @agent.broker_name.split.collect{|n|n.capitalize}.join(" "), "javascript:void(0)" %>,</p>
+<p style="margin-bottom:6px;">Dear <%= link_to (@agent.nil? or @agent.broker_name.nil? ) ? "" : @agent.broker_name.split.collect{|n|n.capitalize}.join(" "), "javascript:void(0)" %>,</p>
 <p style="margin-bottom:6px;">The <strong>Date/Time</strong> of the following Signing has been <strong>CONFIRMED</strong>:</p>
 
 <table width="60%" style="float:left;">

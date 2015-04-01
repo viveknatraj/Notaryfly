@@ -1,9 +1,9 @@
 <% if !params[:page_name] %>
-  <div id="tabs8" class="default-tabs" style="display: none">
-  <%elsif params[:page_name] == "Paid orders"%>
-    <div id="tabs8" class="default-tabs">
+  <div id="tabs7" class="default-tabs" style="display: none">
+  <%elsif params[:page_name] == "Refuse orders"%>
+    <div id="tabs7" class="default-tabs">
     <%else%>
-      <div id="tabs8" class="default-tabs" style="display: none">
+      <div id="tabs7" class="default-tabs" style="display: none">
       <%end%>
       <div class="span-26 last">
         <% form_tag '/notary/orders/index' do %>
@@ -14,11 +14,11 @@
             <option <% if params[:filter] == 'Order Opened' %>selected <% end %>>Order Opened</option>
             <option <% if params[:filter] == 'Appointment Scheduled' %>selected <% end %>>Appointment Scheduled</option>
           </select>
-          <%= hidden_field_tag "page_name", "Paid orders" %>
+          <%= hidden_field_tag "page_name", "Refuse orders" %>
         <% end %>
       </div>
       <table width="100%" border="0" cellspacing="10" cellpadding="10">
-        <tr class="dark-light-green">
+        <tr class="light-green">
           <td>NF#</td>
           <td>SIGNER NAME</td>
           <td>ORDER OPENED</td>
@@ -27,22 +27,21 @@
           <td>CUSTOMER NAME</td>
           <td>DOCS?</td>
         </tr>
-        <% if @paid_orders.blank? %>
-          <tr class="dark-light-green">
-            <td colspan='7' style="text-align: center">You currently have no paid orders.</td>
+        <% if @completed_orders.blank? %>
+          <tr class="light-green">
+            <td colspan='7' style="text-align: center">You currently have no refuse to sign orders.</td>
           </tr>
         <% else %>
 
-          <% @paid_orders.each do |order| %>
-            <tr class='dark-light-green'>
-              <%= client_order_table_data(order, 'tabs8') %>
+          <% @completed_orders.each do |order| %>
+            <tr class='light-green'>
+              <%= client_order_table_data(order, 'tabs7') %>
             </tr>
           <% end %>
         <% end %>
       </table>
-      <div id="pagination_7" class="<%= params[:tab] && params[:tab] != "tabs8" ? 'open_order-page' : '' %>">
-        <%= (will_paginate @paid_orders).to_s.gsub(/<a(.*?)href="([^&]+)"(.*?)>/, '<a\1href="\2"\3>').gsub(/<a(.*?)href="([^"]+)"/, '<a\1href="\2&' + {:tab => "tabs8"}.to_query + '"') %>
+      <div id="pagination_5" class="<%= params[:tab] && params[:tab] != "tabs7" ? 'open_order-page' : '' %>">
+        <%= (will_paginate @completed_orders).to_s.gsub(/<a(.*?)href="([^&]+)"(.*?)>/, '<a\1href="\2"\3>').gsub(/<a(.*?)href="([^"]+)"/, '<a\1href="\2&' + {:tab => "tabs7"}.to_query + '"') %>
       </div>
       <div class="clearfix"></div>
     </div>
- 

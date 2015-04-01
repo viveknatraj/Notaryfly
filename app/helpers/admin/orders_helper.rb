@@ -530,7 +530,7 @@ module Admin::OrdersHelper
 																								end
 								end
 								def open_order_details_first_tab
-																if (@order.status != "need notary") && (@order.status_timeline == "Notary Assigned" || @order.status_timeline == "Time/Date Signing Set" || @order.status_timeline == "Documents Received by Notary" || @order.status_timeline == "Signing Completed" || @order.status_timeline == 'Notary Paid in Full' || @order.status == 'Refuse to Sign')
+																if (@order.status != "need notary") && (@order.status_timeline == "Notary Assigned" || @order.status_timeline == "Time/Date Signing Set" || @order.status_timeline == "Documents Received by Notary" || @order.status_timeline == "Signing Completed" || @order.status_timeline == 'Notary Paid in Full' || @order.status == 'Refuse to Sign' || @order.status_timeline == 'Order Completed')
 																								"active-first"
 																else
 																								"active-not"
