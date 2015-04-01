@@ -79,6 +79,7 @@ end
     @refuse_to_sign_orders  = []
     @signed_orders_orders   = []
     @paid_orders            = []
+    @completed_orders       = []
 
     @orders.each do |order|
       @awaiting_notary_orders << order if order.status == "need notary" && order.move_to_order_history_by_admin == false
@@ -87,7 +88,7 @@ end
       #@attention_orders       << order if order.status != "Refuse To Sign" && order.status_timeline == "Documents Received by Notary" && order.notary_id.present?
       #@refuse_to_sign_orders  << order if order.status == "Refuse To Sign" && order.notary_id.present?
       @signed_orders_orders   << order if ["signing_completed", "Signing Completed"].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false
-      @completed_orders   << order if ["Order Completed"].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false
+      @completed_orders       << order if ["Order Completed"].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false
       @paid_orders            << order if ["notary_paid_full", "Notary Paid in Full"].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false
     end
     
@@ -107,6 +108,7 @@ end
     #@refuse_to_sign_orders  = @refuse_to_sign_orders.paginate :page => params[:page], :per_page => per_page
     @refuse_to_sign_orders  = Order.paginate :page => params[:page], :per_page => per_page, :conditions => ["cancel_order IS NOT NULL  AND move_to_order_history_by_admin=false"], :order => "updated_at DESC"
     @signed_orders_orders   = @signed_orders_orders.paginate :page => params[:page], :per_page => per_page
+    @completed_orders       = @completed_orders.paginate :page => params[:page], :per_page => per_page
     @paid_orders            = @paid_orders.paginate :page => params[:page], :per_page => per_page
 
     params[:tab] = 'tabs1' unless params[:tab].present?
