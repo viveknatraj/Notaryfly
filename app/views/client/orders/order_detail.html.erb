@@ -22,17 +22,17 @@
         <p style="font-size:20px;"><strong><span>NF# <%= @order.id %></span><span style="padding-left:20px;">Escrow# <%= @order.loan_number %></span><span style="padding-left:20px;"><%= @order.borrower_1_last_name %></span></strong></p>
         <div id="tabs">
           <ul class="list-arrow-menu">
-            <% if (@order.status_timeline == "Notary Assigned" || @order.status_timeline == "Time/Date Signing Set" || @order.status_timeline == "Signing Completed" || @order.status_timeline == 'Notary Paid in Full') %>
+            <% if (@order.status_timeline == "Notary Assigned" || @order.status_timeline == 'Order Completed'  || @order.status_timeline == "Time/Date Signing Set" || @order.status_timeline == "Signing Completed" || @order.status_timeline == 'Notary Paid in Full') %>
               <li class="active-first"><a href="javascript:void(0)" style="cursor:not-allowed;">Notary <br>Assigned</a></li>
             <% else %>
               <li class="active-not"><a href="javascript:void(0)" style="cursor:not-allowed;">Notary <br>Assigned</a></li>
             <% end %>
-            <% if (@order.status_timeline == "Time/Date Signing Set") || (@order.status == "filled" && @order.status_timeline == "Signing Completed") || (@order.status == 'Refuse to Sign' && @order.status_timeline == 'Notary Assigned') || @order.status_timeline == "Documents Received by Notary" || @order.status_timeline == 'Notary Paid in Full' %>
+            <% if (@order.status_timeline == "Time/Date Signing Set" || @order.status_timeline == 'Order Completed' ) || (@order.status == "filled" && @order.status_timeline == "Signing Completed") || (@order.status == 'Refuse to Sign' && @order.status_timeline == 'Notary Assigned') || @order.status_timeline == "Documents Received by Notary" || @order.status_timeline == 'Notary Paid in Full' %>
               <li class="active-second"><a href="javascript:void(0)" style="cursor:not-allowed;">Appt <br>Confirmed</a></li>
             <% else %>
               <li class="active-not"><a href="javascript:void(0)" style="cursor:not-allowed;">Appt <br>Confirmed</a></li>
             <% end %>
-            <% if @order.status == "filled" && @order.status_timeline == "Signing Completed" %>
+            <% if @order.status == "filled" && @order.status_timeline == "Signing Completed" || @order.status_timeline == 'Order Completed'  %>
               <li class="active-third"><a href="javascript:void(0)" style="cursor:not-allowed;">Signing <br>Completed</a></li>
             <% else %>
               <li class="active-not"><a href="javascript:void(0)" style="cursor:not-allowed;">Signing <br>Completed</a></li>
