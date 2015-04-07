@@ -49,7 +49,7 @@
                         <%for i in 0...count_next%>
             <%if requested_date(order.id)[count_date]!=nil %>
           <tr class="odd">
-            <td><a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'client_name<%= order.client.client_name %>', '', 'width=800px,height=600px,left=200px,top=150px,resize=0,scrolling=0');" title="View Client Profile" style="color:#000; font-size: 12px;"><%= order.client.client_name %></a></td>
+            <td><a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'client_name<%= order.client.client_name %>', '', 'width=800px,height=600px,left=200px,top=150px,resize=0,scrolling=0');" title="View Client Profile" style="color:#fff; font-size: 12px;"><%= order.client.client_name %></a></td>
                      <td><%=signing_type(order.id)%> &nbsp; <%=no_of_doc(order.id)%></td>
                       
                        <%if requested_date(order.id)!=nil%>
@@ -89,7 +89,7 @@
           <%end%>
           <%else%>
          <tr class="odd">
-           <td><a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'client_name<%= order.client.client_name %>', '', 'width=800px,height=600px,left=200px,top=150px,resize=0,scrolling=0');" title="View Client Profile" style="color:#000; font-size: 12px;"><%= order.client.client_name %></a></td>
+           <td><a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'client_name<%= order.client.client_name %>', '', 'width=800px,height=600px,left=200px,top=150px,resize=0,scrolling=0');" title="View Client Profile" style="color:#fff; font-size: 12px;"><%= order.client.client_name %></a></td>
                      <td><%=signing_type(order.id)%> &nbsp; <%=no_of_doc(order.id)%></td>
                      <td>&nbsp; </td>
                         <td>&nbsp; </td>

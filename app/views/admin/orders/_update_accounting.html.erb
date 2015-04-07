@@ -8,10 +8,10 @@
     color: #fff;
   }
   .odd:nth-child(2n) {
-    background-color: #cddddd;
+    background-color: #66C4EA;
   }
   #myTable tbody {
-    background-color: #e1f1f1;
+    background-color: #66C4EA;
   }
 </style>
 <script type="text/javascript">
@@ -60,10 +60,10 @@
 
             <tr class="odd">
 
-              <td><a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'order_number<%= order.id %>', '', 'width=800px,height=600px,left=200px,top=150px,resize=0,scrolling=10');" title="View Order Details" style="color: #000;font-size: 12px;"><%= order.id %></a></td>
-              <td><a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'client_name<%= order.client.client_name %>', '', 'width=800px,height=600px,left=200px,top=150px,resize=0,scrolling=10');" title="View Client Profile" style="color: #000;font-size: 12px;"><%= order.client.client_name %></a></td>
+              <td><a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'order_number<%= order.id %>', '', 'width=800px,height=600px,left=200px,top=150px,resize=0,scrolling=10');" title="View Order Details" style="color: #fff;font-size: 12px;"><%= order.id %></a></td>
+              <td><a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'client_name<%= order.client.client_name %>', '', 'width=800px,height=600px,left=200px,top=150px,resize=0,scrolling=10');" title="View Client Profile" style="color: #fff;font-size: 12px;"><%= order.client.client_name %></a></td>
               <% if order.notary!=nil %>
-                <td><a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'notary_name_<%= order.notary.first_name %>_<%= order.notary.last_name %>', '', 'width=800px,height=1100px,left=200px,top=150px,resize=0,scrolling=10');" title="View Notary Profile" style="color: #000;font-size: 12px;"><%= order.notary.first_name %>&nbsp;<%= order.notary.last_name %></a></td>
+                <td><a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'notary_name_<%= order.notary.first_name %>_<%= order.notary.last_name %>', '', 'width=800px,height=1100px,left=200px,top=150px,resize=0,scrolling=10');" title="View Notary Profile" style="color: #fff;font-size: 12px;"><%= order.notary.first_name %>&nbsp;<%= order.notary.last_name %></a></td>
               <%else%>
                 <td>&nbsp;</td>
               <% end %>
@@ -74,10 +74,10 @@
               <td><%="$"%><%=number_with_precision(order.signing_fee,:precision=>2)%></td>
               <%if !order.travel_fee.blank?%>
                 <%travel_fee=order.travel_fee%>
-                <td><a href="javascript:void(0)" onClick="travel_fee_edit(<%=order.id%>)" style="color: #000;font-size: 12px;"><%="$"%><%=number_with_precision(order.travel_fee,:precision=>2)%></a></td>
+                <td><a href="javascript:void(0)" onClick="travel_fee_edit(<%=order.id%>)" style="color: #fff;font-size: 12px;"><%="$"%><%=number_with_precision(order.travel_fee,:precision=>2)%></a></td>
               <%else%>
                 <%travel_fee=0%>
-                <td><a href="javascript:void(0)" onClick="travel_fee_edit(<%=order.id%>)" style="color: #000;font-size: 12px;"><%="$"%><%="0.00"%></a></td>
+                <td><a href="javascript:void(0)" onClick="travel_fee_edit(<%=order.id%>)" style="color: #fff;font-size: 12px;"><%="$"%><%="0.00"%></a></td>
               <%end%>
               <td><%="$"%><%=number_with_precision(order.client.customer_fee,:precision=>2)%></td>
               <%total_revenue=order.client.customer_fee%>

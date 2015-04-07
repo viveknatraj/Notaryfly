@@ -1,4 +1,8 @@
 <style>
+table td{padding-top:0 !important;padding-bottom:0 !important;}
+#myTable a {
+    color: #fff;
+}
   div.orders.notice {
     padding: 5px;
     border: 2px solid green;
@@ -14,7 +18,7 @@
     width: auto;
   }
   #myTable tbody {
-    background-color: #d1fcd1;
+    background-color: #008000;color:#fff;
   }
   #myTable thead {
     background-color: #008000;
@@ -161,14 +165,14 @@
               <tr class="even">
                 <td><%= check_box_tag "order_ids[]", order.id unless order.payment %></td>
                 <td>
-                  <a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'order_number<%= order.id %>', '', 'width=800px,height=600px,left=200px,top=150px,resize=0,scrolling=10');" title="View Order details" style="color: #000;font-size: 12px;"><%= order.id %></a>
+                  <a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'order_number<%= order.id %>', '', 'width=800px,height=600px,left=200px,top=150px,resize=0,scrolling=10');" title="View Order details" style="color: #fff;font-size: 12px;"><%= order.id %></a>
                 </td>
                 <td>
-                  <a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'client_name<%= order.client.client_name %>', '', 'width=800px,height=600px,left=200px,top=150px,resize=0,scrolling=10');" title="View Client Profile" style="color: #000;font-size: 12px;"><%= order.client.client_name %></a>
+                  <a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'client_name<%= order.client.client_name %>', '', 'width=800px,height=600px,left=200px,top=150px,resize=0,scrolling=10');" title="View Client Profile" style="color: #fff;font-size: 12px;"><%= order.client.client_name %></a>
                 </td>
                 <% if order.notary!=nil %>
                   <td>
-                    <a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'notary_name_<%= order.notary.first_name %>_<%= order.notary.last_name %>', '', 'width=800px,height=1100px,left=200px,top=150px,resize=0,scrolling=10');" title="View Notary Profile" style="color: #000;font-size: 12px;"><%= order.notary.first_name %>&nbsp;<%= order.notary.last_name %></a>
+                    <a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'notary_name_<%= order.notary.first_name %>_<%= order.notary.last_name %>', '', 'width=800px,height=1100px,left=200px,top=150px,resize=0,scrolling=10');" title="View Notary Profile" style="color: #fff;font-size: 12px;"><%= order.notary.first_name %>&nbsp;<%= order.notary.last_name %></a>
                   </td>
 
                 <% else %>
@@ -192,14 +196,14 @@
                     <!--<a href="javascript:void(0)" onclick="
                     <% unless order.executives.present? %>if(confirm('No executives mapped. Are you sure to proceed?'))divwin=dhtmlwindow.open('divbox', 'div', 'pay_<%= order.id %>', '', 'width=450px,height=270px,left=320px,top=290px,resize=0,scrolling=10');
                     <% else %>divwin=dhtmlwindow.open('divbox', 'div', 'pay_<%= order.id %>', '', 'width=450px,height=270px,left=320px,top=290px,resize=0,scrolling=10');
-                    <% end %>" style="color: #000;font-size: 12px;">Pay</a>-->
+                    <% end %>" style="color: #fff;font-size: 12px;">Pay</a>-->
                     Not Paid
                   <% else %>
                     Paid
                   <% end %>
                 </td>
                 <td class="last">
-                  <a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'feedback<%= order.id %>', '', 'width=530px,height=400px,left=200px,top=150px,resize=0,scrolling=0');" title="View Feedback" style="color: #000;font-size: 12px;">Edit</a>
+                  <a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'feedback<%= order.id %>', '', 'width=530px,height=400px,left=200px,top=150px,resize=0,scrolling=0');" title="View Feedback" style="color: #fff;font-size: 12px;">Edit</a>
                 </td>
               </tr>
 
