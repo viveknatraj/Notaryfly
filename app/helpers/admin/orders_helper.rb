@@ -364,7 +364,7 @@ module Admin::OrdersHelper
 																end
 																end +
 																if cur_tab == 'tabs8'
-																								content_tag(:td, link_to("Move to paid orders", :controller => order_detail_link, :action => 'order_update', :order_id => obj.id, :tab => cur_tab)) 
+																								content_tag(:td, link_to("Move to paid orders", :controller => order_detail_link, :action => 'move_to_paid', :order_id => obj.id, :tab => cur_tab)) 
 																else
 																								content_tag(:td) do
 																								obj.attachments_count.nil? ? "--" : (obj.attachments_count > 0 ? image_tag("doc_icon.png") : '--')

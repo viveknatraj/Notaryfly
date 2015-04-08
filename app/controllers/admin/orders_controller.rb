@@ -11,6 +11,12 @@ def order_update
   flash[:notice] = "Successfully Order moved to order history"
   redirect_to(:controller => "admin/orders", :action => :open_order, :tab => params[:tab])
 end
+def move_to_paid
+  @order=Order.find_by_id(params[:order_id])
+  @order.update_attributes(:status_timeline => 'Notary Paid in Full')
+  flash[:notice] = "Successfully Order moved to paid orders"
+  redirect_to(:controller => "admin/orders", :action => :open_order, :tab => params[:tab])
+end
 
   def index
     if session[:admin_user] == nil

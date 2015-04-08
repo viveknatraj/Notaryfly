@@ -32,7 +32,7 @@
             <% else %>
               <li class="active-not"><a href="javascript:void(0)" style="cursor:not-allowed;">Appt <br>Confirmed</a></li>
             <% end %>
-            <% if @order.status == "filled" && @order.status_timeline == "Signing Completed" || @order.status_timeline == 'Order Completed'  %>
+            <% if @order.status == "filled" && @order.status_timeline == "Signing Completed" || @order.status_timeline == 'Order Completed'  || @order.status_timeline == 'Notary Paid in Full' %>
               <li class="active-third"><a href="javascript:void(0)" style="cursor:not-allowed;">Signing <br>Completed</a></li>
             <% else %>
               <li class="active-not"><a href="javascript:void(0)" style="cursor:not-allowed;">Signing <br>Completed</a></li>
