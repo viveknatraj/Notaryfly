@@ -28,7 +28,7 @@ class Notary::OrdersController < ApplicationController
       @pending_orders   << order if order.status == "need notary" && !order.notary_id.present?
       @assigned_orders  << order if order.status == "filled" && order.status_timeline == "Notary Assigned" && order.notary_id.present?
       @confirmed_orders << order if order.status != "Refuse To Sign" && order.status_timeline == "Time/Date Signing Set" && order.notary_id.present?
-      @rts_orders       << order if (order.status == "Refuse To Sign" || order.cancel_order != '' ||  order.admin_order_cancel != '' )&& order.notary_id.present? 
+      @rts_orders       << order if (order.status == "Refuse To Sign" || order.cancel_order != '' ||  order.admin_order_cancel != '' )&& order.notary_id.present? && order.status_timeline != 'Notary Paid in Full' 
       @signed_orders    << order if ["signing_completed", "Signing Completed"].include?(order.status_timeline) && order.notary_id.present?
       @completed_orders   << order if ["Order Completed"].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false
       @paid_orders      << order if ["notary_paid_full", "Notary Paid in Full"].include?(order.status_timeline) && order.notary_id.present?
