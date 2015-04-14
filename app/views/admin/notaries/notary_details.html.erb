@@ -249,6 +249,13 @@
         <div class="radio-btn">
 
           <label>
+            OTHER FEE
+          </label>
+          <%= text_field_tag :"notary[other_fee]", 75, :class => "tiny", :readonly => :readonly %>
+        </div>
+        <div class="radio-btn">
+
+          <label>
             <!--<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>-->
             <%= radio_button_tag :"notary[fee_type]", "Base Fee", (@notary.fee_type == 'Base Fee' || @notary.fee_type.nil?) %>
             BASE FEE

@@ -262,17 +262,29 @@
       <div class="form-list-box">
         <div class="radio-btn">
           <label>
-            <%= radio_button_tag :"notary[fee_type]", "Base Fee", (@notary.fee_type == 'Base Fee' || @notary.fee_type.nil?) %>
-            BASE FEE
+            OTHER FEE
           </label>
-          <%= text_field_tag :"notaries[base_fee]", @notary.fee, :class => "tiny", :readonly => :readonly %>
+          <%= text_field_tag :"notary[other_fee]", @notary.other_fee, :class => "tiny" %>
         </div>
         <div class="radio-btn">
           <label>
-            <%= radio_button_tag :"notary[fee_type]", "Override Fee", @notary.fee_type == 'Override Fee' %>
+            <%= radio_button_tag :"notary[fee_type]", "Base Fee", (@notary.fee_type == 'Base Fee' || @notary.fee_type.nil?) %>
+            BASE FEE
+          </label>
+          <%= text_field_tag :"notaries[base_fee]", @notary.fee, :class => "tiny" %>
+        </div>
+        <!--<div class="radio-btn">
+          <label>
+            <%#= radio_button_tag :"notary[fee_type]", "Override Fee", @notary.fee_type == 'Override Fee' %>
             OVERRIDE FEE
           </label>
-          <%= text_field_tag :"notaries[override_fee]", @notary.fee, :class => "tiny" %>
+          <%#= text_field_tag :"notaries[override_fee]", @notary.fee, :class => "tiny" %>
+										</div>-->
+        <div class="radio-btn">
+          <label>
+            TOTAL FEE
+          </label>
+          <%= text_field_tag :"notaries[total_fee]", @notary.fee + @notary.other_fee, :class => "tiny", :readonly => :readonly %>
         </div>
       </div>
       <div class="form-list-box">

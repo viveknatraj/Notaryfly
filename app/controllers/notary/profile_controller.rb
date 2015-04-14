@@ -163,7 +163,8 @@ class Notary::ProfileController < ApplicationController
     if @notary.update_attributes(params[:notary])
       flash[:notice] = "Notary fee updated"
       redirect_to :action => :my_fees
-    else
+    elsif @notary.errors.present?
+      flash[:error] = @notary.errors.full_messages
       my_fees
       render :action => :my_fees
     end

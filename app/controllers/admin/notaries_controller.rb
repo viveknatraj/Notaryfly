@@ -145,11 +145,12 @@ class Admin::NotariesController < ApplicationController
       end
     else
       if params[:notary]
-        fee = params[:notary][:fee_type] == "Base Fee" ? params[:notaries][:base_fee] : params[:notaries][:override_fee]
+        #fee = params[:notary][:fee_type] == "Base Fee" ? params[:notaries][:base_fee] : params[:notaries][:override_fee]
+        fee = params[:notaries][:base_fee]
         if @notary.update_attributes(params[:notary].merge!(:fee => fee.to_i))
           flash[:notice] = "Notary details are updated"
         else
-          flash[:error] = "Notary details are not updated"
+          flash[:error] = "Notary details are not updated<br/>\n#{@notary.errors.full_messages.join('<br>')}"
         end
       end
       redirect_to :controller => "admin/orders", :action => :find_notary, :id => params[:order_id], :order => params[:order], :notary_search => params[:notary_search], :page => params[:page]

@@ -265,6 +265,13 @@ end
 
   end
 
+  def edit_notaryother_fee
+
+    @notary=Notary.find(params[:notary_id])
+    @notary.update_attribute(:other_fee, params[:notaryother_fee].to_f)
+    redirect_to :back
+
+  end
   def edit_total_revenue
     @orders=Order.find(params[:order_id])
     @orders.update_attribute(:total_revenue, params[:total_revenue].to_f)

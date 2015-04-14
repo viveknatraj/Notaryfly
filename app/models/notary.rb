@@ -8,6 +8,7 @@ class Notary < ActiveRecord::Base
 
   validates_presence_of :first_name
   validates_presence_of :last_name, :routing
+  validates_numericality_of :other_fee
   
 	validates_format_of :routing, :with => /^[0-9]{9}$/,  :message => "should be 9 digits (numeric only)"
   validates_confirmation_of :routing,:account,:message=>"doesn't match confirmation"

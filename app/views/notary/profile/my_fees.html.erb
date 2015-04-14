@@ -114,6 +114,16 @@
             </div>
             <div class="clr"></div><br/>
             <div class="labels wholeform">
+              <p class="myfeeleft">Other Fee:</p>
+              <p class="myfeeright"><label>$</label><%= f.text_field :other_fee, :class => "formtinyfield" %></p>
+            </div>
+            <div class="clr"></div><br/>
+            <div class="labels wholeform">
+              <p class="myfeeleft">Total Fee:</p>
+														<p class="myfeeright"><label>$</label><%= text_field_tag 'total_fee', (@notary.fee + @notary.other_fee), :class => "formtinyfield", :readonly => :readonly %></p>
+            </div>
+            <div class="clr"></div><br/>
+            <div class="labels wholeform">
               <p class="myfeeleft">Distance Willing to Travel for Base Fee:</p>
               <p class="myfeeright">
                 Up to <%= f.text_field :travel_distance, :class => "formtinyfield" %> Miles

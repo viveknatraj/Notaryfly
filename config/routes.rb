@@ -37,6 +37,7 @@ ActionController::Routing::Routes.draw do |map|
   map.admin '/admin/orders/move_to_paid', :controller=>"admin/orders", :action=>'move_to_paid'
   map.admin '/admin/orders/approve_to_cancel_message', :controller=>"admin/orders", :action=>'approve_to_cancel_message'
   map.admin '/admin/orders/edit_travel_fee', :controller => "admin/orders", :action => 'edit_travel_fee'
+  map.admin '/admin/orders/edit_notaryother_fee', :controller => "admin/orders", :action => 'edit_notaryother_fee'
   map.admin '/admin/orders/edit_total_revenue', :controller => "admin/orders", :action => 'edit_total_revenue'
   map.admin '/admin/orders/download', :controller => "admin/orders", :action => 'download'
   map.admin '/admin/executives/index', :controller => "admin/executives", :action => 'index'
