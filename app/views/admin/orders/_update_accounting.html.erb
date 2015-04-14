@@ -77,6 +77,7 @@
 														<% # Notary fee %>
 														<% if order.notary.present? %>
 																<td><%= order.notary.fee %></td>
+																<% other_fee = order.notary.other_fee %>
                 <td><a href="javascript:void(0)" onClick="notaryother_fee_edit(<%=order.id%>)" style="color: #fff;font-size: 12px;"><%="$"%><%=number_with_precision(other_fee,:precision=>2)%></a></td>
 																<% total_fee = order.signing_fee.to_i + order.notary.other_fee.to_i %>
 						        <% else %>
