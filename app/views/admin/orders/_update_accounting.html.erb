@@ -58,8 +58,10 @@
             <td>Notary Fee</td>
             <td>Notary Other Fee</td>
             <td>Total Fee</td>
+												<td>Executive Names</td>
+												<td>Executive Fee</td>
             <td>Notary Paid</td>
-            <td>NF Revenue</td>
+            <td>NF Net</td>
             <td>Paid Date</td>
           </tr>
         </thead>
@@ -88,14 +90,14 @@
                 <%travel_fee=0%>
                 <td><a href="javascript:void(0)" onClick="travel_fee_edit(<%=order.id%>)" style="color: #fff;font-size: 12px;"><%="$"%><%="0.00"%></a></td>
               <%end%>
-														<td><%= order.client.customer_fee.to_i + order.travel_fee.to_i %></td>
+														<td><%= notary_gross=(order.client.customer_fee.to_i + order.travel_fee.to_i) %></td>
 														<% # Notary fee %>
 														<% if order.notary.present? %>
                 <td><%= order.notary.first_name %></td>
 																<td><%= order.notary.fee %></td>
 																<% other_fee = order.notary.other_fee %>
                 <td><a href="javascript:void(0)" onClick="notaryother_fee_edit(<%=order.id%>)" style="color: #fff;font-size: 12px;"><%="$"%><%=number_with_precision(other_fee,:precision=>2)%></a></td>
-																<% total_fee = order.signing_fee.to_i + order.notary.other_fee.to_i %>
+																<% total_fee = order.signing_fee.to_i + other_fee.to_i %>
 						        <% else %>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
@@ -103,6 +105,16 @@
 																<% total_fee = order.signing_fee %>
 														<% end %>
 														<td><%="$"%><%=number_with_precision(total_fee, :precision=>2)%></td>
+              <% if order.client.executives.present? %>
+                <td>
+																								<% order.client.executives.each do |e| %>
+																																<small><%= e.name %></small><br/>
+																								<% end %>
+                </td>
+              <% else %>
+                <td/>
+              <% end %>
+														<td>&nbsp;</td>
 														<!--<td><%#="$"%><%#=number_with_precision(order.client.customer_fee,:precision=>2)%></td>-->
               <%total_revenue=order.client.customer_fee%>
               <%if order.notary_id!=nil%>
@@ -112,7 +124,8 @@
                 <%doc_notary_fee=0%>
                 <td></td>
               <%end%>
-              <td><%="$ "%><%=number_with_precision(total_revenue.to_f-(travel_fee.to_f+ doc_notary_fee.to_f),:precision=>2)%></td>
+              <!--<td><%#="$ "%><%#=number_with_precision(total_revenue.to_f-(travel_fee.to_f+ doc_notary_fee.to_f),:precision=>2)%></td>-->
+              <td><%="$ "%><%=number_with_precision(notary_gross.to_f-(total_fee.to_f),:precision=>2)%></td>
               <%if order.order_notary_fee_date!=nil%>
                 <td><%=  order.order_notary_fee_date.strftime '%m-%d-%Y' %></td>
               <%else%>
