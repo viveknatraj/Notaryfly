@@ -284,7 +284,7 @@
           <label>
             TOTAL FEE
           </label>
-          <%= text_field_tag :"notaries[total_fee]", @notary.fee + @notary.other_fee, :class => "tiny", :readonly => :readonly %>
+          <%= text_field_tag :"notaries[total_fee]", @notary.fee.to_i + @notary.other_fee.to_i, :class => "tiny", :readonly => :readonly %>
         </div>
       </div>
       <div class="form-list-box">

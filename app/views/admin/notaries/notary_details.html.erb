@@ -262,12 +262,18 @@
           </label>
           <%= text_field_tag :"notaries[base_fee]", 75, :class => "tiny", :readonly => :readonly %>
         </div>
-        <div class="radio-btn">
+        <!--<div class="radio-btn">
           <label>
-            <%= radio_button_tag :"notary[fee_type]", "Override Fee", @notary.fee_type == 'Override Fee' %>
+            <%#= radio_button_tag :"notary[fee_type]", "Override Fee", @notary.fee_type == 'Override Fee' %>
             OVERRIDE FEE
           </label>
-          <%= text_field_tag :"notaries[override_fee]", 90, :class => "tiny" %>
+          <%#= text_field_tag :"notaries[override_fee]", 90, :class => "tiny" %>
+								</div>-->
+        <div class="radio-btn">
+          <label>
+            TOTAL FEE
+          </label>
+          <%= text_field_tag :"notaries[total_fee]", @notary.fee.to_i + @notary.other_fee.to_i, :class => "tiny", :readonly => :readonly %>
         </div>
       </form>
     </div>
