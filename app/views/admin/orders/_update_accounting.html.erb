@@ -103,7 +103,7 @@
               <% if order.client.executives.present? %>
 																<% executive = order.client.client_executives.first %>
 																<% if executive.share_percentage.present? %>
-																			<% executive_fee = ( order.client.customer_fee,to_i / 100.0 ) * executive.share_percentage %>
+																			<% executive_fee = ( order.client.customer_fee.to_i / 100.0 ) * executive.share_percentage %>
 																<% else %>
 																			<% executive_fee = executive.share_value %>
 																<% end %>
