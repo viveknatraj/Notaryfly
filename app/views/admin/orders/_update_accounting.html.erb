@@ -83,7 +83,7 @@
                 <%travel_fee=0%>
                 <td><a href="javascript:void(0)" onClick="travel_fee_edit(<%=order.id%>)" style="color: #fff;font-size: 12px;"><%="$"%><%="0.00"%></a></td>
               <%end%>
-														<td><%= notary_gross=(order.client.customer_fee.to_i + order.travel_fee.to_i) %></td>
+														<td>$<%= notary_gross=(order.client.customer_fee.to_i + order.travel_fee.to_i) %></td>
 														<% # Notary fee %>
 														<% if order.notary.present? %>
                 <td><a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'notary_name_<%= order.notary.first_name %>_<%= order.notary.last_name %>', '', 'width=800px,height=1100px,left=200px,top=150px,resize=0,scrolling=10');" title="View Notary Profile" style="color: #fff;font-size: 12px;"><%= order.notary.first_name %>&nbsp;<%= order.notary.last_name %></a></td>
@@ -100,6 +100,7 @@
 																<% total_fee = 0 %>
 														<% end %>
 														<td><%="$"%><%=number_with_precision(total_fee, :precision=>2)%></td>
+														<% executive_fee = 0 %>
               <% if order.client.executives.present? %>
 																<% executive = order.client.client_executives.first %>
 																<% if executive.share_percentage.present? %>
@@ -112,7 +113,7 @@
 																																<small><%= e.name %></small><br/>
 																								<% end %>
                 </td>
-																<td><%= executive_fee %></td>
+																<td>$<%= executive_fee %></td>
               <% else %>
                 <td/>
                 <td/>
@@ -127,7 +128,7 @@
                 <td></td>
               <%end%>
               <!--<td><%#="$ "%><%#=number_with_precision(total_revenue.to_f-(travel_fee.to_f+ doc_notary_fee.to_f),:precision=>2)%></td>-->
-              <td><%="$ "%><%=number_with_precision(notary_gross.to_f-(total_fee.to_f),:precision=>2)%></td>
+              <td><%="$ "%><%=number_with_precision(notary_gross.to_f-(total_fee.to_f+executive_fee),:precision=>2)%></td>
               <%if order.order_notary_fee_date!=nil%>
                 <td><%=  order.order_notary_fee_date.strftime '%m-%d-%Y' %></td>
               <%else%>

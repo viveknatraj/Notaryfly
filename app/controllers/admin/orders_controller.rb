@@ -449,7 +449,12 @@ end
       redirect_to :back
     else
       order_list=params[:order_ids]
-      @orders=Order.all(:conditions => [" id in (?)", order_list])
+			# need to display only first order details
+      #@orders=Order.all(:conditions => [" id in (?)", order_list])
+			first_order = Order.find(order_list.first)
+      @orders=Order.all(:conditions => {:notary_id => 31949})
+			@total_fee = @orders.collect{|o| o.notary_fee.to_i}
+			@total_fee = @total_fee.sum
     end
     # processing each values
     #render :text => "Params passed are: #{params.inspect}\nOrder: #{@orders.count}"
