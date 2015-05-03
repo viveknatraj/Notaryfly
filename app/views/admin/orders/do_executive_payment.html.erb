@@ -45,7 +45,9 @@ div.orders.error {
     			<td  style="text-align: center" rowspan="<%= e_orders[:orders_list].count %>" width='25%'>
     				<ul>
     				  <% e_orders[:orders_list].each {|order| %>
-  					  	<li><%= order.id %></li>
+  					  	<li>
+                 <a href="javascript:void(0)" onclick="divwin=dhtmlwindow.open('divbox', 'div', 'order_number<%= order.id %>', '', 'width=800px,height=600px,left=200px,top=150px,resize=0,scrolling=10');" title="View Order details" style="font-size: 12px;"><%= order.id %></a>
+					      </li>
                 <div id="order_number<%= order.id %>" style="display:none">
 
                   <h2>Order Details </h2>
