@@ -452,9 +452,31 @@ end
 			# need to display only first order details
       #@orders=Order.all(:conditions => [" id in (?)", order_list])
 			first_order = Order.find(order_list.first)
-      @orders=Order.all(:conditions => {:notary_id => 31949})
-			@total_fee = @orders.collect{|o| o.notary_fee.to_i}
-			@total_fee = @total_fee.sum
+      @orders ||= []
+      if params['notary_payment']
+        @header_name = 'Notary'
+        @actual_name = "#{first_order.notary.first_name} #{first_order.notary.last_name}"
+        @orders=Order.all(:conditions => {:notary_id => first_order.notary_id, :status => 'closed'})
+        @total_fee = @orders.collect{|o| o.notary_fee.to_i}
+        @total_fee = @total_fee.sum
+      elsif params['executive_payment']
+        @header_name = 'Executive'
+        @executives = first_order.client.client_executives
+        @orders = {}
+        @executives.each do |e|
+          @orders[e.executive_id] = {:orders_list => [], :total_fee => 0, :name => e.executive.name}
+          #@orders[e.executive_id]['orders_list'] = Order.all(:conditions => {:client_id => e.client_id, :status_timeline => 'Order Completed'})
+          @orders[e.executive_id][:orders_list] = Order.all(:conditions => {:client_id => e.client_id, :status => 'closed'})
+          unless e.share_percentage.present?
+            @orders[e.executive_id][:total_fee] = e.share_value * @orders[e.executive_id][:orders_list].count 
+          else
+            @orders[e.executive_id][:orders_list].each {|order|
+              @orders[e.executive_id][:total_fee] += ( order.client.customer_fee.to_i / 100.0 ) * e.share_percentage
+            }
+          end
+        end
+        render 'do_executive_payment'
+      end
     end
     # processing each values
     #render :text => "Params passed are: #{params.inspect}\nOrder: #{@orders.count}"

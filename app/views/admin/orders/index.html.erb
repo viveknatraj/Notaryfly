@@ -130,8 +130,8 @@ table td{padding-top:0 !important;padding-bottom:0 !important;}
     <!--<span>Display:</span><%#= select_tag "switch-view", options_for_select([["per page" , "" ],["25" , "25" ], ["50" , "50" ], ["100" , "100" ], ["All" , "All" ]], params[:per_page]), {:name => "per_page"} %>-->
 <%# end %>
 <% form_tag({:action => :do_payment, :id => 'orders_list'}, {:method => :post, :class=>'sub_tab_align'}) do %>
-      <input class="sub_tab pay-notr" type=submit value='MAKE PAYMENT - NOTARY' onclick='check_payment()'/>
-      <input class="sub_tab pay-exe" type=submit value='MAKE PAYMENT - EXECUTIVE' onclick='check_payment()'/>
+      <input class="sub_tab pay-notr" name='notary_payment' type=submit value='MAKE PAYMENT - NOTARY' onclick='check_payment()'/>
+      <input class="sub_tab pay-exe" name='executive_payment' type=submit value='MAKE PAYMENT - EXECUTIVE' onclick='check_payment()'/>
 
       <div class="inner">
         <table class="table" id="myTable">
