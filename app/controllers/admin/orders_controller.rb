@@ -25,9 +25,11 @@ end
     # @orders = Order.find(:all,:conditions=>["status='closed'"])
     #@orders = Order.paginate :page => params[:page], :conditions => ["status='closed'"]
     if params[:per_page] == "All"
-      @orders = Order.find(:all,:conditions=>["status='closed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false"])
+      #@orders = Order.find(:all,:conditions=>["status='closed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false"])
+      @orders = Order.find(:all,:conditions=>["status_timeline='Order Completed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false"])
     else
-      @orders = Order.find(:all,:conditions=>["status='closed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false"]).paginate(:page => params[:page], :per_page => params[:per_page] || 25)
+      #@orders = Order.find(:all,:conditions=>["status='closed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false"]).paginate(:page => params[:page], :per_page => params[:per_page] || 25)
+      @orders = Order.find(:all,:conditions=>["status_timeline='Order Completed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false"]).paginate(:page => params[:page], :per_page => params[:per_page] || 25)
     end
     @feedback_average=[]
     @orders.each do |f|
