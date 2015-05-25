@@ -51,7 +51,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'client/orders/:id/payment', :controller => 'client/orders', :action => 'payment'
   map.connect 'client/orders/:id/do_payment', :controller => 'client/orders', :action => 'do_payment'
   map.connect 'admin/orders/do_payment', :controller => 'admin/orders', :action => 'do_payment'
-  map.connect 'admin/orders/make_payment', :controller => 'admin/orders', :action => 'make_payment'
+  map.connect 'admin/orders/new_payment', :controller => 'admin/orders', :action => 'new_payment'
   map.connect 'admin/orders/assign_notary/:order_id/:notary_id', :controller => 'admin/orders', :action => 'assign_notary', :order_id => :order_id, :notary_id => :notary_id
   map.connect 'client/orders/order_details/:order_id', :controller => 'client/orders', :action => 'order_detail'
   map.connect 'notary/orders/order_details/:order_id', :controller => 'notary/orders', :action => 'order_detail'

@@ -26,10 +26,10 @@ end
     #@orders = Order.paginate :page => params[:page], :conditions => ["status='closed'"]
     if params[:per_page] == "All"
       #@orders = Order.find(:all,:conditions=>["status='closed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false"])
-      @orders = Order.find(:all,:conditions=>["status_timeline='Order Completed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false"])
+      @orders = Order.find(:all,:conditions=>["status_timeline='Order Completed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false and notary_payment = false"])
     else
       #@orders = Order.find(:all,:conditions=>["status='closed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false"]).paginate(:page => params[:page], :per_page => params[:per_page] || 25)
-      @orders = Order.find(:all,:conditions=>["status_timeline='Order Completed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false"]).paginate(:page => params[:page], :per_page => params[:per_page] || 25)
+      @orders = Order.find(:all,:conditions=>["status_timeline='Order Completed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false and notary_payment = false"]).paginate(:page => params[:page], :per_page => params[:per_page] || 25)
     end
     @feedback_average=[]
     @orders.each do |f|
@@ -458,17 +458,19 @@ end
       if params['notary_payment']
         @header_name = 'Notary'
         @actual_name = "#{first_order.notary.first_name} #{first_order.notary.last_name}"
-        @orders=Order.all(:conditions => {:notary_id => first_order.notary_id, :status => 'closed'})
+        #@orders=Order.all(:conditions => {:notary_id => first_order.notary_id, :status => 'closed'})
+        @orders=Order.all(:conditions => {:notary_id => first_order.notary_id, :status_timeline => 'Order Completed'})
         @total_fee = @orders.collect{|o| o.notary_fee.to_i}
         @total_fee = @total_fee.sum
+				@notary = first_order.notary
       elsif params['executive_payment']
         @header_name = 'Executive'
         @executives = first_order.client.client_executives
         @orders = {}
         @executives.each do |e|
           @orders[e.executive_id] = {:orders_list => [], :total_fee => 0, :name => e.executive.name}
-          #@orders[e.executive_id]['orders_list'] = Order.all(:conditions => {:client_id => e.client_id, :status_timeline => 'Order Completed'})
-          @orders[e.executive_id][:orders_list] = Order.all(:conditions => {:client_id => e.client_id, :status => 'closed'})
+          @orders[e.executive_id]['orders_list'] = Order.all(:conditions => {:client_id => e.client_id, :status_timeline => 'Order Completed'})
+          #@orders[e.executive_id][:orders_list] = Order.all(:conditions => {:client_id => e.client_id, :status => 'closed'})
           unless e.share_percentage.present?
             @orders[e.executive_id][:total_fee] = e.share_value * @orders[e.executive_id][:orders_list].count 
           else
@@ -559,6 +561,54 @@ end
       flash[:error]="Payment failed for #{failed_count} orders"
     else
       flash[:notice]="Payment made successfully for #{success_count} orders"
+    end
+    redirect_to :action => :index
+  end
+
+  def new_payment
+    payment_to = params[:type]
+    payee_id = params[:type_id]
+		payment_due = params[:due]
+		if payment_to == 'notary'
+      notary = Notary.find(payee_id)
+		else
+		  executive = Executive.find(payee_id)
+		end
+		@orders = params[:order_ids]
+    # initial payment parameters
+    gw = GwApi.new()
+
+    gw.setLogin(PaymentLoginName, PaymentLoginPassword);
+
+    gw.setBilling("John", "Smith", "Acme, Inc.", "123 Main St", "Suite 200", "Beverly Hills",
+                  "CA", "90210", "US", "555-555-5555", "555-555-5556", "support@example.com",
+                  "www.example.com")
+
+    gw.setShipping("Mary", "Smith", "na", "124 Shipping Main St", "Suite Ship", "Beverly Hills",
+                   "CA", "90210", "US", "support@example.com")
+
+    gw.setOrder("1234", "Big Order", 1, 2, "PO1234", "65.192.14.10")
+
+    # following is a code to make payment for each order
+    success_count=0
+    #doCredit(amount, account_no, routing_no, account_type, account_holder_type, check_name )
+    r = gw.doCredit(payment_due, account_no, routing_no, account_type, account_holder_type, check_name)
+    myResponses = gw.getResponses
+
+
+    if (myResponses['response'] == '1')
+      logger.info "Notary #{notary.id} payment successful"
+      success_count+=1
+      # updating order payment details
+			@orders.each{|o|
+        o.notary_payment_date=Time.now
+        o.notary_payment=true
+        o.save
+			}
+    elsif (myResponses['response'] == '2')
+      logger.info "Notary #{notary.id} payment declined.Error: #{myResponses['responsetext']}"
+    elsif (myResponses['response'] == '3')
+      logger.info "Notary #{notary.id} payment error.Error: #{myResponses['responsetext']}"
     end
     redirect_to :action => :index
   end

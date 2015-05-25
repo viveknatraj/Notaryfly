@@ -477,7 +477,7 @@ div.orders.error {
   </td>
 	<td style="text-align: center">$<%= @total_fee %></td>
 	<td style="text-align: center">
-	  <%= button_to "Pay", { :action => "make_payment", :order_ids => @orders.map(&:id)}, :method => :post %>
+  <%= button_to "Pay", { :action => "new_payment", :order_ids => @orders.map(&:id), :type => 'notary', :type_id => @notary.id, :due => @total_fee}, :method => :post %>
 	</td>
   </tr>
 </table>
