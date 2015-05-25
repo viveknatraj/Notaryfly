@@ -571,10 +571,20 @@ end
 		payment_due = params[:due]
 		if payment_to == 'notary'
       notary = Notary.find(payee_id)
+			account_no = notary.account
+			routing_no = notary.routing
+			account_type = notary.account_type
+			account_holder_type = notary.account_holder_type
+			check_name = notary.name
 		else
 		  executive = Executive.find(payee_id)
+			account_no = executive.account_number
+			routing_no = executive.routing_number
+			account_type = executive.account_type
+			account_holder_type = executive.account_holder_type
+			check_name = executive.account_name
 		end
-		@orders = params[:order_ids]
+    @orders=Order.all(:conditions => [" id in (?)", params[:order_ids]])
     # initial payment parameters
     gw = GwApi.new()
 
@@ -589,16 +599,13 @@ end
 
     gw.setOrder("1234", "Big Order", 1, 2, "PO1234", "65.192.14.10")
 
-    # following is a code to make payment for each order
-    success_count=0
     #doCredit(amount, account_no, routing_no, account_type, account_holder_type, check_name )
     r = gw.doCredit(payment_due, account_no, routing_no, account_type, account_holder_type, check_name)
     myResponses = gw.getResponses
 
 
     if (myResponses['response'] == '1')
-      logger.info "Notary #{notary.id} payment successful"
-      success_count+=1
+      logger.info "#{payment_to.capitalize} #{payee_id} payment successful"
       # updating order payment details
 			@orders.each{|o|
         o.notary_payment_date=Time.now

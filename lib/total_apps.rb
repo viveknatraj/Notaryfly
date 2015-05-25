@@ -95,7 +95,6 @@ class GwApi
         if (cvv!='')
             query += "cvv=" + URI.escape(cvv) + "&"
         end
-
         # Order Information
         @order.each do | key,value|
             query += key +"=" + URI.escape(value) + "&"
@@ -147,7 +146,7 @@ class GwApi
             query += key +"=" + URI.escape(value) + "&"
         end
         query += "type=credit"
-								print " ERROR : #{query}"
+								p "QUERY: #{query}"
 								rescue Exception => e
 																return e.inspect
 								end
