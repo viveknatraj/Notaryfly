@@ -26,10 +26,10 @@ end
     #@orders = Order.paginate :page => params[:page], :conditions => ["status='closed'"]
     if params[:per_page] == "All"
       #@orders = Order.find(:all,:conditions=>["status='closed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false"])
-      @orders = Order.find(:all,:conditions=>["status_timeline='Order Completed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false and notary_payment = false"])
+      @orders = Order.find(:all,:conditions=>["(status_timeline='Order Completed' or (status_timeline='Notary Paid in Full' and payment = false )) AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false and notary_payment = false"])
     else
       #@orders = Order.find(:all,:conditions=>["status='closed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false"]).paginate(:page => params[:page], :per_page => params[:per_page] || 25)
-      @orders = Order.find(:all,:conditions=>["status_timeline='Order Completed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false and notary_payment = false"]).paginate(:page => params[:page], :per_page => params[:per_page] || 25)
+      @orders = Order.find(:all,:conditions=>["(status_timeline='Order Completed' or (status_timeline='Notary Paid in Full' and payment = false )) AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false and notary_payment = false"]).paginate(:page => params[:page], :per_page => params[:per_page] || 25)
     end
     @feedback_average=[]
     @orders.each do |f|
@@ -457,12 +457,12 @@ end
       @orders ||= []
       if params['notary_payment']
         @header_name = 'Notary'
-        @actual_name = "#{first_order.notary.first_name} #{first_order.notary.last_name}"
+								@notary = first_order.notary
+        @actual_name = "#{@notary.first_name} #{@notary.last_name}"
         #@orders=Order.all(:conditions => {:notary_id => first_order.notary_id, :status => 'closed'})
         @orders=Order.all(:conditions => {:notary_id => first_order.notary_id, :status_timeline => 'Order Completed'})
-        @total_fee = @orders.collect{|o| o.notary_fee.to_i}
-        @total_fee = @total_fee.sum
-				@notary = first_order.notary
+        @total_fee = ( @notary.fee + @notary.other_fee ) * @orders.count
+        @total_fee = @total_fee.to_i
       elsif params['executive_payment']
         @header_name = 'Executive'
         @executives = first_order.client.client_executives
@@ -607,11 +607,23 @@ end
     if (myResponses['response'] == '1')
       logger.info "#{payment_to.capitalize} #{payee_id} payment successful"
       # updating order payment details
-			@orders.each{|o|
-        o.notary_payment_date=Time.now
-        o.notary_payment=true
-        o.save
-			}
+		  if payment_to == 'notary'
+			  @orders.each{|o|
+          o.notary_payment_date=Time.now
+          o.notary_payment=true
+          o.status_timeline = 'Notary Paid in Full'
+          o.payment = true if o.executive_payment == true
+          o.save
+			  }
+			else
+			  @orders.each{|o|
+          o.executive_payment_date=Time.now
+          o.executive_payment=true
+          o.status_timeline = 'Executive Paid in Full'
+          o.payment = true if o.notary_payment == true
+          o.save
+			  }
+			end
     elsif (myResponses['response'] == '2')
       logger.info "Notary #{notary.id} payment declined.Error: #{myResponses['responsetext']}"
     elsif (myResponses['response'] == '3')

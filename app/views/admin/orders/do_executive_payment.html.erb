@@ -61,9 +61,9 @@ div.orders.error {
                         <div class="span-9">
                           <% if order.status == "closed" || order.status == "filled" %>
                             <p><label>Notary Fee: </label>
-                              <% if order.order_notary_fee==nil or order.order_notary_fee.length==0 %> Not Provided
-                              <% else %> $<%= order.order_notary_fee %>
-                              <% end %></p>
+																												<% if @notary.fee ==nil && @notary.other_fee.length==0 %> Not Provided
+																												<% else %> $<%= @notary.fee + @notary.other_fee %>
+																												<% end %></p>
                           <% end %>
                           <p><label>Order Status: </label><%= order.status.upcase %></p>
                           <% if order.status == "closed" %>
