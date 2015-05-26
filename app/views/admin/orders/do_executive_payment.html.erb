@@ -480,7 +480,7 @@ div.orders.error {
           </td>
     			<td style="text-align: center" width='20%'>$<%= e_orders[:total_fee] %></td>
     			<td style="text-align: center" width='20%'>
-    				<%= button_to "Pay", { :action => "make_payment", :order_ids => e_orders[:orders_list].map(&:id)}, :method => :post %>
+            <%= button_to "Pay", { :action => "new_payment", :order_ids => e_orders[:orders_list].map(&:id), :type => 'executive', :type_id => e.executive_id, :due => e_orders[:total_fee]}, :method => :post %>
     			</td>
         </tr>
     </table>
