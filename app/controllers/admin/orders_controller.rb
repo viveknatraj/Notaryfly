@@ -455,31 +455,38 @@ end
       #@orders=Order.all(:conditions => [" id in (?)", order_list])
 			first_order = Order.find(order_list.first)
       @orders ||= []
-      if params['notary_payment']
-        @header_name = 'Notary'
+      @header_name = params['notary_payment'] ? 'Notary' : 'Executive'
+      if params['notary_payment'] && first_order.status_timeline != 'Notary Paid in Full'
 								@notary = first_order.notary
         @actual_name = "#{@notary.first_name} #{@notary.last_name}"
         #@orders=Order.all(:conditions => {:notary_id => first_order.notary_id, :status => 'closed'})
         @orders=Order.all(:conditions => {:notary_id => first_order.notary_id, :status_timeline => 'Order Completed'})
         @total_fee = ( @notary.fee + @notary.other_fee ) * @orders.count
         @total_fee = @total_fee.to_i
-      elsif params['executive_payment']
-        @header_name = 'Executive'
+      elsif params['executive_payment']  && first_order.status_timeline != 'Executive Paid in Full'
         @executives = first_order.client.client_executives
-        @orders = {}
-        @executives.each do |e|
-          @orders[e.executive_id] = {:orders_list => [], :total_fee => 0, :name => e.executive.name}
-          @orders[e.executive_id]['orders_list'] = Order.all(:conditions => {:client_id => e.client_id, :status_timeline => 'Order Completed'})
-          #@orders[e.executive_id][:orders_list] = Order.all(:conditions => {:client_id => e.client_id, :status => 'closed'})
-          unless e.share_percentage.present?
-            @orders[e.executive_id][:total_fee] = e.share_value * @orders[e.executive_id][:orders_list].count 
-          else
-            @orders[e.executive_id][:orders_list].each {|order|
-              @orders[e.executive_id][:total_fee] += ( order.client.customer_fee.to_i / 100.0 ) * e.share_percentage
-            }
+				unless @executives.present?
+          flash[:error]="No executives mapped"
+          redirect_to :back
+				else
+          @orders = {}
+          @executives.each do |e|
+            @orders[e.executive_id] = {:orders_list => [], :total_fee => 0, :name => e.executive.name}
+            @orders[e.executive_id]['orders_list'] = Order.all(:conditions => {:client_id => e.client_id, :status_timeline => 'Order Completed'})
+            #@orders[e.executive_id][:orders_list] = Order.all(:conditions => {:client_id => e.client_id, :status => 'closed'})
+            unless e.share_percentage.present?
+              @orders[e.executive_id][:total_fee] = e.share_value * @orders[e.executive_id][:orders_list].count 
+            else
+              @orders[e.executive_id][:orders_list].each {|order|
+                @orders[e.executive_id][:total_fee] += ( order.client.customer_fee.to_i / 100.0 ) * e.share_percentage
+              }
+            end
           end
-        end
-        render 'do_executive_payment'
+          render 'do_executive_payment'
+				end
+			else
+        flash[:error]="Already #{@header_name} payment done"
+        redirect_to :back
       end
     end
     # processing each values
