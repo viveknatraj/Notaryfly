@@ -59,12 +59,6 @@ div.orders.error {
 
                       <div class="xboxcontent" style="padding:10px; margin: 0px">
                         <div class="span-9">
-                          <% if order.status == "closed" || order.status == "filled" %>
-                            <p><label>Notary Fee: </label>
-																												<% if @notary.fee ==nil && @notary.other_fee.length==0 %> Not Provided
-																												<% else %> $<%= @notary.fee + @notary.other_fee %>
-																												<% end %></p>
-                          <% end %>
                           <p><label>Order Status: </label><%= order.status.upcase %></p>
                           <% if order.status == "closed" %>
                             <p><label>Return Carrier: </label><%= order.closed_carrier %></p>

@@ -472,7 +472,7 @@ end
           @orders = {}
           @executives.each do |e|
             @orders[e.executive_id] = {:orders_list => [], :total_fee => 0, :name => e.executive.name}
-            @orders[e.executive_id]['orders_list'] = Order.all(:conditions => {:client_id => e.client_id, :status_timeline => 'Order Completed'})
+            @orders[e.executive_id][:orders_list] = Order.all(:conditions=>["(status_timeline='Order Completed' or (status_timeline='Notary Paid in Full' and payment = false )) and client_id=#{e.client_id}"])
             #@orders[e.executive_id][:orders_list] = Order.all(:conditions => {:client_id => e.client_id, :status => 'closed'})
             unless e.share_percentage.present?
               @orders[e.executive_id][:total_fee] = e.share_value * @orders[e.executive_id][:orders_list].count 
@@ -607,7 +607,7 @@ end
     gw.setOrder("1234", "Big Order", 1, 2, "PO1234", "65.192.14.10")
 
     #doCredit(amount, account_no, routing_no, account_type, account_holder_type, check_name )
-    r = gw.doCredit(payment_due, account_no, routing_no, account_type, account_holder_type, check_name)
+    r = gw.doCredit(payment_due, account_no.to_s, routing_no.to_s, account_type, account_holder_type, check_name)
     myResponses = gw.getResponses
 
 
@@ -622,6 +622,7 @@ end
           o.payment = true if o.executive_payment == true
           o.save
 			  }
+      flash[:notice]="Payment made successfully for Notary: #{check_name}"
 			else
 			  @orders.each{|o|
           o.executive_payment_date=Time.now
@@ -630,11 +631,17 @@ end
           o.payment = true if o.notary_payment == true
           o.save
 			  }
+      flash[:notice]="Payment made successfully for Executive: #{check_name}"
 			end
     elsif (myResponses['response'] == '2')
-      logger.info "Notary #{notary.id} payment declined.Error: #{myResponses['responsetext']}"
+      logger.info "#{payment_to.capitalize} '#{check_name}' payment declined.Error: #{myResponses['responsetext']}"
+      flash[:error] = "#{payment_to.capitalize} '#{check_name}' payment declined.Error: #{myResponses['responsetext']}"
     elsif (myResponses['response'] == '3')
-      logger.info "Notary #{notary.id} payment error.Error: #{myResponses['responsetext']}"
+      logger.info "#{paynent_to.capitalize} '#{check_name}' payment failed.Error: #{myResponses['responsetext']}"
+      flash[:error] = "#{paynent_to.capitalize} '#{check_name}' payment failed.Error: #{myResponses['responsetext']}"
+		else
+      logger.info "#{payment_to.capitalize} '#{check_name}' payment failed.Error: #{r}"
+      flash[:error] = "#{payment_to.capitalize} '#{check_name}' payment failed. Error: #{r}"
     end
     redirect_to :action => :index
   end
