@@ -349,7 +349,7 @@
                     <% unless note.notes.empty? %>
                         <label><%= note.created_at.strftime("%B %d, %Y at %I:%M%p")%></label><br/>
                         <span style="background-color:#9CB6C5; padding: 2px 5px;"><%= note.notes%></span><br/>
-                    <%else%>Not provided<% end %>
+                    <% end %>
                   <% end %></p>
                 <% else %>
                   Not provided
