@@ -27,7 +27,7 @@
     <td>NOTARY</td>
 				<td>DOCS?</td>
   </tr>
-  <% @paid_orders = Order.find(:all, :conditions => ["client_id = ? AND admin_approve IS NULL AND status != 'closed' AND (status_timeline = ? ) ", @client.id, "Notary Paid in Full" ], :order => @filter) %>
+  <% @paid_orders = Order.find(:all, :conditions => ["client_id = ? AND admin_approve IS NULL AND status != 'closed' AND (status_timeline = ? ) ", @client.id, "Paid" ], :order => @filter) %>
   <% if @paid_orders.blank? %>
       <tr class="dark-light-green">
         <td colspan='7' style="text-align: center">No orders found </td>

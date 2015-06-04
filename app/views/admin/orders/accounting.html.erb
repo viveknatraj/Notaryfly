@@ -71,7 +71,6 @@
             <td>Total Fee</td>
 						      <td>Executive Names</td>
 						      <td>Executive Fee</td>
-            <td>Notary Paid</td>
             <td>NF Net</td>
             <td>Paid Date</td>
           </tr>
@@ -129,17 +128,10 @@
               <% end %>
 														<!--<td><%#="$"%><%#=number_with_precision(order.client.customer_fee,:precision=>2)%></td>-->
               <%total_revenue=order.client.customer_fee%>
-              <%if order.notary_id!=nil%>
-                <td><%="$ "%><%=number_with_precision(order.notary_fee,:precision=>2)%></td>
-                <%doc_notary_fee=order.notary_fee%>
-              <%else%>
-                <%doc_notary_fee=0%>
-							         <td></td>
-              <%end%>
               <!--<td><%#="$ "%><%#=number_with_precision(total_revenue.to_f-(travel_fee.to_f+ doc_notary_fee.to_f),:precision=>2)%></td>-->
               <td><%="$ "%><%=number_with_precision(notary_gross.to_f-(total_fee.to_f+executive_fee),:precision=>2)%></td>
-              <%if order.order_notary_fee_date!=nil%>
-                <td><%=  order.order_notary_fee_date.strftime '%m-%d-%Y' %></td>
+              <%if order.notary_payment_date!=nil%>
+                <td><%=  order.notary_payment_date.strftime '%m-%d-%Y' %></td>
               <%else%>
                 <td>Not paid</td>
               <%end%>

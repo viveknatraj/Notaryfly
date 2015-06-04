@@ -13,7 +13,7 @@ def order_update
 end
 def move_to_paid
   @order=Order.find_by_id(params[:order_id])
-  @order.update_attributes(:status_timeline => 'Notary Paid in Full')
+  @order.update_attributes(:status_timeline => 'Paid')
   flash[:notice] = "Successfully Order moved to paid orders"
   redirect_to(:controller => "admin/orders", :action => :open_order, :tab => params[:tab])
 end
@@ -26,10 +26,10 @@ end
     #@orders = Order.paginate :page => params[:page], :conditions => ["status='closed'"]
     if params[:per_page] == "All"
       #@orders = Order.find(:all,:conditions=>["status='closed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false"])
-      @orders = Order.find(:all,:conditions=>["(status_timeline='Order Completed' or (status_timeline='Notary Paid in Full' and payment = false )) AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false and notary_payment = false"])
+      @orders = Order.find(:all,:conditions=>["(status_timeline='Order Completed' or (status_timeline='Notary Paid in Full' and payment = false ) or (status_timeline='Executive Paid in Full' and executive_payment = true )) AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false and payment = false"], :order => 'updated_at desc')
     else
       #@orders = Order.find(:all,:conditions=>["status='closed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false"]).paginate(:page => params[:page], :per_page => params[:per_page] || 25)
-      @orders = Order.find(:all,:conditions=>["(status_timeline='Order Completed' or (status_timeline='Notary Paid in Full' and payment = false )) AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false and notary_payment = false"]).paginate(:page => params[:page], :per_page => params[:per_page] || 25)
+      @orders = Order.find(:all,:conditions=>["(status_timeline='Order Completed' or (status_timeline='Notary Paid in Full' and notary_payment = true ) or (status_timeline='Executive Paid in Full' and executive_payment = true )) AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false and payment = false"], :order => 'updated_at desc').paginate(:page => params[:page], :per_page => params[:per_page] || 25)
     end
     @feedback_average=[]
     @orders.each do |f|
@@ -97,7 +97,7 @@ end
       #@refuse_to_sign_orders  << order if order.status == "Refuse To Sign" && order.notary_id.present?
       @signed_orders_orders   << order if ["signing_completed", "Signing Completed"].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false
       @completed_orders       << order if ["Order Completed"].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false
-      @paid_orders            << order if ["notary_paid_full", "Notary Paid in Full"].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false
+      @paid_orders            << order if ["Paid"].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false
     end
     
       #attention_orders = Order.find_by_sql("select o.id as order_id from orders o LEFT JOIN messages m ON o.id=m.order_id LEFT JOIN notes n ON o.id=n.order_id where o.status != 'Refuse To Sign' AND o.status_timeline ='Documents Received by Notary' AND move_to_order_history_by_admin=false AND n.require_attention = true and o.notary_id IS NOT NULL")
@@ -461,7 +461,7 @@ end
         @actual_name = "#{@notary.first_name} #{@notary.last_name}"
         #@orders=Order.all(:conditions => {:notary_id => first_order.notary_id, :status => 'closed'})
         @orders=Order.all(:conditions => {:notary_id => first_order.notary_id, :status_timeline => 'Order Completed'})
-        @total_fee = ( @notary.fee + @notary.other_fee ) * @orders.count
+        @total_fee = ( @notary.fee.to_i + @notary.other_fee.to_i ) * @orders.count
         @total_fee = @total_fee.to_i
       elsif params['executive_payment']  && first_order.status_timeline != 'Executive Paid in Full'
         @executives = first_order.client.client_executives
@@ -637,8 +637,8 @@ end
       logger.info "#{payment_to.capitalize} '#{check_name}' payment declined.Error: #{myResponses['responsetext']}"
       flash[:error] = "#{payment_to.capitalize} '#{check_name}' payment declined.Error: #{myResponses['responsetext']}"
     elsif (myResponses['response'] == '3')
-      logger.info "#{paynent_to.capitalize} '#{check_name}' payment failed.Error: #{myResponses['responsetext']}"
-      flash[:error] = "#{paynent_to.capitalize} '#{check_name}' payment failed.Error: #{myResponses['responsetext']}"
+      logger.info "#{payment_to.capitalize} '#{check_name}' payment failed.Error: #{myResponses['responsetext']}"
+      flash[:error] = "#{payment_to.capitalize} '#{check_name}' payment failed.Error: #{myResponses['responsetext']}"
 		else
       logger.info "#{payment_to.capitalize} '#{check_name}' payment failed.Error: #{r}"
       flash[:error] = "#{payment_to.capitalize} '#{check_name}' payment failed. Error: #{r}"
