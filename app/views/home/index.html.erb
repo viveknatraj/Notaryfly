@@ -1,4 +1,5 @@
 <%= stylesheet_link_tag "dhtmlwindow" %>
+<%= stylesheet_link_tag "style" %>
 <%#= javascript_include_tag "defaults"  %>
 <%= javascript_include_tag "prototype"  %>
 <%= javascript_include_tag "dhtmlwindow"%>
@@ -14,124 +15,93 @@ function myFunction()
 }
 
 </script>
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Login Page</title>
+</head>
 
-<div id="home_header" class="span-24 last">
-	<div class="span-5">
-		<%= link_to image_tag("logo.jpg"),url_for({:controller=>"home",:action=> "index"}) %>
+<body>
+	<div class="nw-head">
+		<div class="nw-container">
+			<div class="nw-logo"><img src="images/logo.png" /></div>
+			<div class="nw-menu">
+				<ul>
+					<li><a href="#">Home</a></li>
+					<li><a href="#">Learn More</a></li>
+					<li><a href="#">Faq’s</a></li>
+					<li><a href="#">Order Status</a></li>
+				</ul>
+			</div>
+		</div>
 	</div>
-	<div id="home_navigation" class="span-12 prepend-7 last">
-		<ul class="inline_list">
-			<li><%= link_to "Home", :controller => "home", :action => "index" %></li>
-			<li><%= link_to "Learn More", :controller => "home", :action => "learn_more" %></li>
-			<li><%= link_to "Faq's", :controller => "home", :action => "faqs" %></li>
-			<li><a id="order_status" href="#"   onClick="divwin=dhtmlwindow.open('divbox', 'div', 'check_status', '', 'width=575px,height=280px,left=200px,top=150px,resize=0,scrolling=0,center=1'); myFunction();return false">Order Status</a></li>
-                </ul>
-	</div>
-</div>
-
-<div id="callout" class="span-24 last">
-	<div id="search_and_sign" class="span-8">
-		<h1><%= image_tag("header_search_and_sign.png") %></h1>
-		<%= image_tag("search_and_sign.png") %>
-	</div>
-	<div id="register" class="span-16 last">
-		<h2>Not A NotaryFly Member?</h2>
-		<p>
-			Become a member to get all the benefits of NotaryFly. 
-			<br />Registration is fast, easy, and FREE!
-		</p>
-		<p class="register">
-		<%= link_to(image_tag("button_register_now.png"), :controller => "users", :action => "new_notary" ) %>
-		<%= link_to(image_tag("button_registercustomer_now.png"), :controller => "users", :action => "new_client" ) %>
-		</p>
-		<%#= link_to "Company Registration", :controller => "users", :action => "new_client"  %>
-		
-                <p class="register_test"><strong>[ Title, Escrow, or Lender]</strong></p>
-
-	</div>
-</div>
-   
-   <div id="columns" class="span-24 last">
-   <div class="homepage_icon">
-     <%= link_to image_tag("facebook.png", :class => "facebook", :alt => "Facebook"), "http://www.facebook.com/notary.fly?fref=ts", :target => "_blank" %>
-     <%= link_to image_tag("twitter_icon.png", :class => "twitter", :alt => "Twitter"), "http://www.twitter.com/NotaryFly", :target => "_blank" %>
-     <%= link_to image_tag("linkedin_icon.png", :class => "linkedin", :alt => "LinkedIn"), "http://www.linkedin.com/profile/view?id=208148078&trk=hb_tab_pro_top", :target => "_blank" %>
-	</div>
-	<div id="info" class="span-11">
-		<h3>What can Notary Fly do for you?</h3>
-		<p>NotaryFly's database is free to notaries, therefore it's constantly growing with new talent. 
-The depth of NotaryFly's notary pool means you can trust you'll find the skills and experience you need in a notary when you conduct a search.</p>
-<p>Our advanced notary search tools allow you to fine-tune your search. When you search for a notary, you choose the specific criteria that's important to you -- location, required skills, experience level -- and our breakthrough technology will instantly zero in on the most qualified notary for your specific signing.</p>
-	</div>
-	<div id="search" class="span-6">
-		<h3>Notary Search</h3>
-		<form action="/home/zip_code_search" id="zip_code_search">
-			<label id="zip_code">Enter Zip Code</label>
-                        <input type="text" name="zip_code" value="" id="zip_code_val" class="text_field" maxlength="5" onkeyup="validateNum('zip_code_val')"/><br />
-			<input type="image" src="../images/button_search.png" id="button">
-		</form>
-                <p style="color: black">Post your loan signing and find the notary
-		that is right for you in minutes.  Our hiring
-		tool makes it easy to filter and organize your
-		loan signings from start to finish.</p>
-		<p><%= link_to "Learn More...", :action => "learn_more" %></p>
-	</div>
-	<div id="login" class="span-6 last">
-		<h3>Member Login</h3>
-		<% if flash[:notice] %><div style="color:red; margin: 5px 0px 2px 5px; font-size:11px;"><%= flash[:notice] %></div><% end %>		
-		
-		<div id="form">
-			<% form_tag session_path do -%>
-			<label for="login">Email Address</label><br/>
-			<%= text_field_tag 'login', @login, :class => "text_field",:id=>'emailid' %>
-			<label for="password">Password</label><br/>
-			<%= password_field_tag 'password', nil, :class => "text_field"%>
+	<div class="nw-container cnt-top">
+		<div class="nw-signup">
+			<div class="nw-cmt-img"><img src="images/buletin-img.png" /></div>
+			<div class="nw-signup-cnt">
+				<h6>Not Currently Using. NotaryFly?</h6>
+				<h3>Sign up for FREE in seconds!</h3>
+				<div class="nw-buts">
+					<span class="nw-notary"><a href="#">Notary Sign up</a></span>
+					<span class="nw-cust"><a href="#">Customer Sign up</a></span>
+				</div>
+			</div>
+		</div>
+		<div class="nw-login">
+      <% form_tag session_path, :class => 'nw-login' do -%>
+			<span>
+				<label>Email Id</label>
+        <%= text_field_tag 'login', @login, :class => 'nw-input',:id =>'emailid', :placeholder => "Enter your Email Id" %>
+			</span>
+			<span>
+				<label>Password</label>
+			  <%= password_field_tag 'password', nil, :class => 'nw-input', :placeholder => "Enter your Email Id" %>
+			</span>
+      <span>
+				<span class="nw-frgt-pass"><a href="#">Forgot Password?</a></span>
+				<span><button class="nw-button">Login</button></span>
+      </span>
+    <% end%>
 			<!-- Uncomment this if you want this functionality
 			<p><label for="remember_me">Remember me:</label>
-			<%= check_box_tag 'remember_me', '1', @remember_me %></p>
 			-->
-			<input type="image" src="../images/button_login.png" id="button">			
-			<% end -%>
+		</div>		
+	</div>
+	<div class="cnt-bot">
+		<div class="nw-container">
+			<div class="nw-cnt-three">
+				<h6>Title / Escrow / Lenders</h6>
+				<ul>
+					<li>Place New Order in Seconds</li>
+					<li>Notary is rated on every Order</li>
+					<li>Hassle-Free Updates to LO’s</li>
+				</ul>
+			</div>
+			<div class="nw-cnt-three">
+				<h6>If you are a Notary</h6>
+				<ul>
+					<li>Always free to sign up!</li>
+					<li>Paid quickly through EFT</li>
+					<li>One click Order acceptance</li>
+				</ul>
+			</div>
+			<div class="nw-cnt-three">
+				<h6>Notary Search</h6>
+				<div class="nw-srch">
+					<input type="text" placeholder="Enter Zip Code" class="nw-input" /><button class="nw-button"><img src="images/src-but.png" /></button>
+				</div>
+				<div class="nw-social">
+					<span><a href="#"><img src="images/fb-icon.png" /></a></span>
+					<span><a href="#"><img src="images/in-icon.png" /></a></span>
+					<span><a href="#"><img src="images/tw-icon.png" /></a></span>
+				</div>
+			</div>
 		</div>
-		<style type="text/css" media="screen">
-			a.forgot_password {
-				color:#0E7192; text-decoration:none;
-			}
-
-			a.forgot_password:hover {
-				text-decoration:underline;
-			}
-		</style>
-		<p style="margin:3px 0px 0px 15px; font-size:11px;"><%= link_to "Forgot Password?", {:controller => "passwords", :action => "new"}, :class=> "forgot_password" %></p>
-		
 	</div>
-</div>
-
-<div id="footer" class="span-24 last">
-	<div class="span-15">
-		<ul class="inline_list footer">
-			<li><%= link_to "Home", :controller => "home", :action => "index" %> |</li>
-			<li><%= link_to "Learn More", :controller => "home", :action => "learn_more" %> |</li> 
-			<li><%= link_to "Contact Us", :controller => "home", :action => "contact_us" %> |</li>
-			<li><%= link_to "Terms of Use", :controller => "home", :action => "terms_of_use" %> |</li>
-			<li><%= link_to "Privacy Statement", :controller => "home", :action => "privacy_statement"%> |</li>
-                        <li><%= link_to "Disclaimer", :controller => "home", :action => "disclaimer"%></li>
-		</ul>
+	<div class="nw-footer nw-container">
+		<span class="nw-lft-cnt"><a href="#">Home</a> | <a href="#">Learn More</a> | <a href="#">Contact Us</a> | <a href="#">Terms of Use</a> | <a href="#">Privacy Statement</a> | <a href="#">Disclaimer</a></span>
+		<span class="nw-rgt-cnt">© Copyright 2012-2014 NotaryFly</span>
 	</div>
-	<div id="copyright" class="span-9 last">
-		<p style="color:#696969">© Copyright 2012-2014 NotaryFly</p>
-	</div>
-
-
-  <div id="check_status" style="display:none;">
-          <div id ="error" style ="color:red;"></div>
-          <center class="order_status"> Order Status </center>
-          <% form_remote_for :user, :url => {:controller => "users", :action => "check_status"} do |f| %>
-            <div class="order_mane"> <span>*Last Name Signer/Borrower</span> <%= text_field_tag "last_name"%></div>
-            <div class="order_mane"> <span>*Order Number</span> <%= text_field_tag "order_number" %><%= image_submit_tag "checkst.jpg",:id=>'check_status_button',:class=>'check_status_button' %> </div>
-            
-          <% end %>
-          <div id ="notary123"></div>
-          <div id="empty"></div>
-  </div>
-</div>
+</body>
+</html>
