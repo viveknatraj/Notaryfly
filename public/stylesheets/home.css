@@ -1,5 +1,5 @@
 body {
-    background: #f4f3ed url(../images/home_bg.png) repeat-x;
+    /*background: #f4f3ed url(../images/home_bg.png) repeat-x;*/
     font-family: "Trebuchet MS", "MS Trebuchet", Helvetica, Arial, sans-serif;
 }
 
@@ -215,3 +215,5 @@ ul.footer li a:hover {
     float:left;
     margin:5px 0px 5px 0px;
 }
+
+.container{width:100% !important;}

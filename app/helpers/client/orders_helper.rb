@@ -82,7 +82,11 @@ module Client::OrdersHelper
        obj.signing_location_city+", "+ obj.signing_location_state+"&nbsp;&nbsp;"+obj.signing_location_zip_code
      end +
      content_tag(:td) do
+     if request.url.include?('client/orders')
+       obj.notary.present? ? "#{obj.notary.first_name} #{obj.notary.last_name}" : "Not assigned"
+     else
        obj.client.client_name
+     end
      end +
      #~ content_tag(:td) do
        #~ if obj.client

@@ -80,14 +80,14 @@ font-size:13px;
 }
 
 #sidebar h3 {  
-  padding: 10px 15px;
+  padding: 9px 15px;
   margin: 0;
   font-size: 13px;
 }
 
 #sidebar .block {
-  margin-bottom: 20px;
-  padding-bottom: 10px;
+  /*margin-bottom: 20px;
+  padding-bottom: 10px;*/
 }
 
 #sidebar .block .content {
@@ -113,8 +113,8 @@ font-size:13px;
 }
 
 #main .block .content .inner {
-  padding: 0 20px 20px;
-  margin-left:-29px;
+  /*padding: 0 20px 20px;
+  margin-left:-29px;*/
 }
 
 #main .main p.first {
@@ -175,6 +175,7 @@ font-size:13px;
 #footer {
     clear: both;
     padding-bottom: 20px;
+    margin-top: 20px;
     width: 100%;
 }
 
@@ -191,6 +192,7 @@ font-size:13px;
     clear: both;
     float: left;
     margin-bottom: 10px;
+    margin-top: 20px;
     margin-left: 9px;
 }
 
@@ -215,8 +217,10 @@ font-size:13px;
 .table {
   width: 100%;
   border-collapse: collapse;  
-  margin-bottom: 15px;
+/*  margin-bottom: 15px;*/
+margin-left:0;
 }
+#myTable{border:5px solid #005672;margin-top: 38px;}
 
 .table th {
   padding: 10px;
@@ -236,10 +240,13 @@ font-size:13px;
   margin-left: 0px;
 }
 
-.table td {
-  padding: 4px;
- }
+table thead td{font-weight:normal !important	;}
 
+.table td {
+  padding-left: 5px !important;
+  text-align:left !important;color:#222;
+ }
+.table td a{color:#222 !important;}
 .table td.last {
   text-align: right;
 }
@@ -807,12 +814,12 @@ strong {font-weight:bold; color:#000000 !important;}
     width: 560px;
 }
 .success {background:#E6EFC2;color:#264409;border-color:#C6D880;}
-.error {background:#ffbbbb;color:#FF0000;border-color:#FF0000;}
+.error {background:#ffbbbb;box-shadow: 0 0 30px rgba(0, 0, 0, 0.9);color:#FF0000;border-color:#FF0000;}
 
 .even:nth-child(2n) {
-    background-color: #cfe2ff;
+    /*background-color: #cfe2ff;*/
 }
-#myTable thead{background-color:#465991;color:#fff;}
+#myTable thead{background-color:#465991;color:#fff;text-transform: uppercase;}
 
 .customer-notes {
     border: 1px solid #1f1f0f;
@@ -826,37 +833,36 @@ strong {font-weight:bold; color:#000000 !important;}
 .customer-notes label{width:100% !important;}
 
 .sub_tab_list {
-    display: inline-block;
-    margin-top: 10px;
+    display: inline-block;position:absolute;z-index:1;
+    /*margin-top: 10px;*/
 }
 .sub_tab {
     border: 1px solid #000;
-    border-radius: 4px;
+     border-radius: 14px 14px 0 0;
      cursor: pointer;
     display: inline-block;
     line-height: 20px;
-    margin-top: 25px;
-    padding: 7px 25px;
+    /*margin-top: 20px;*/
+    padding: 10px 25px;
     vertical-align: middle;text-transform: uppercase;
 }
 .sub_tab_align {
-    margin-top: -61px;
+    /*margin-top: -41px;*/position:relative;
 }
 .sub_tab.pay-notr, .sub_tab.pay-exe {
-    line-height: 17px; color: #fff;
+    line-height: 17px; color: #000;position:absolute;top: -37px;
 }
 .sub_tab.pay-notr {
-    background-color: #0b5395;
-    margin-left: 82px;
+    background-color: #0b5395;left: 316px;
 }
 
 .sub_tab.pay-exe {
-    background-color: #073763;
+    background-color: #073763;left:550px;margin-left:1px;-webkit-margin-start: -3px;
 }
 
 .sub_tab a {
-    color: #fff !important;
-    font-size: 14px;
+    color: #000 !important;
+    font-size: 13px;font-weight:700;
     text-decoration: none;
 }
 
@@ -873,6 +879,6 @@ strong {font-weight:bold; color:#000000 !important;}
 
 .mess-inti {
     position: absolute;
-    top: 0;
+    top: -25px;
     width: 100%;
 }

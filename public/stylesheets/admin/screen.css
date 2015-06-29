@@ -2,12 +2,12 @@
 .container{ margin:0 auto; width:1028px;}
 .table-view{ border:1px solid #c6cbcf; border-bottom:0px solid #a7a7a7; background:#eaf0f4; padding:6px; border-radius:10px; margin-top:20px;}
 .default-tabs{ border:5px solid #005672;}
-.default-tabs table{ border-collapse:collapse; border:1px solid #ccc;}
+.default-tabs table{ border-collapse:collapse; border:1px solid #ccc;margin-left:0;}
 .default-tabs table th, td{border-collapse:collapse; border:1px solid #333;}
 .default-tabs table th, td a{ text-decoration:underline; color:#06F;}
 .default-tabs table th, td a:hover{ text-decoration:none; color:#06F; text-decoration: underline;}
 
-.default-tabs .white-bg{ background:#fff;}
+.default-tabs .white-bg{background:#fff;}
 .default-tabs .light-blue{ background:#ccecf8;}
 .default-tabs .mid-light-blue{ background:#99d8f0; }
 .default-tabs .dark-blue{ background:#66c4e9; }
@@ -31,8 +31,8 @@
 .table-view .listing-view li a.dark-light-blue{ background:#66c4e9; border-radius:10px 10px 0px 0px;}
 .table-view .listing-view li a.light-green{ background:#a1da8b; border-radius:10px 10px 0px 0px;}
 .table-view .listing-view li a.mid-light-green{ background:#61c250; border-radius:10px 10px 0px 0px;}
-.table-view .listing-view li a.dark-light-green{ background:#3c8a2e; border-radius:10px 10px 0px 0px;}
-.table-view .listing-view li a.high-dark-light-green{ background:#214D19; border-radius:10px 10px 0px 0px;}
+.table-view .listing-view li a.dark-light-green{ background:#3c8a2e; border-radius:10px 10px 0px 0px; color: white;}
+.table-view .listing-view li a.high-dark-light-green{ background:#214D19; border-radius:10px 10px 0px 0px; color: white;}
 .table-view .listing-view li a.light-red{ background:#FF674F; border-radius:10px 10px 0px 0px;}
 
 

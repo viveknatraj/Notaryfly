@@ -1073,3 +1073,10 @@ function addNotes()
 //    $("#add_notes").append('<input type="hidden" name="notes[]" value="' + field.value + '"/>')
     document.getElementById('divbox').style.display="none";
 }
+
+$(document).ready(function(){
+	$("body").addClass("full_width");
+	$("#sidebar h3").click(function() {
+		$( "#sidebar .navigation" ).toggle();
+	});
+});

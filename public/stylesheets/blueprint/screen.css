@@ -408,7 +408,7 @@ a.star {background:url("/images/star.png") no-repeat; width:13px; height:14px; d
 .container{ margin:0 auto; width:1170px;}
 .table-view{ border:1px solid #c6cbcf; border-bottom:0px solid #a7a7a7; background:#eaf0f4; padding:10px; border-radius:10px; margin-top:20px;}
 .default-tabs{ border:5px solid #005672;}
-.default-tabs table{ border-collapse:collapse; border:1px solid #ccc;}
+.default-tabs table{ border-collapse:collapse; border:1px solid #ccc;margin-left: 0;}
 .default-tabs table th, td{border-collapse:collapse; border:1px solid #333;}
 .default-tabs table th, td a{ text-decoration:none; color:#06F;}
 .default-tabs table th, td a:hover{ text-decoration:none; color:#06F; text-decoration: underline;}
@@ -437,7 +437,7 @@ a.star {background:url("/images/star.png") no-repeat; width:13px; height:14px; d
 
 
 .table-view .listing-view li{ color:#000; text-decoration:none; font-weight:700; text-transform:uppercase; border-radius:13px 13px 0px 0px; background:#fff; border:1px solid #a3abaf;}
-.table-view .listing-view li a{padding:10px 32px;  display:inline-block; color:#000; text-decoration:none;}
+.table-view .listing-view li a{padding:10px 20px;  display:inline-block; color:#000; text-decoration:none;}
 .table-view .listing-view li.ui-state-active{border:5px solid #005672 !important; border-bottom:0;}
 
 .container a{text-decoration: underline; color: #000};

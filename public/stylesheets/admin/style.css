@@ -2,7 +2,8 @@
 .gray { color:#999999; }
 .hightlight { background-color:#FFFFCC; }
 
-/* a:link, a:visited, a:hover, a:active, h1, h2, h3 { color: #2F427A; } */
+/* a:link, a:visited, a:hover, a:active, h1, h2, h3 { color: #2F427A; }
+ */
 a { -moz-outline: none; }
 
 body {
@@ -36,10 +37,18 @@ hr {
 }
 
 #main .block .content {
-  background: #FFF;
-  padding-top: 1px;
-  position:relative;
+    position: relative;
 }
+
+#main .block #orderhis_paid.content,#main .block #completed_orders_index.content {
+  background-color: #eaf0f4;
+    border: 1px solid #c6cbcf;
+    border-radius: 10px;
+    margin-top: 20px;
+    padding: 6px;
+    position: relative;
+}
+
 
 #main .block .content h2 {
   margin-left: 15px;
@@ -56,7 +65,7 @@ hr {
 #sidebar h3 {  
   background: #2F427A;
   color: #FFF;
-  border-bottom: 10px solid #262626;
+  border-bottom: 10px solid #000;
   font-size: 15px;
 }
 
@@ -172,7 +181,7 @@ hr {
 }
 
 .table td {
-  border:1px solid #5f5f5f;
+  border:1px solid #222;
 }
 
 /* forms */
@@ -290,3 +299,17 @@ textarea {width:350px;height:125px;padding:5px;}
 #orders-index {display: inline-block;}
 #orders-index select {border: 1px solid #d0d0d0;border-radius: 2px;padding: 5px;}
 #orders-index span {display: inline-block;margin: 0 10px 0 0;}
+/*Custom CSS 2015-04-14*/
+
+body.full_width #wrapper {position:relative;}
+body.full_width #wrapper #main {width: 100%;}
+body.full_width #wrapper #main .xsnazzy{width:100%;}
+body.full_width #wrapper #main .xsnazzy .container{width:100%;}
+body.full_width #wrapper #main .xsnazzy .container #tabs{width:100%;box-sizing:border-box;}
+body.full_width #wrapper #sidebar {position: absolute;right: 1.5%;top: 21px;width: 200px;}
+
+body.full_width #sidebar h3 {background-color: #000;cursor: pointer; font-size: 18px;font-weight: normal;line-height: 19px;text-align: center;}
+body.full_width #sidebar h3:hover,body.full_width #sidebar h3.active{background-color:#11245C;border-bottom:10px solid #11245C;}
+body.full_width #sidebar .navigation{display:none;}
+
+.disp_block{display:block !important;}
