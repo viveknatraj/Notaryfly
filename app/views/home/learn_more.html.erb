@@ -1,29 +1,28 @@
 <%= stylesheet_link_tag "dhtmlwindow" %>
+<%= stylesheet_link_tag "style" %>
 <%#= javascript_include_tag "defaults"  %>
 <%= javascript_include_tag "prototype"  %>
 <%= javascript_include_tag "dhtmlwindow"%>
 
 
 <style type="text/css" media="screen">
-	body {background: #f4f3ed url(../images/sub_bg_2.jpg) repeat-x;}
+/*	body {background: #f4f3ed url(../images/sub_bg_2.jpg) repeat-x;}*/
 </style>
 
-<div id="home_header" class="span-24 last">
-	<div class="span-5">
-		<%= link_to image_tag("logo.jpg"),url_for({:controller=>"home",:action=> "index"}) %>
-	</div>
-	<div id="home_navigation" class="span-12 prepend-7 last">
-		<ul class="inline_list">
-			<li><%= link_to "Home", :controller => "home", :action => "index" %></li>
+<div class="nw-head">
+		<div class="nw-container">
+			<div class="nw-logo"><%= link_to image_tag("logo.jpg"),url_for({:controller=>"home",:action=> "index"}) %></div>
+			<div class="nw-menu">
+				<ul>
+					<li><%= link_to "Home", :controller => "home", :action => "index" %></li>
 			<li><%= link_to "Learn More", :controller => "home", :action => "learn_more" %></li>
 			<li><%= link_to "Faq's", :controller => "home", :action => "faqs" %></li>
-			<li><a id="order_status" href="#"   onClick="divwin=dhtmlwindow.open('divbox', 'div', 'check_status', '', 'width=575px,height=280px,left=200px,top=150px,resize=0,scrolling=0,center=1'); myFunction();return false">Order Status</a></li>
-                </ul>
-		</ul>	
-	</div>
+			<li><a id="order_status" href="#"   onClick="divwin=dhtmlwindow.open('divbox', 'div', 'check_status', '', 'width=575px,height=280px,left=200px,top=150px,resize=0,scrolling=0,center=1'); myFunction();return false">Order Status</a></li>				</ul>
+			</div>
+		</div>
 </div>
 
-<div id="callout" class="span-24 last">
+<!--<div id="callout" class="span-24 last">
 	<div id="search_and_sign" class="span-8">
 		<h1><%= image_tag("header_search_and_sign.png") %></h1>
 		<%= image_tag("search_and_sign.png") %>
@@ -43,11 +42,11 @@
                 <p class="register_test"><strong>* Title, Escrow, or Lender</strong></p>
 
 	</div>
-</div>
+</div>-->
 
 <div id="columns" class="span-24 last">
 	
-	<div class="span-23" style="border:1px solid #e7dfcc; background-color:#FFF; padding:20px 30px 20px 30px;">
+	<div class="span-23" style="border:1px solid #e7dfcc; background-color:#FFF; padding:20px 18px;">
 		<h3 style="color:#a0522d; font-family:Georgia; font-weight:bold; font-style:italic;">
 			<span style="float:left; width:50%; padding-top:10px;">Learn More</span>
 			<%= link_to(image_tag("buttons/notary_sign_up.jpg", :style=> "float:right; padding-bottom:5px;"), :controller => "users", :action => "new_notary") %>

@@ -274,6 +274,9 @@ div.form div.fields p span {
 div.form div.labels {
 	margin-top:5px;
 }
+div.form div.labels.wholeform p{
+color:#000 !important;font-size:14px;
+}
 div#new_order_form_1 p {
 	margin-bottom:14px;
 }

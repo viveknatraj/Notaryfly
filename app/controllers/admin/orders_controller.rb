@@ -464,11 +464,19 @@ end
         @total_fee = ( @notary.fee.to_i + @notary.other_fee.to_i ) * @orders.count
         @total_fee = @total_fee.to_i
       elsif params['executive_payment']  && first_order.status_timeline != 'Executive Paid in Full'
+        # saving executive ids into order record and it will be removed once
+        # payment made
         @executives = first_order.client.client_executives
-				unless @executives.present?
+        unless @executives.present?                                                                                                   
           flash[:error]="No executives mapped"
-          redirect_to :back
-				else
+          redirect_to :back^M 
+        else
+          if first_order.executive_ids.empty?
+             first_order.executive_ids = @executives.map(&:executive_id)
+             first_order.save
+          else
+            @executives = ClientExecutive.all(:conditions => ["executive_id in (?) and client_id = #{first_order.client.id}", first_order.executive_ids])
+          end
           @orders = {}
           @executives.each do |e|
             @orders[e.executive_id] = {:orders_list => [], :total_fee => 0, :name => e.executive.name}
@@ -483,8 +491,8 @@ end
             end
           end
           render 'do_executive_payment'
-				end
-			else
+          end
+      else
         flash[:error]="Already #{@header_name} payment done"
         redirect_to :back
       end
@@ -592,6 +600,7 @@ end
 			check_name = executive.account_name
 		end
     @orders=Order.all(:conditions => [" id in (?)", params[:order_ids]])
+    first_order = @orders[0]
     # initial payment parameters
     gw = GwApi.new()
 
@@ -624,11 +633,20 @@ end
 			  }
       flash[:notice]="Payment made successfully for Notary: #{check_name}"
 			else
+        executive_ids = first_order.executive_ids                                                                                     
+        executive_ids.delete(executive.id)
+        first_order.executive_ids = executive_ids
+        first_order.executive_payment_date=Time.now
+        first_order.save
+        first_order.reload
 			  @orders.each{|o|
-          o.executive_payment_date=Time.now
-          o.executive_payment=true
-          o.status_timeline = 'Executive Paid in Full'
-          o.payment = true if o.notary_payment == true
+          if first_order.order_executives.empty?
+            o.status_timeline = 'Executive Paid in Full' 
+          else
+            o.executive_payment_date=Time.now^M
+            o.executive_payment=true^M
+            o.payment = true if o.notary_payment == true
+          end
           o.save
 			  }
       flash[:notice]="Payment made successfully for Executive: #{check_name}"

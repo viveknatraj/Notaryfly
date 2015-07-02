@@ -37,7 +37,7 @@ hr {
 }
 
 #main .block .content {
-    position: relative;
+    /*position: relative;*/
 }
 
 #main .block #orderhis_paid.content,#main .block #completed_orders_index.content {

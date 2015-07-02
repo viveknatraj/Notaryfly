@@ -94,14 +94,28 @@ function myFunction()
 
 				<h6>Notary Search</h6>
 				<div class="nw-srch">
-					<input type="text" placeholder="Enter Zip Code" class="nw-input" /><button class="nw-button"><img src="images/src-but.png" /></button>
+				<form action="/home/zip_code_search" id="zip_code_search">
+				<%if flash[:notaries] %>
+				<% if !flash[:notaries][:success]%>
+				<div style="color:red; margin: 5px 0px 2px 0px; font-size:11px; font-style:italic;">Not Valid ZipCode </div>
+				<%else%>
+				<% if flash[:notaries][:count]==0  %>
+				<div style="color:red; margin: 5px 0px 2px 0px; font-size:11px; font-style:italic;">0 notaries within 20 miles of <%= flash[:notaries][:zip_code] %></div>
+				<%  else  %>
+				<div style="color:green; margin: 5px 0px 2px 0px; font-size:11px; font-style:italic;"><%= pluralize(flash[:notaries][:count], "notary") %>  within 20 miles of <%= flash[:notaries][:zip_code] %></div>
+				<%end%>
+				<%end%>
+				<%end%>
+				<input type="text" name="zip_code" value="<%= flash[:notaries].present? ? flash[:notaries][:zip_code] : nil%>" id="zip_code_val" class="nw-input" maxlength="5" onkeyup="validateNum('zip_code_val')" placeholder='Enter Zip Code'/>
+				<button class="nw-button"><img src="images/src-but.png" /></button>
+				</form>
 				</div>
 			</div>
 		</div>
 	</div>
 	<div class="nw-footer">
 	<div class=" nw-container">
-		<span class="nw-lft-cnt"><%= link_to "Home", :controller => "home", :action => "index" %> | <%= link_to "Learn More", :controller => "home", :action => "learn_more" %> | <%= link_to "Contact Us", :controller => "home", :action => "contact_us" %> | <%= link_to "Terms of Use", :controller => "home", :action => "terms_of_use" %> | <%= link_to "Privacy Statement", :controller => "home", :action => "privacy_statement"%> | <%= link_to "Disclaimer", :controller => "home", :action => "disclaimer"%></span>		<span class="nw-rgt-cnt">© Copyright 2012-2015 NotaryFly</span>
+		<span class="nw-lft-cnt"><%= link_to "Home", :controller => "home", :action => "index" %> | <%= link_to "Learn More", :controller => "home", :action => "learn_more" %> | <%= link_to "Contact Us", :controller => "home", :action => "contact_us" %> | <%= link_to "Terms of Use", :controller => "home", :action => "terms_of_use" %> | <%= link_to "Privacy Statement", :controller => "home", :action => "privacy_statement"%></span>		<span class="nw-rgt-cnt">© Copyright 2012-2015 NotaryFly</span>
 </div>
 	</div>
 </body>

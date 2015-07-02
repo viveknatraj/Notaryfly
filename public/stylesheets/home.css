@@ -4,9 +4,12 @@ body {
 }
 
 #home_header {
-    background-color:#252423;
-    color:#FFF;
-    padding-top:15px;
+    background-color: #252423;
+    color: #fff;
+    float: none;
+    margin: auto;
+    overflow: hidden;
+    padding-top: 15px;
 }
 ul.inline_list {
     margin:0px 0px 10px 0px;
@@ -29,7 +32,9 @@ ul.inline_list li {
     text-decoration:underline;
 }
 #callout {
-    margin-top:20px;
+    float: none;
+    margin: 20px auto;
+    overflow: hidden;
 }
 #search_and_sign h1 {
     margin:0px;
@@ -91,7 +96,9 @@ div#callout div#register p.member a:hover {
     text-decoration:underline;
 }
 div#columns {
-    margin-top:45px;
+    float: none;
+    margin: 45px auto;
+    overflow: hidden;
 }
 div#columns label {
     color:#4c4c4b;
@@ -167,7 +174,9 @@ div#columns div#login div#form form {
     position: absolute;
 }
 #footer {
-    margin-top:55px;
+    float: none;
+    margin: 55px auto 0;
+    overflow: hidden;
 }
 #footer ul li{
     margin:0px 3px 0px 3px;

@@ -833,7 +833,7 @@ strong {font-weight:bold; color:#000000 !important;}
 .customer-notes label{width:100% !important;}
 
 .sub_tab_list {
-    display: inline-block;position:absolute;z-index:1;
+    display: inline-block;position:absolute;top:6px;z-index:1;
     /*margin-top: 10px;*/
 }
 .sub_tab {
