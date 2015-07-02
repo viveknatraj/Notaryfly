@@ -31,7 +31,7 @@ class Notary::OrdersController < ApplicationController
       @rts_orders       << order if (order.status == "Refuse To Sign" || order.cancel_order.present? ||  order.admin_order_cancel.present?) && order.notary_id.present? && order.status_timeline != 'Notary Paid in Full' 
       @signed_orders    << order if ["signing_completed", "Signing Completed"].include?(order.status_timeline) && order.notary_id.present?
       @completed_orders   << order if ["Order Completed"].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false
-      @paid_orders      << order if ["Paid"].include?(order.status_timeline) && order.notary_id.present?
+      @paid_orders            << order if ['Paid', 'Notary Paid in Full', 'Executive Paid in Full'].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false && order.payment == true
     end
 
     per_page = 20
@@ -91,7 +91,7 @@ class Notary::OrdersController < ApplicationController
 
     @orders.each do |order|
       refused_to_sign_orders       << order if order.status == "Refuse To Sign" && order.notary_id.present?
-      paid_orders      << order if ["notary_paid_full", "Notary Paid in Full"].include?(order.status_timeline) && order.notary_id.present?
+      paid_orders      << order if ["Paid", "notary_paid_full", "Notary Paid in Full", "Executive Paid in Full"].include?(order.status_timeline) && order.notary_id.present? && order.payment == true
     end
     @refused_to_sign_orders = refused_to_sign_orders.paginate :page => params[:page], :per_page => per_page
     @paid_orders = paid_orders.paginate :page => params[:page], :per_page => per_page

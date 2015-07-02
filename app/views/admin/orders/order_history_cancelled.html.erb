@@ -73,7 +73,7 @@
           </tr>
         </thead>
         <tbody>
-          <% @orders.each do |order| %>
+          <% @history_cancelled_orders.each do |order| %>
             <tr class="odd">
               <td><a href="/admin/orders/order_details/<%=order.id%>"><%=order.id%></a></td>
               <td><%=order.borrower_1_last_name%>&nbsp;<%=order.borrower_1_first_name%></td>
