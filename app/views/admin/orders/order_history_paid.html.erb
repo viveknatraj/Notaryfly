@@ -20,10 +20,14 @@ table td{padding-top:0 !important;padding-bottom:0 !important;}
     background-color: #008000;color: #fff;
   }
 	#ajax-loader {
-    background-color: gray;
+    background-color: transparent;
     height: 400px;
-    left: 450px;
+    left: 0;
+    margin: 0;
+    padding: 0;
     position: absolute;
+    text-align: center;
+    width: 100%;
     z-index: 99;
 }
 .loading {
@@ -47,7 +51,7 @@ table td{padding-top:0 !important;padding-bottom:0 !important;}
     </ul>
     <div class="clear"></div>
   </div>
-	<div id="ajax-loader" style="display:none"><%= image_tag "loader.jpeg", :class=>"loading" %></div>
+	<div id="ajax-loader" style="display:none"><%= image_tag "loader.gif", :class=>"loading" %></div>
   <div class="content" id="orderhis_paid">
     <ul class='sub_tab_list'>
       <li class="sub_tab comp-ordr"><%= paid_in_full %></li>
@@ -96,7 +100,7 @@ table td{padding-top:0 !important;padding-bottom:0 !important;}
       <script type="text/javascript">
         initSortTable('myTable',Array('N','S','S','S','S'));
       </script>
-      <%= will_paginate @orders %>
+      <%= will_paginate @history_paid_orders %>
     </div>
   </div>
 </div>

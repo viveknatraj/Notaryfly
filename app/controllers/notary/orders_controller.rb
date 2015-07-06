@@ -31,7 +31,7 @@ class Notary::OrdersController < ApplicationController
       @rts_orders       << order if (order.status == "Refuse To Sign" || order.cancel_order.present? ||  order.admin_order_cancel.present?) && order.notary_id.present? && order.status_timeline != 'Notary Paid in Full' 
       @signed_orders    << order if ["signing_completed", "Signing Completed"].include?(order.status_timeline) && order.notary_id.present?
       @completed_orders   << order if ["Order Completed"].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false
-      @paid_orders            << order if ['Paid', 'Notary Paid in Full', 'Executive Paid in Full'].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false && order.payment == true
+      @paid_orders            << order if ['Paid', 'Notary Paid in Full'].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false && order.notary_payment == true
     end
 
     per_page = 20

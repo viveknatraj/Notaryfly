@@ -643,8 +643,8 @@ end
           if first_order.order_executives.empty?
             o.status_timeline = 'Executive Paid in Full' 
           else
-            o.executive_payment_date=Time.now^M
-            o.executive_payment=true^M
+            o.executive_payment_date=Time.now
+            o.executive_payment=true
             o.payment = true if o.notary_payment == true
           end
           o.save

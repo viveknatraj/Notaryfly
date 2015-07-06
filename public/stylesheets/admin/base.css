@@ -222,6 +222,8 @@ margin-left:0;
 }
 #myTable{border:5px solid #005672;margin-top: 38px;}
 
+#tabs6 > #myTable{margin-top:-4px;}
+
 .table th {
   padding: 10px;
   font-weight: bold;
