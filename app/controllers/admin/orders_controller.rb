@@ -613,7 +613,7 @@ end
     gw.setShipping("Mary", "Smith", "na", "124 Shipping Main St", "Suite Ship", "Beverly Hills",
                    "CA", "90210", "US", "support@example.com")
 
-    gw.setOrder("1234", "Big Order", 1, 2, "PO1234", "65.192.14.10")
+    gw.setOrder(first_order.id, "Big Order", 1, 2, "PO1234", "65.192.14.10")
 
     #doCredit(amount, account_no, routing_no, account_type, account_holder_type, check_name )
     r = gw.doCredit(payment_due, account_no.to_s, routing_no.to_s, account_type, account_holder_type, check_name)
