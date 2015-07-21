@@ -27,7 +27,7 @@
     <td>NOTARY</td>
 				<td>DOCS?</td>
   </tr>
-  <% @awaiting_notary_orders = Order.find(:all, :conditions => ["client_id = ? AND admin_approve IS NULL AND status != 'closed' AND (status = ? OR (status = ? AND notary_id != ?  AND status_timeline IS NULL)) ", @client.id, 'need notary', 'filled', ''], :order => @filter) %>
+  <% @awaiting_notary_orders = Order.find(:all, :conditions => ["client_id = ? AND admin_approve IS NULL AND status != 'closed' AND (status = ? OR (status = ? AND notary_id != ?  AND status_timeline IS NULL)) AND cancel_order IS NULL", @client.id, 'need notary', 'filled', ''], :order => @filter) %>
   <% if @awaiting_notary_orders.blank? %>
       <tr class="light-blue">
         <td colspan='7' style="text-align: center">No orders found </td>

@@ -26,10 +26,10 @@ end
     #@orders = Order.paginate :page => params[:page], :conditions => ["status='closed'"]
     if params[:per_page] == "All"
       #@orders = Order.find(:all,:conditions=>["status='closed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false"])
-      @orders = Order.find(:all,:conditions=>["(status_timeline='Order Completed' or (status_timeline='Notary Paid in Full' and payment = false ) or (status_timeline='Executive Paid in Full' and executive_payment = true )) AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false and payment = false"], :order => 'updated_at desc')
+      @orders = Order.find(:all,:conditions=>["(status_timeline='Paid' or (status_timeline='Notary Paid in Full' and payment = false ) or (status_timeline='Executive Paid in Full' and executive_payment = true )) AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false and payment = false"], :order => 'updated_at desc')
     else
       #@orders = Order.find(:all,:conditions=>["status='closed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false"]).paginate(:page => params[:page], :per_page => params[:per_page] || 25)
-      @orders = Order.find(:all,:conditions=>["(status_timeline='Order Completed' or (status_timeline='Notary Paid in Full' and notary_payment = true ) or (status_timeline='Executive Paid in Full' and executive_payment = true )) AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false and payment = false"], :order => 'updated_at desc').paginate(:page => params[:page], :per_page => params[:per_page] || 25)
+      @orders = Order.find(:all,:conditions=>["(status_timeline='Paid' or (status_timeline='Notary Paid in Full' and notary_payment = true ) or (status_timeline='Executive Paid in Full' and executive_payment = true )) AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false and payment = false"], :order => 'updated_at desc').paginate(:page => params[:page], :per_page => params[:per_page] || 25)
     end
     @feedback_average=[]
     @orders.each do |f|
@@ -79,7 +79,7 @@ end
   def open_order
     redirect_to session[:url] if session[:admin_user] == nil
 
-    @orders = Order.find(:all, :conditions => ["status!='closed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false"], :order => "updated_at DESC")
+    @orders = Order.find(:all, :conditions => ["status!='closed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false and cancel_order IS NULL"], :order => "updated_at DESC")
     @awaiting_notary_orders = []
     @notary_assigned_orders = []
     @appt_confirmed_orders  = []
