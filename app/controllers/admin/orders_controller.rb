@@ -97,7 +97,7 @@ end
       #@refuse_to_sign_orders  << order if order.status == "Refuse To Sign" && order.notary_id.present?
       @signed_orders_orders   << order if ["signing_completed", "Signing Completed"].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false
       @completed_orders       << order if ["Order Completed"].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false
-      @paid_orders            << order if ['Paid', 'Notary Paid in Full', 'Executive Paid in Full'].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false && order.payment == true
+      @paid_orders            << order if ['Paid', 'Notary Paid in Full', 'Executive Paid in Full'].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false
     end
     
       #attention_orders = Order.find_by_sql("select o.id as order_id from orders o LEFT JOIN messages m ON o.id=m.order_id LEFT JOIN notes n ON o.id=n.order_id where o.status != 'Refuse To Sign' AND o.status_timeline ='Documents Received by Notary' AND move_to_order_history_by_admin=false AND n.require_attention = true and o.notary_id IS NOT NULL")
@@ -149,14 +149,14 @@ end
     per_page = 20
     @orders = Order.find(:all, :conditions => ["status!='closed' and move_to_order_history_by_admin = true"], :order => "updated_at DESC")
     @orders.each do |order|
-      paid_orders            << order if ["notary_paid_full", "Notary Paid in Full", 'Executive Paid in Full'].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false && order.payment == true
+      paid_orders            << order if ['Paid', "notary_paid_full", "Notary Paid in Full", 'Executive Paid in Full'].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false && order.payment == true
     end
      @history_paid_orders            = paid_orders.paginate :page => params[:page], :per_page => per_page
      @history_cancelled_orders= Order.paginate :page => params[:page], :conditions => ["cancel_order IS NOT NULL AND move_to_order_history_by_admin=true"]
    end
    
    def order_history_paid
-    if session[:admin_user] == nil
+    if session[:admin_user] == nil 
       redirect_to session[:url]
     end
     paid_orders            = []
@@ -164,7 +164,7 @@ end
     @orders = Order.find(:all, :conditions => ["status!='closed'"], :order => "updated_at DESC").paginate :page => params[:page], :per_page => per_page
     #@orders = Order.find(:all, :conditions => ["status!='closed' and move_to_order_history_by_admin = true"], :order => "updated_at DESC").paginate :page => params[:page], :per_page => per_page
     @orders.each do |order|
-      paid_orders << order if ["notary_paid_full", "Notary Paid in Full", 'Executive Paid in Full'].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false && order.payment == true
+      paid_orders << order if ["Paid", "notary_paid_full", "Notary Paid in Full", 'Executive Paid in Full'].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false && order.payment == true
     end
     @history_paid_orders = paid_orders.paginate :page => params[:page], :per_page => per_page
     if request.xhr?
