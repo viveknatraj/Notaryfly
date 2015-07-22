@@ -460,7 +460,7 @@ end
 								@notary = first_order.notary
         @actual_name = "#{@notary.first_name} #{@notary.last_name}"
         #@orders=Order.all(:conditions => {:notary_id => first_order.notary_id, :status => 'closed'})
-        @orders=Order.all(:conditions => {:notary_id => first_order.notary_id, :status_timeline => 'Order Completed'})
+        @orders=Order.all(:conditions => {:notary_id => first_order.notary_id, :status_timeline => 'Paid'})
         @total_fee = ( @notary.fee.to_i + @notary.other_fee.to_i ) * @orders.count
         @total_fee = @total_fee.to_i
       elsif params['executive_payment']  && first_order.status_timeline != 'Executive Paid in Full'
@@ -480,7 +480,7 @@ end
           @orders = {}
           @executives.each do |e|
             @orders[e.executive_id] = {:orders_list => [], :total_fee => 0, :name => e.executive.name}
-            @orders[e.executive_id][:orders_list] = Order.all(:conditions=>["(status_timeline='Order Completed' or (status_timeline='Notary Paid in Full' and payment = false )) and client_id=#{e.client_id}"])
+            @orders[e.executive_id][:orders_list] = Order.all(:conditions=>["(status_timeline='Paid' or (status_timeline='Notary Paid in Full' and payment = false )) and client_id=#{e.client_id}"])
             #@orders[e.executive_id][:orders_list] = Order.all(:conditions => {:client_id => e.client_id, :status => 'closed'})
             unless e.share_percentage.present?
               @orders[e.executive_id][:total_fee] = e.share_value * @orders[e.executive_id][:orders_list].count 
@@ -600,6 +600,7 @@ end
 			check_name = executive.account_name
 		end
     @orders=Order.all(:conditions => [" id in (?)", params[:order_ids]])
+    if @orders.present?
     first_order = @orders[0]
     # initial payment parameters
     gw = GwApi.new()
@@ -613,7 +614,8 @@ end
     gw.setShipping("Mary", "Smith", "na", "124 Shipping Main St", "Suite Ship", "Beverly Hills",
                    "CA", "90210", "US", "support@example.com")
 
-    gw.setOrder(first_order.id.to_s, "Big Order", 1, 2, "PO1234", "65.192.14.10")
+    order_id = payment_to == 'notary' ? first_order.id : executive.id
+    gw.setOrder(order_id.to_s, check_name, account_no, routing_no, "PO1234", "65.192.14.10")
 
     #doCredit(amount, account_no, routing_no, account_type, account_holder_type, check_name )
     r = gw.doCredit(payment_due, account_no.to_s, routing_no.to_s, account_type, account_holder_type, check_name)
@@ -660,6 +662,9 @@ end
 		else
       logger.info "#{payment_to.capitalize} '#{check_name}' payment failed.Error: #{r}"
       flash[:error] = "#{payment_to.capitalize} '#{check_name}' payment failed. Error: #{r}"
+    end
+    else
+      flash[:error] = "No orders mapped"
     end
     redirect_to :action => :index
   end

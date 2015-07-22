@@ -955,7 +955,7 @@ table td{padding-top:0 !important;padding-bottom:0 !important;}
                                   <% client_executives=order.client.client_executives
                                   if client_executives.present?
                                     client_exe=client_executives.first
-                                    share_value=client_exe.share_value.present? ? client_exe.share_value : (order.signing_fee*client_exe.share_percentage/100.0)
+                                    share_value=client_exe.share_value.present? ? client_exe.share_value : (order.signing_fee.to_i*client_exe.share_percentage/100.0)
                                   else
                                     share_value=nil
                                   end %>
