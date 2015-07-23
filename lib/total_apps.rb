@@ -20,7 +20,7 @@ class GwApi
     end
 
     def setOrder( orderid, orderdescription, tax, shipping, ponumber,ipadress)
-        @order['orderid'] = orderid;
+        @order['orderid'] = "#{Time.now.to_i}"
         @order['orderdescription'] = orderdescription
         @order['shipping'] = "%.2f" % shipping
         @order['ipaddress'] = ipadress

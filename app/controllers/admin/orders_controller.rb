@@ -79,7 +79,7 @@ end
   def open_order
     redirect_to session[:url] if session[:admin_user] == nil
 
-    @orders = Order.find(:all, :conditions => ["status!='closed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false and cancel_order IS NULL"], :order => "updated_at DESC")
+    @orders = Order.find(:all, :conditions => ["status!='closed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false and cancel_order IS NULL and payment=false"], :order => "updated_at DESC")
     @awaiting_notary_orders = []
     @notary_assigned_orders = []
     @appt_confirmed_orders  = []
@@ -206,7 +206,7 @@ end
 
     @order.update_attribute(:admin_order_cancel, params[:admin_order_cancel])
     @order.update_attribute(:admin_order_cancel_date, Date.today)
-    #@order.update_attribute(:admin_cancel_approve,1)
+    @order.update_attribute(:status,"Refuse To Sign")
     @order.save
     #      if !@order.cancel_order.blank?
     #        client = Client.find_by_id(@order.client_id)
@@ -615,7 +615,7 @@ end
                    "CA", "90210", "US", "support@example.com")
 
     order_id = payment_to == 'notary' ? first_order.id : executive.id
-    gw.setOrder(order_id.to_s, check_name, account_no, routing_no, "PO1234", "65.192.14.10")
+    gw.setOrder(rand(first_order.id).to_s, check_name, account_no, routing_no, "PO1234", "65.192.14.10")
 
     #doCredit(amount, account_no, routing_no, account_type, account_holder_type, check_name )
     r = gw.doCredit(payment_due, account_no.to_s, routing_no.to_s, account_type, account_holder_type, check_name)
@@ -644,10 +644,10 @@ end
 			  @orders.each{|o|
           if first_order.order_executives.empty?
             o.status_timeline = 'Executive Paid in Full' 
+            o.payment = true if o.notary_payment == true
           else
             o.executive_payment_date=Time.now
             o.executive_payment=true
-            o.payment = true if o.notary_payment == true
           end
           o.save
 			  }
