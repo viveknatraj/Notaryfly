@@ -14,7 +14,7 @@ class Notary::OrdersController < ApplicationController
     #@multiple_notary = MultipleNotary.find_all_by_notary_id(@notary,:conditions => ["status ='not filled'"]).collect{|i|i.order_id}
     #@orders = Order.find(:all, :conditions => ["(id IN (?) AND status = 'need notary') OR (notary_id = ? AND status = 'filled') OR (notary_id = ? AND status = 'Refuse To Sign')", @multiple_notary, @notary.id, @notary.id ], :order => @filter)
     notary = Notary.find_by_user_id(current_user.id)
-    @orders = Order.find(:all, :conditions => ["status!=? AND notary_id=? and payment = false", 'closed', notary.id], :order => @filter)
+    @orders = Order.find(:all, :conditions => ["status!=? AND notary_id=? and payment = false and move_to_order_history_by_admin = false", 'closed', notary.id], :order => @filter)
 
     @pending_orders   = []
     @assigned_orders  = []
@@ -28,7 +28,7 @@ class Notary::OrdersController < ApplicationController
       @pending_orders   << order if order.status == "need notary" && !order.notary_id.present?
       @assigned_orders  << order if order.status == "filled" && order.status_timeline == "Notary Assigned" && order.notary_id.present?
       @confirmed_orders << order if order.status != "Refuse To Sign" && order.status_timeline == "Time/Date Signing Set" && order.notary_id.present?
-      @rts_orders       << order if (order.status == "Refuse To Sign" || order.cancel_order.present? ||  (order.admin_order_cancel.present? && order.admin_approve==1)) && order.notary_id.present? && order.status_timeline != 'Notary Paid in Full' 
+      @rts_orders       << order if (order.status == "Refuse To Sign" || order.cancel_order.present? ||  order.admin_order_cancel.present?) && order.notary_id.present? && order.status_timeline != 'Notary Paid in Full' 
       @signed_orders    << order if ["signing_completed", "Signing Completed"].include?(order.status_timeline) && order.notary_id.present?
       @completed_orders   << order if ["Order Completed"].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false
       @paid_orders            << order if ['Paid', 'Notary Paid in Full'].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false
@@ -84,13 +84,13 @@ class Notary::OrdersController < ApplicationController
     }
     per_page = 20
     filter = sort_by[params[:filter]] rescue nil
-    filter ||= "borrower_1_last_name ASC"
+    filter ||= "updated_at DESC"
     @orders = Order.find(:all, :conditions => ["status!=? AND notary_id=?", 'closed', @notary.id], :order => filter)
      refused_to_sign_orders    = []
      paid_orders      = []
 
     @orders.each do |order|
-      refused_to_sign_orders       << order if order.status == "Refuse To Sign" && order.notary_id.present?
+      refused_to_sign_orders       << order if (order.status == "Refuse To Sign" || order.cancel_order != nil || order.admin_order_cancel != nil) && order.notary_id.present?
       paid_orders      << order if ["Paid", "notary_paid_full", "Notary Paid in Full", "Executive Paid in Full"].include?(order.status_timeline) && order.notary_id.present? && order.payment == true
     end
     @refused_to_sign_orders = refused_to_sign_orders.paginate :page => params[:page], :per_page => per_page

@@ -16,7 +16,7 @@
 				<ul>
 					<li><%= link_to "Home", :controller => "home", :action => "index" %></li>
 			<li><%= link_to "Learn More", :controller => "home", :action => "learn_more" %></li>
-			<li><%= link_to "Faq's", :controller => "home", :action => "faqs" %></li>
+			<li><%= link_to "FAQ'S", :controller => "home", :action => "faqs" %></li>
 			<li><a id="order_status" href="#"   onClick="divwin=dhtmlwindow.open('divbox', 'div', 'check_status', '', 'width=575px,height=280px,left=200px,top=150px,resize=0,scrolling=0,center=1'); myFunction();return false">Order Status</a></li>				</ul>
 			</div>
 		</div>
@@ -47,15 +47,15 @@
 <div id="columns" class="span-24 last">
 	
 	<div class="span-23" style="border:1px solid #e7dfcc; background-color:#FFF; padding:20px 18px;">
-		<h3 style="color:#a0522d; font-family:Georgia; font-weight:bold; font-style:italic;">
+		<h3 style="color:#000; font-family:Georgia; font-weight:bold; font-style:italic;">
 			<span style="float:left; width:50%; padding-top:10px;">Contact Us</span>
-			<%= link_to(image_tag("buttons/notary_sign_up.jpg", :style=> "float:right; padding-bottom:5px;"), :controller => "users", :action => "new_notary") %>
 		</h3>
 		<hr>
 		<p>NotaryFly.com prides itself on outstanding customer service. If you have any questions, comments or suggestions about our site, please contact us. We appreciate the feedback.</p>
 		<p>NotaryFly.com<br/>
-		177 Riverside Ave., Suite F-1214<br/>
-		Newport Beach, CA 92663</p>
+		120 Tustin Ave  Suite C-1214<br/>
+		Newport Beach, CA  92663
+		</p>
 
 		<p>Phone: 800-470-7515</p>
 
@@ -72,8 +72,7 @@
 			<li><%= link_to "Learn More", :controller => "home", :action => "learn_more" %> |</li> 
 			<li><%= link_to "Contact Us", :controller => "home", :action => "contact_us" %> |</li>
 			<li><%= link_to "Terms of Use", :controller => "home", :action => "terms_of_use" %> |</li>
-			<li><%= link_to "Privacy Statement", :controller => "home", :action => "privacy_statement"%> |</li>
-                        <li><%= link_to "Disclaimer", :controller => "home", :action => "disclaimer"%></li>
+			<li><%= link_to "Privacy Statement", :controller => "home", :action => "privacy_statement"%> </li>
 		</ul>
 	</div>
 	<div id="copyright" class="span-9 last">

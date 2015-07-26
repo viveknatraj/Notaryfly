@@ -79,7 +79,7 @@ end
   def open_order
     redirect_to session[:url] if session[:admin_user] == nil
 
-    @orders = Order.find(:all, :conditions => ["status!='closed' AND admin_order_cancel IS NULL AND move_to_order_history_by_admin = false and cancel_order IS NULL and payment=false"], :order => "updated_at DESC")
+    @orders = Order.find(:all, :conditions => ["status!='closed' AND move_to_order_history_by_admin = false and payment=false"], :order => "updated_at DESC")
     @awaiting_notary_orders = []
     @notary_assigned_orders = []
     @appt_confirmed_orders  = []
@@ -152,7 +152,7 @@ end
       paid_orders            << order if ['Paid', "notary_paid_full", "Notary Paid in Full", 'Executive Paid in Full'].include?(order.status_timeline) && order.notary_id.present? && order.move_to_order_history_by_admin == false && order.payment == true
     end
      @history_paid_orders            = paid_orders.paginate :page => params[:page], :per_page => per_page
-     @history_cancelled_orders= Order.paginate :page => params[:page], :conditions => ["cancel_order IS NOT NULL AND move_to_order_history_by_admin=true"]
+     @history_cancelled_orders= Order.paginate :page => params[:page], :conditions => ["(cancel_order IS NOT NULL or admin_order_cancel IS NOT NULL) AND move_to_order_history_by_admin=true"]
    end
    
    def order_history_paid
@@ -179,7 +179,7 @@ end
       redirect_to session[:url]
     end
     per_page = 20
-    @history_cancelled_orders= Order.paginate :page => params[:page], :conditions => ["cancel_order IS NOT NULL AND move_to_order_history_by_admin=true"]
+    @history_cancelled_orders= Order.paginate :page => params[:page], :conditions => ["(cancel_order IS NOT NULL or admin_order_cancel IS NOT NULL) AND move_to_order_history_by_admin=true"]
     @orders = Order.find(:all, :conditions => ["status!='closed'"], :order => "updated_at DESC").paginate :page => params[:page], :per_page => per_page
     if request.xhr?
      render :update do |page|

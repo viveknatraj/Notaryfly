@@ -71,7 +71,7 @@ module Client::OrdersHelper
        order_detail_link = 'notary/orders'
      end
      content_tag(:td, link_to(obj.id, :controller => order_detail_link, :action => 'order_detail', :order_id => obj.id, :tab => cur_tab)) +
-     content_tag(:td, "#{obj.borrower_1_last_name.capitalize}, #{obj.borrower_1_first_name.capitalize}" )+
+     content_tag(:td, "#{obj.borrower_1_last_name.to_s.capitalize}, #{obj.borrower_1_first_name.to_s.capitalize}" )+
      content_tag(:td) do
        obj.read_attribute_before_type_cast("created_at").to_date.strftime('%m/%d/%Y')
      end +
@@ -79,7 +79,7 @@ module Client::OrdersHelper
        obj.signing_date.strftime('%m/%d/%Y')+"&nbsp;&nbsp;"+obj.signing_time if obj.signing_date
      end +
      content_tag(:td) do
-       obj.signing_location_city+", "+ obj.signing_location_state+"&nbsp;&nbsp;"+obj.signing_location_zip_code
+       obj.signing_location_city.to_s+", "+ obj.signing_location_state.to_s+"&nbsp;&nbsp;"+obj.signing_location_zip_code.to_s
      end +
      content_tag(:td) do
      if request.url.include?('client/orders')

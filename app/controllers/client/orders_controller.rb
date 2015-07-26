@@ -22,7 +22,7 @@ class Client::OrdersController < ApplicationController
     @filter ||= "created_at DESC"
 
     @orders = Order.find(:all, :conditions => ["client_id = ? AND admin_approve IS NULL AND cancel_order_date IS NULL and status != 'closed' and payment=false", @client.id], :order => @filter).paginate :page => params[:page], :per_page => per_page
-    @refuse_to_sign_orders  = Order.paginate :page => params[:page], :per_page => per_page, :conditions => ["(cancel_order_date IS NOT NULL or (admin_order_cancel != '' AND admin_approve = 1)) AND move_to_order_history_by_admin=false AND client_id =?", @client.id], :order => "updated_at DESC"
+    @refuse_to_sign_orders  = Order.paginate :page => params[:page], :per_page => per_page, :conditions => ["(cancel_order_date IS NOT NULL or admin_order_cancel != '') AND move_to_order_history_by_admin=false AND client_id =?", @client.id], :order => "updated_at DESC"
 				@completed_orders = Order.find(:all, :conditions => ["client_id = ? AND status_timeline = 'Order Completed'", @client.id], :order => @filter).paginate :page => params[:page], :per_page => per_page
   end
 
@@ -239,7 +239,7 @@ class Client::OrdersController < ApplicationController
     @filter ||= "created_at DESC"
 
     @orders = Order.find(:all, :conditions => ["client_id = ? AND admin_approve = ?", @client.id, 1], :order => @filter).paginate :page => params[:page], :per_page => per_page
-    @refused_to_sign_orders = Order.find(:all, :conditions => ["client_id = ? AND admin_approve IS NULL AND status = ?  ", @client.id, "Refuse To Sign"], :order => @filter).paginate :page => params[:page], :per_page => per_page
+    @refused_to_sign_orders = Order.find(:all, :conditions => ["client_id = ? AND (admin_order_cancel IS NOT NULL or cancel_order IS NOT NULL) AND status = ?  ", @client.id, "Refuse To Sign"], :order => @filter).paginate :page => params[:page], :per_page => per_page
     #@paid_orders = Order.find(:all, :conditions => ["client_id = ? AND admin_approve IS NULL AND status != 'closed' AND payment=true ", @client.id], :order => @filter).paginate :page => params[:page], :per_page => per_page
     @paid_orders = Order.find(:all, :conditions => ["client_id = ? AND status != 'closed' AND (status_timeline= 'Paid' or payment = true )", @client.id], :order => @filter).paginate :page => params[:page], :per_page => per_page
 

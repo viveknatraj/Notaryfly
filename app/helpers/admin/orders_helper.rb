@@ -302,7 +302,7 @@ module Admin::OrdersHelper
 																obj.signing_date.strftime('%m/%d/%Y')+"&nbsp;&nbsp;"+obj.signing_time if obj.signing_date
 																end +
 																content_tag(:td) do
-																obj.signing_location_city+", "+ obj.signing_location_state+"&nbsp;&nbsp;"+obj.signing_location_zip_code
+																obj.signing_location_city.to_s+", "+ obj.signing_location_state.to_s+"&nbsp;&nbsp;"+obj.signing_location_zip_code.to_s
 																end +
 																content_tag(:td) do
 																if obj.client
