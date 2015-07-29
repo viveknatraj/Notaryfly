@@ -83,9 +83,9 @@
                   <span>
                     <%= @order.borrower_1_last_name %> <%= @order.borrower_1_first_name %>
                     (<%= link_to "details", {}, :href => "#", :onclick => "divwin=dhtmlwindow.open('divbox', 'div', 'customer_info_#{@client.id}', '', 'width=380px,height=480px,left=200px,top=150px,resize=0,scrolling=0'); return false" %>)/(<%= link_to "send message", {}, :href => "mailto: #{@client.user.email}?subject=Order Detail NF# #{@order.id}" %>)<br>
-                    <%if @order.borrower_1_work_phone.length!=0%><%= @order.borrower_1_work_phone %><%end%> <% if @order.borrower_1_extension.length!=0%>- Ext  <%= @order.borrower_1_extension %><br/><%end%>
-                    <%if @order.borrower_1_home_phone.length!=0%><%= @order.borrower_1_home_phone %><br/><%end%>
-                    <%if @order.borrower_1_mobile_phone.length!=0%><%= @order.borrower_1_mobile_phone %><br/><%end%>
+                    <%if @order.borrower_1_work_phone.present?%><%= @order.borrower_1_work_phone %><%end%> <% if @order.borrower_1_extension.present?%>- Ext  <%= @order.borrower_1_extension %><br/><%end%>
+                    <%if @order.borrower_1_home_phone.present?%><%= @order.borrower_1_home_phone %><br/><%end%>
+                    <%if @order.borrower_1_mobile_phone.present?%><%= @order.borrower_1_mobile_phone %><br/><%end%>
                   </span>
                 </div>
               <%end%>
@@ -94,15 +94,15 @@
                 <h3 class="notary_info">Signer/Borrower Information</h3 >
 
                 <div class="span-9">
-                  <p><label for="borrower_1_first_name">Signer/Borrower #1: </label><%if @order.borrower_1_first_name.length!=0 or order.borrower_1_last_name.length!=0%> <%= @order.borrower_1_first_name %> <%= @order.borrower_1_last_name %><%else%> Not Provided<%end%> </p>
-                  <p><label for="borrower_1_work_phone">Work Phone: </label><%if @order.borrower_1_work_phone.length!=0%><%= @order.borrower_1_work_phone %><%else%> Not Provided<%end%> - Ext </label><% if @order.borrower_1_extension.length!=0%> <%= @order.borrower_1_extension %><%else%> Not Provided<%end%></p>
-                  <p><label for="borrower_1_home_phone">Home Phone: </label><%if @order.borrower_1_home_phone.length!=0%><%= @order.borrower_1_home_phone %><%else%> Not Provided<%end%></p>
-                  <p><label for="borrower_1_mobile_phone">Mobile Phone: </label><%if @order.borrower_1_mobile_phone.length!=0%><%= @order.borrower_1_mobile_phone %><%else%> Not Provided<%end%></p>
+                  <p><label for="borrower_1_first_name">Signer/Borrower #1: </label><%if @order.borrower_1_first_name.present? or @order.borrower_1_last_name.present?%> <%= @order.borrower_1_first_name %> <%= @order.borrower_1_last_name %><%else%> Not Provided<%end%> </p>
+                  <p><label for="borrower_1_work_phone">Work Phone: </label><%if @order.borrower_1_work_phone.present?%><%= @order.borrower_1_work_phone %><%else%> Not Provided<%end%> - Ext </label><% if @order.borrower_1_extension.present?%> <%= @order.borrower_1_extension %><%else%> Not Provided<%end%></p>
+                  <p><label for="borrower_1_home_phone">Home Phone: </label><%if @order.borrower_1_home_phone.present?%><%= @order.borrower_1_home_phone %><%else%> Not Provided<%end%></p>
+                  <p><label for="borrower_1_mobile_phone">Mobile Phone: </label><%if @order.borrower_1_mobile_phone.present?%><%= @order.borrower_1_mobile_phone %><%else%> Not Provided<%end%></p>
                   <p>&nbsp;</p>
-                  <p><label for="borrower_2_last_name">Signer/Borrower #2: </label><%if @order.borrower_2_first_name.length!=0 or @order.borrower_2_last_name.length!=0%><%= @order.borrower_2_first_name %> <%= @order.borrower_2_last_name %><%else%> Not Provided<%end%></p>
-                  <p><label for="borrower_2_work_phone">Work #: </label><%if @order.borrower_2_work_phone.length!=0 %><%= @order.borrower_2_work_phone %><%else%> Not Provided<%end%> - Ext </label><% if @order.borrower_2_extension.length==0%> Not Provided<%else%> <%= @order.borrower_2_extension %> <%end%></p>
-                  <p><label for="borrower_2_home_phone">Home #: </label><%if @order.borrower_2_home_phone.length!=0%><%= @order.borrower_2_home_phone %><%else%> Not Provided<%end%></p>
-                  <p><label for="borrower_2_mobile_phone">Mobile #: </label><% if @order.borrower_2_mobile_phone.length!=0%> <%= @order.borrower_2_mobile_phone %><%else%> Not Provided<%end%></p>
+                  <p><label for="borrower_2_last_name">Signer/Borrower #2: </label><%if @order.borrower_2_first_name.present? or @order.borrower_2_last_name.present?%><%= @order.borrower_2_first_name %> <%= @order.borrower_2_last_name %><%else%> Not Provided<%end%></p>
+                  <p><label for="borrower_2_work_phone">Work #: </label><%if @order.borrower_2_work_phone.present? %><%= @order.borrower_2_work_phone %><%else%> Not Provided<%end%> - Ext </label><% if @order.borrower_2_extension.present?%> Not Provided<%else%> <%= @order.borrower_2_extension %> <%end%></p>
+                  <p><label for="borrower_2_home_phone">Home #: </label><%if @order.borrower_2_home_phone.present?%><%= @order.borrower_2_home_phone %><%else%> Not Provided<%end%></p>
+                  <p><label for="borrower_2_mobile_phone">Mobile #: </label><% if @order.borrower_2_mobile_phone.present?%> <%= @order.borrower_2_mobile_phone %><%else%> Not Provided<%end%></p>
                 </div>
 
               </div><br/>

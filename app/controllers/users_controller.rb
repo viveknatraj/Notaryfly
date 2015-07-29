@@ -90,7 +90,7 @@ class UsersController < ApplicationController
               page.replace_html "notary123" ,"<b>Order Timeline: #{order_id.status_timeline}</b><br/><br/>#{image_tag("step_3.png")}"
             elsif (order_id.status_timeline == "Signing Completed")
               page.replace_html "notary123" ,"<b>Order Timeline: #{order_id.status_timeline}</b><br/><br/>#{image_tag("step_4.png")}"
-            elsif (order_id.status_timeline == "Notary Paid in Full")
+            elsif (['Notary Paid in Full', 'Paid'].include? order_id.status_timeline)
               page.replace_html "notary123" ,"<b>Order Timeline: #{order_id.status_timeline}</b><br/><br/>#{image_tag("step_5.png")}"
             elsif (order_id.status_timeline.nil?)
               page.replace_html "notary123" ,"<b>Order Timeline: #{order_id.status_timeline}</b><br/><br/>#{image_tag("step_1.png")}"
