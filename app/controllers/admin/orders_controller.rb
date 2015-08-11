@@ -77,7 +77,7 @@ end
   end
 
   def open_order
-    redirect_to session[:url] if session[:admin_user] == nil
+    redirect_to session[:url] ||'/' if session[:admin_user] == nil
 
     @orders = Order.find(:all, :conditions => ["status!='closed' AND move_to_order_history_by_admin = false and payment=false"], :order => "updated_at DESC")
     @awaiting_notary_orders = []
@@ -1093,7 +1093,7 @@ end
 
       if @order.status_timeline=="Signing Completed"
         Notifier.deliver_mail_to_client_for_signing_completed(@order, client_email)
-        Notifier.deliver_mail_to_agent_for_signing_completed(@order, agent) if !@order.agent_id.blank?
+        Notifier.deliver_mail_to_agent_for_signing_completed(@order, agent.email) if agent.present?
       end
     elsif params[:order][:closed_comments]
       @order.update_attributes(:status => "closed",
