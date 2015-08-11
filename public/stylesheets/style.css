@@ -35,12 +35,19 @@ body{background-color:#fff;}
     margin: 15px 0;
 }
 .nw-buts > span {
-    display:inline-block;margin-right: 15px;
+    display:inline-block;margin-right: 15px;text-align:center;font-size: 14px;font-weight: bold;
+}
+.nw-notary {
+    color: #4b99c4;
+}
+.nw-cust {
+    color: #f94848;
 }
 .nw-buts > span > a {
     border-radius: 4px;
     color: #fff;display: block;
     padding: 10px 20px;
+margin-top:10px;
     text-decoration: none;
     text-transform: uppercase;
 }
@@ -72,7 +79,7 @@ body{background-color:#fff;}
 .cnt-bot{background-color: #f5f5f5;margin:10px 0;}
 .nw-cnt-three {
     float: left;
-    margin: 40px 0;
+    margin: 20px 0;
     width: 33.33%;
 }
 .nw-cnt-three > h6 {
