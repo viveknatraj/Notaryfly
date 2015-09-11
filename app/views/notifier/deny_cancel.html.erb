@@ -15,5 +15,17 @@
         <li><strong>Tracking #:</strong> <%= @order.closed_tracking_number %></li>
 
 </ul>
+<table width="60%" style="float:left;">
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signer/Client:</div></td><td><div class="title2"><%= @order.borrower_1_first_name.capitalize %> <%= @order.borrower_1_last_name.capitalize %></div></td></tr>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">NF Order #:</div></td><td><div class="title2"><%= @order.id %></div></td></tr>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Escrow/Transaction#:</div></td><td><div class="title2"><%= @order.loan_number %></div></td></tr>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signing Location:</div></td><td><div class="title2"> <%=@order.signing_location_address%></div></td></tr>
+    <tr><td><div class="title1" style="font-weight:bold;">&nbsp; </div></td><td><div class="title2"> <%=@order.signing_location_city%>,&nbsp;&nbsp;<%=@order.signing_location_state%>&nbsp;&nbsp;<%=@order.signing_location_zip_code%></div></td></tr>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signing Date:</div></td><td><div class="title2"> <%= @order.signing_date.strftime("%B %d, %Y") %></div></td></tr>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signing Time:</div></td><td><div class="title2"> <%= @order.signing_time %></div></td></tr>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signing Type:</div></td><td><div class="title2"> <%=@order.loan_type%></div></td></tr>
+  <tr> <td> <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div> <div class="title1" style="font-weight:bold;">Docs Returned Via:</div> </td> <td> <div class="title2"><%= @order.closed_carrier %></div> </td> </tr>
+  <tr> <td> <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div> <div class="title1" style="font-weight:bold;">Tracking #:</div> </td> <td> <div class="title2"><%= @order.closed_tracking_number %></div> </td> </tr>
+</table>
 
 <p>This information was provided by NotaryFly.com</p>

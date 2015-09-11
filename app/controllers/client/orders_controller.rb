@@ -156,6 +156,10 @@ class Client::OrdersController < ApplicationController
       # End
 
       if @order.save
+        client_email = User.find(@client.user_id).email
+        agent_email = @order.agent.email
+        Notifier.deliver_client_order_placed(@order, client_email)
+        Notifier.deliver_agent_order_placed(@order, agent_email)
         #as per client request added 1 credit for each order placed
         @credits = Credit.find_by_user_id(self.current_user.id)
         new_credits = @credits.credits + 1
@@ -188,6 +192,10 @@ class Client::OrdersController < ApplicationController
       @order.status_log = "Placed New Order: #{Time.now.strftime('%m/%d/%y - %I:%M %p')} - #{@client.client_name} Customer"
       # End
       if @order.save
+        client_email = User.find(@client.user_id).email
+        agent_email = @order.agent.email
+        Notifier.deliver_client_order_placed(@order, client_email)
+        Notifier.deliver_agent_order_placed(@order, agent_email)
         @note = Notes.new(:notes => params[:notes].first, :order_id => @order.id, :user_id => self.current_user.id)
         @note.save
 
@@ -658,6 +666,7 @@ class Client::OrdersController < ApplicationController
 
     Notifier.deliver_client_order_completed(@order, client_email) #client_email
     Notifier.deliver_client_feedback_mail(@order, @agent, @notary, client_email)
+    Notifier.deliver_agent_feedback_mail(@order, @agent)
     # Notifier.deliver_notary_order_completed(@order,'venkateswaransk@dckap.com' ) notary_email
 
     flash[:notice] = "The order number #{@order.id} has been closed and can now be found under the history tab"
@@ -797,7 +806,7 @@ class Client::OrdersController < ApplicationController
     @order.update_attributes(:status_timeline => "Documents Received by Title/Escrow")
 
     if @order
-      agent = Agent.find(@order.agent_id).email if !@order.agent_id.blank?
+      agent = Agent.find(@order.agent_id) if !@order.agent_id.blank?
       Notifier.deliver_mail_to_agent_for_documents_received_title(@order, agent) if !@order.agent_id.blank?
       if @order.notary_id
         notary = Notary.find(@order.notary_id)

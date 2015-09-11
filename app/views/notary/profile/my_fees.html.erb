@@ -120,7 +120,7 @@
             <div class="clr"></div><br/>
             <div class="labels wholeform">
               <p class="myfeeleft">Total Fee:</p>
-														<p class="myfeeright"><label>$</label><%= text_field_tag 'total_fee', (@notary.fee + @notary.other_fee), :class => "formtinyfield", :readonly => :readonly %></p>
+	<p class="myfeeright"><label>$</label><%= text_field_tag 'total_fee', (@notary.fee.to_i + @notary.other_fee.to_i), :class => "formtinyfield", :readonly => :readonly %></p>
             </div>
             <div class="clr"></div><br/>
             <div class="labels wholeform">

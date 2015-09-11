@@ -1,9 +1,13 @@
+<%
+   full_name = 'Not Provided'
+   email = 'Not Provided'
+   mobile_phone = 'Not Provided'
+%>
 <p style="margin-bottom:6px;">
   <strong>This message was sent from a notification-only email address that does not accept incoming email. Please do not reply to this message.</strong>
 </p>
-<p style="margin-bottom:6px;">Dear <%= link_to @agent.broker_name.split.collect{|n|n.capitalize}.join(" "), "javascript:void(0)" %>,</p>
-<p style="margin-bottom:6px;"><strong>Congratulations, the loan has FUNDED for the following Order:</strong></p>
-
+<p style="margin-bottom:6px;">Dear <%= @agent.broker_name.capitalize %>,</p>
+<p style="margin-bottom:6px;">The order has been <strong>PLACED</strong> for the following document signing. We will update you as we locate the Notary:</p>
 
 <table width="60%" style="float:left;">
   <tr>
@@ -60,9 +64,42 @@
       <div class="title2"><%= @order.signing_time %></div>
     </td>
   </tr>
+  <tr>
+    <td>
+      <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div>
+      <div class="title1" style="font-weight:bold;">Notary Assigned:</div>
+    </td>
+    <td>
+      <div class="title2"><%= link_to "#{full_name}", "javascript:void(0)" %></div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div>
+      <div class="title1" style="font-weight:bold;">Notary Email:</div>
+    </td>
+    <td>
+      <div class="title2"><%= link_to "#{email}", "mailto:#{email}" %></div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div>
+      <div class="title1" style="font-weight:bold;">Notary Phone:</div>
+    </td>
+    <td>
+      <div class="title2"><%= link_to "#{mobile_phone}", "javascript:void(0)" %></div>
+    </td>
+  </tr>
 </table>
 
-<p style="margin-bottom:6px;">This information is ONLY provided as a courtesy to keep you updated on the loan listed above.  For further details regarding the funding, please contact your title or escrow company.</p>
+<div style="float:left; width:100%;">
 
-<p style="margin-bottom:6px;">If you know anyone else who should be using NotaryFly to complete loan closings, please forward their information to: <a href='mailto:ReferAFriend@notaryfly.com'>ReferAFriend@notaryfly.com</a></p>
-<p style='margin-bottom:6px;'><strong>Notaryfly</strong></p>
+  <p style="margin-bottom:6px;">
+    <strong>For “Order Status” updates, visit <a href="http://www.notaryfly.com/">NotaryFly.com</a></strong>
+  </p>
+  <p style="margin-bottom:6px;">
+    <strong>For questions or assistance, please email <a href="mailto:support@notaryfly.com/">support@notaryfly.com</a> or call 888-888-8888.</strong>
+  </p>
+  <p style="margin-bottom:6px;"><strong>Notaryfly</strong></p>
+</div>

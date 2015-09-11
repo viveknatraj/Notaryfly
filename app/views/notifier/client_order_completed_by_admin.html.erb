@@ -1,9 +1,8 @@
-<p style="margin-bottom:6px;">
-  <strong>This message was sent from a notification-only email address that does not accept incoming email. Please do not reply to this message.</strong>
-</p>
-<p style="margin-bottom:6px;">Dear <%= link_to @agent.broker_name.split.collect{|n|n.capitalize}.join(" "), "javascript:void(0)" %>,</p>
-<p style="margin-bottom:6px;"><strong>Congratulations, the loan has FUNDED for the following Order:</strong></p>
-
+<% @client = Client.find(@order.client_id) %>
+<% @user = User.find(@client.user_id) %>
+<p><strong>This message was sent from a notification-only email address that does not accept incoming email. Please do not reply to this message.</strong></p>
+<p>Dear <%= @client.client_name.capitalize %>, </p>
+<p>The order has been <strong>COMPLETED</strong> for following signing:</p>
 
 <table width="60%" style="float:left;">
   <tr>
@@ -60,9 +59,27 @@
       <div class="title2"><%= @order.signing_time %></div>
     </td>
   </tr>
+  <tr>
+    <td>
+      <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div>
+      <div class="title1" style="font-weight:bold;">Signing Type:</div>
+    </td>
+    <td>
+      <div class="title2"><%=@order.loan_type%></div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div>
+      <div class="title1" style="font-weight:bold;">Total Fee:</div>
+    </td>
+    <td>
+      <% total_fee = @order.notary.fee.to_i + @order.notary.other_fee.to_i %>
+      <div class="title2"><%= "$#{total_fee}" %></div>
+    </td>
+  </tr>
 </table>
 
-<p style="margin-bottom:6px;">This information is ONLY provided as a courtesy to keep you updated on the loan listed above.  For further details regarding the funding, please contact your title or escrow company.</p>
-
-<p style="margin-bottom:6px;">If you know anyone else who should be using NotaryFly to complete loan closings, please forward their information to: <a href='mailto:ReferAFriend@notaryfly.com'>ReferAFriend@notaryfly.com</a></p>
-<p style='margin-bottom:6px;'><strong>Notaryfly</strong></p>
+<div style="float:left;width:100%;">
+<p style="margin-bottom:6px;"><strong>We appreciate working with you. Please pay invoice as soon as possible so we can pay the hard working notaries as soon as possible. We will update your account as soon as the invoice is paid in full. If you need anything, please contact us at:<a href="mailto:support@notaryfly.com/">support@notaryfly.com</a> or call (800)470-7515.</strong></p>
+<p style="margin-bottom:6px;"><strong>Notaryfly</strong></p>

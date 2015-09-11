@@ -1,10 +1,8 @@
-<script></script>
-<p style="margin-bottom:6px;"><strong>This message was sent from a notification-only email address that does not accept incoming email. Please do not reply to this message.</strong></p>
-
-<p>Dear <%= @agent.broker_name.capitalize %>, </p>
-
-<p style="margin-bottom:6px;">A Notary has been <strong>ASSIGNED</strong> for the following document signing:</p>
-
+<p style="margin-bottom:6px;">
+  <strong>This message was sent from a notification-only email address that does not accept incoming email. Please do not reply to this message.</strong>
+</p>
+<p style="margin-bottom:6px;">Dear <%= @agent.broker_name.split.collect{|n|n.capitalize}.join(" "), "javascript:void(0)" %>,</p>
+<p style="margin-bottom:6px;">Congratulations, the loan has been <strong>FUNDED</strong> for the following Order:</p>
 
 <table width="60%" style="float:left;">
     <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Escrow Order #:</div></td><td><div class="title2"><%= @order.loan_number %></div></td></tr>
@@ -17,6 +15,11 @@
 </table>
 
 <div style="float:left; width:100%;">
-<p style="margin-bottom:6px;"><strong>Visit <a href="http://www.notaryfly.com">NotaryFly.com</a> for real time "Order Status" updates</strong></p>
+<p style="margin-bottom:6px;">
+This information is ONLY provided as a courtesy to keep you updated on the loan listed above.  For further details regarding the funding, please contact your title or escrow company.
+</p>
+<p style="margin-bottom:6px;">
+If you know anyone else who should be using NotaryFly to complete loan closings, please forward their information to::<a href='mailto:ReferAFriend@notaryfly.com/'>ReferAFriend@notaryfly.com</a>
+</p>
 <p style="margin-bottom:6px;"><strong>Notaryfly</strong></p>
 </div>

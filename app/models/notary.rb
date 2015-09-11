@@ -7,12 +7,14 @@ class Notary < ActiveRecord::Base
   has_many :messages
 
   validates_presence_of :first_name
-  validates_presence_of :last_name, :routing
+  validates_presence_of :last_name
   validates_numericality_of :other_fee, :allow_nil => true
   
-	validates_format_of :routing, :with => /^[0-9]{9}$/,  :message => "should be 9 digits (numeric only)"
-  validates_confirmation_of :routing,:account,:message=>"doesn't match confirmation"
-    validates_format_of :day_phone, :mobile_phone,
+  validates_presence_of :routing, :on => :update
+  validates_format_of :routing, :on => :update, :with => /^[0-9]{9}$/,  :message => "should be 9 digits (numeric only)"
+  validates_confirmation_of :routing,:account, :on => :update, :message=>"doesn't match confirmation"
+  validates_format_of :day_phone, :mobile_phone,
+    :on => :update,
     :message => "must be a valid telephone number.",
     :with => /^[\(\)0-9\- \+\.]{10,20}$/
 

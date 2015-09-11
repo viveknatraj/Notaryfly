@@ -2,23 +2,28 @@
 
 <p><strong>This message was sent from a notification-only email address that does not accept incoming email. Please do not reply to this message.</strong></p>
 <br/>
-<p>Dear <%= @notary.first_namecapitalize %>&nbsp;<%= @notary.last_namecapitalize %>, </p>
+<p>Dear <%= @notary.first_name.capitalize %>&nbsp;<%= @notary.last_name.capitalize %>, </p>
 <br/>
-<p>We would like to inform that the following document signing has been successfully COMPLETED!</p>
+<p>The following order has been <b>COMPLETED</b>:</p>
 
-<ul>
-  <li><strong>Signer/Client:</strong> <%= @order.borrower_1_first_name %> <%= @order.borrower_1_last_name %></li>
-	<li><strong>NF Order #:</strong> <%= @order.id %></li>
-	<li><strong>Escrow/Transaction #:</strong> <%= @order.loan_number %></li>
-	<li><strong>Signing Date:</strong> <%= @order.signing_date.strftime("%B %d, %Y") %></li>
-	<li><strong>Signing Time:</strong> <%= @order.signing_time %></li>
-	<li><strong>Docs Returned Via:</strong> <%= @order.closed_carrier %></li>
-	<li><strong>Tracking #:</strong> <%= @order.closed_tracking_number %></li>
-	
-</ul>
+<table width="60%" style="float:left;">
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Escrow Order #:</div></td><td><div class="title2"><%= @order.loan_number %></div></td></tr>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">NF Order #:</div></td><td><div class="title2"><%= @order.id %></div></td></tr>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signer:</div></td><td><div class="title2"><%= @order.borrower_1_first_name.capitalize %> <%= @order.borrower_1_last_name.capitalize %></div></td></tr>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signing Location:</div></td><td><div class="title2"> <%=@order.signing_location_address%></div></td></tr>
+    <tr><td><div class="title1" style="font-weight:bold;">&nbsp; </div></td><td><div class="title2"> <%=@order.signing_location_city%>,&nbsp;&nbsp;<%=@order.signing_location_state%>&nbsp;&nbsp;<%=@order.signing_location_zip_code%></div></td></tr>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signing Date:</div></td><td><div class="title2"> <%= @order.signing_date.strftime("%B %d, %Y") %></div></td></tr>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signing Time:</div></td><td><div class="title2"> <%= @order.signing_time %></div></td></tr>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signing Type:</div></td><td><div class="title2"> <%=@order.loan_type%></div></td></tr>
+    <% total_fee = @order.notary.fee.to_i + @order.notary.other_fee.to_i %>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Notary Fee:</div></td><td><div class="title2">$ <%= number_with_precision(total_fee.to_f,:precision=>2) %></div></td></tr>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">ACH #/Check #:</div></td><td><div class="title2"><%= @order.closed_tracking_number %></div></td></tr>
+</table>
 
-<p>To view order details please visit <a href="http://www.notaryfly.com">NotaryFly</a> by clicking the link below.</p>
+<p><b>NotaryFly gets paid by some companies as a loan funds and disperses (same day sometimes), while other companies pay at the end of the month.  Once NotaryFly receives funds, Notary is typically paid in next pay cycle.  You will receive an email once funds leave NotaryFly.  If you have any questions, please contact accounting@notaryfly.com
+<br/>
+NOTE:  Must have current W-9 on file to be paid, please make sure this is current.</b>
+</p>
 
-
-<p>This information was provided by NotaryFly.com</p>
+<p>If there are any title/escrow companies or lenders who should be using NotaryFly, please forward their contact information to:  ReferAFriend@notaryfly.com</p>
 

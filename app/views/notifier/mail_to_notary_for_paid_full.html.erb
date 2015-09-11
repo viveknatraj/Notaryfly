@@ -62,7 +62,8 @@
       <div class="title1" style="font-weight:bold;">Notary Fee:</div>
     </td>
     <td>
-      <div class="title2">$ <%= number_with_precision((@order.notary_fee.to_i).to_f,:precision=>2) %></div>
+        <% total_fee = @order.notary.fee.to_i + @order.notary.other_fee.to_i %>
+      <div class="title2">$ <%= number_with_precision(total_fee.to_f,:precision=>2) %></div>
     </td>
   </tr>
   <tr>

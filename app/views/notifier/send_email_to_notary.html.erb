@@ -55,7 +55,8 @@
       <div class="title1" style="font-weight:bold;">Fee:</div>
     </td>
     <td>
-      <div class="title2">$ <%= number_with_precision(@order.notary_fee.to_f,:precision=>2) %></div>
+      <% total_fee = @notary.fee.to_i + @notary.other_fee.to_i %>
+      <div class="title2">$ <%= number_with_precision(total_fee.to_f,:precision=>2) %></div>
     </td>
   </tr>
 </table>
@@ -65,12 +66,12 @@
 <p style="margin-bottom:6px;">
   <table>
     <tr>
-      <td style="text-align:left"><%= link_to "Accept Order", "/notary/orders/accept_order/#{@order.id}" %></td>
-      <td style="text-align:right"><%= link_to "Deny Order", "/notary/orders/deny_order/1240#{@order.id}" %></td>
+      <td style="text-align:left"><%=image_submit_tag("#{ROOT_URL}/images/accept-order.png",:onClick=> remote_function(:url => { :controller => "notary/orders",:action=> "accept_order", :id => @order.id }))%></td>
+      <td style="text-align:right"><%=image_submit_tag("#{ROOT_URL}/images/Deny-Order.png",:onClick=> remote_function(:url => { :controller => "notary/orders",:action=> "deny_order", :id => @order.id }))%></td>
     </tr>
   </table>
 </p>
 <p style="margin-bottom:6px;">
-  <strong style="text-decoration:underline;">NOTE:  This Order is possibly being sent to multiple Notaries simultaneously.  Please only accept the order if you are sure you can accommodate the date and time requested.</strong>
+  <strong style="text-decoration:underline;">NOTE:  This Order is possibly being sent to multiple Notaries simultaneously. 1st Response gets the Order. Please only accept the order if you are sure you can accommodate the date and time requested.</strong>
 </p>
 </div>

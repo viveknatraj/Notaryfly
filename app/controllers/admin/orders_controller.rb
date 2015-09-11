@@ -14,6 +14,9 @@ end
 def move_to_paid
   @order=Order.find_by_id(params[:order_id])
   @order.update_attributes(:status_timeline => 'Paid')
+  user = User.find(@order.client.user_id)
+  client_email = user.email
+  Notifier.deliver_client_invoice_paid(@order, client_email)
   flash[:notice] = "Successfully Order moved to paid orders"
   redirect_to(:controller => "admin/orders", :action => :open_order, :tab => params[:tab])
 end
@@ -634,6 +637,8 @@ end
           o.save
 			  }
       flash[:notice]="Payment made successfully for Notary: #{check_name}"
+      notary_email = User.find(notary.user_id).email
+      Notifier.deliver_notary_paid(@orders, notary_email)
 			else
         executive_ids = first_order.executive_ids
         executive_ids.delete(executive.id)
@@ -835,6 +840,10 @@ end
 				status_log = @order.status_log.to_s + "#Notary Assigned: #{Time.now.strftime('%m/%d/%y - %I:%M %p')} -#{session[:admin_user]} Admin"
     @order.update_attributes(:notary_id => params[:notary_id], :status => "filled", :status_timeline=> "Notary Assigned", :signing_fee => signing_fee, :customer_fee => signing_fee, :status_log => status_log)
     Notifier.deliver_notary_assign_order_confirmation(@order, @notary, notary_email)
+    user = User.find(@order.client.user_id)
+    client_email = user.email
+    Notifier.deliver_client_assign_order_confirmation(@order, @notary, client_email)
+    Notifier.deliver_agent_assign_order_confirmation(@order, @order.agent.email)
     flash[:notice] = "Notary Assigned"
     redirect_to({:controller => '/admin/orders', :action => 'open_order', :tab => 'tabs3'})
   end
@@ -1093,7 +1102,7 @@ end
 
       if @order.status_timeline=="Signing Completed"
         Notifier.deliver_mail_to_client_for_signing_completed(@order, client_email)
-        Notifier.deliver_mail_to_agent_for_signing_completed(@order, agent.email) if agent.present?
+        Notifier.deliver_mail_to_agent_for_signing_completed(@order, agent) if agent.present?
       end
     elsif params[:order][:closed_comments]
       @order.update_attributes(:status => "closed",
@@ -1169,9 +1178,16 @@ end
 
   def mark_completed
     @order = Order.find_by_id(params[:id])
+    user = User.find(@order.notary.user_id)
+    notary_email = user.email
+    user = User.find(@order.client.user_id)
+    client_email = user.email
     if @order.present?
       status_log = @order.status_log.to_s + "#Order Completed: #{Time.now.strftime('%m/%d/%y - %I:%M %p')} - #{session[:admin_user]} Admin"
       @order.update_attributes(:status_timeline => "Order Completed", :status_log => status_log)
+      Notifier.deliver_client_order_completed_by_admin(@order, client_email)
+      Notifier.deliver_notary_order_completed_by_admin(@order, notary_email)
+      Notifier.deliver_mail_to_agent_for_loan_fund(@order, @order.agent) if @order.agent.present?
     end
     render :js => "window.location = '#{request.referer}'"
   end

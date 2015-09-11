@@ -1,19 +1,39 @@
+<%
+   full_name = 'Not Provided'
+   email = 'Not Provided'
+   mobile_phone = 'Not Provided'
+   if @notary
+     full_name = [@notary.first_name, @notary.last_name].join(" ")
+     email = @notary.user.email
+     mobile_phone = @notary.mobile_phone
+   end
+%>
 <p><strong>This message was sent from a notification-only email address that does not accept incoming email. Please do not reply to this message.</strong></p>
 <br/>
-<p>Hi <%= Client.find_by_id(@order.client_id).client_name %>, </p>
+<p>Dear <%= Client.find_by_id(@order.client_id).client_name %>, </p>
 <br/>
-<p>We would like to inform that the following Order Cancellation has been approved by admin!</p>
-<p>Travel Fee amount: $50.00</p>
+<p>The <strong>CANCELLED</strong> order for the following document signing has been <strong>APPROVED</strong> with penalty of $50 travel fee and your account will be credited accordingly:</p>
 
-<ul>
-	<li><strong>Signer/Client:</strong> <%= @order.borrower_1_first_name %> <%= @order.borrower_1_last_name %></li>
-	<li><strong>NF Order #:</strong> <%= @order.id %></li>
-	<li><strong>Escrow/Transaction #:</strong> <%= @order.loan_number %></li>
-	<li><strong>Signing Date:</strong> <%= @order.signing_date.strftime("%B %d, %Y") %></li>
-	<li><strong>Signing Time:</strong> <%= @order.signing_time %></li>
-	<li><strong>Docs Returned Via:</strong> <%= @order.closed_carrier %></li>
-        <li><strong>Tracking #:</strong> <%= @order.closed_tracking_number %></li>
+<table width="60%" style="float:left;">
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Escrow Order #:</div></td><td><div class="title2"><%= @order.loan_number %></div></td></tr>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">NF Order #:</div></td><td><div class="title2"><%= @order.id %></div></td></tr>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signer:</div></td><td><div class="title2"><%= @order.borrower_1_first_name.capitalize %> <%= @order.borrower_1_last_name.capitalize %></div></td></tr>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signing Location:</div></td><td><div class="title2"> <%=@order.signing_location_address%></div></td></tr>
+    <tr><td><div class="title1" style="font-weight:bold;">&nbsp; </div></td><td><div class="title2"> <%=@order.signing_location_city%>,&nbsp;&nbsp;<%=@order.signing_location_state%>&nbsp;&nbsp;<%=@order.signing_location_zip_code%></div></td></tr>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signing Date:</div></td><td><div class="title2"> <%= @order.signing_date.strftime("%B %d, %Y") %></div></td></tr>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signing Time:</div></td><td><div class="title2"> <%= @order.signing_time %></div></td></tr>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signing Type:</div></td><td><div class="title2"> <%=@order.loan_type%></div></td></tr>
+  <tr> <td> <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div> <div class="title1" style="font-weight:bold;">Notary Assigned:</div> </td> <td> <div class="title2"><%= link_to "#{full_name}", "javascript:void(0)" %></div> </td> </tr>
+  <tr> <td> <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div> <div class="title1" style="font-weight:bold;">Notary Email:</div> </td> <td> <div class="title2"><%= link_to "#{email}", "mailto:#{email}" %></div> </td> </tr>
+  <tr> <td> <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div> <div class="title1" style="font-weight:bold;">Notary Phone:</div> </td> <td> <div class="title2"><%= link_to "#{mobile_phone}", "javascript:void(0)" %></div> </td> </tr>
+</table>
 
-</ul>
-
-<p>This information was provided by NotaryFly.com</p>
+<div style="float:left; width:100%;">
+  <p style="margin-bottom:6px;">
+    <strong>For “Order Status” updates, visit <a href="http://www.notaryfly.com/">NotaryFly.com</a></strong>
+  </p>
+  <p style="margin-bottom:6px;">
+    <strong>For questions or assistance, please email <a href="mailto:support@notaryfly.com/">support@notaryfly.com</a> or call 888-888-8888.</strong>
+  </p>
+<p><strong>Notaryfly</strong></p>
+</div>

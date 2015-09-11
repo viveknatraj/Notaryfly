@@ -195,7 +195,7 @@ class Notary::OrdersController < ApplicationController
     @order = Order.find(params[:id])
     if params[:order][:return_account_number]
       client = Client.find_by_id(@order.client_id)
-      agent = Agent.find(@order.agent_id).email if !@order.agent_id.blank?
+      agent = Agent.find(@order.agent_id) if !@order.agent_id.blank?
       client_email = User.find(client.user_id).email
       status_log = @order.status_log.to_s + "#Signing Completed: #{Time.now.strftime('%m/%d/%y - %I:%M %p')} - #{@order.notary.first_name} Notary"
       @order.update_attributes(:status_timeline => "Signing Completed", :status_log => status_log)
@@ -338,6 +338,7 @@ class Notary::OrdersController < ApplicationController
 
   def accept_order
     notary = Notary.find_by_user_id(self.current_user.id)
+    notary_email = self.current_user.email
     mul_notaries = MultipleNotary.find_by_notary_id_and_order_id(notary.id, params[:id])
     mul_notaries.update_attributes(:accept_status => "1")
     order=Order.find_by_id(params[:id])
@@ -345,7 +346,13 @@ class Notary::OrdersController < ApplicationController
     status_log = order.status_log.to_s + "#Notary Assigned: #{Time.now.strftime('%m/%d/%y - %I:%M %p')} - #{notary.first_name} Notary"
     order.update_attributes(:status => "filled", :status_timeline=> "Notary Assigned", :notary_id => notary.id, :signing_fee => signing_fee, :customer_fee => signing_fee, :status_log => status_log)
     order.save
-    render :js => "window.location = '#{request.referer}'"
+    Notifier.deliver_notary_assign_order_confirmation(order, notary, notary_email)
+    user = User.find(order.client.user_id)
+    client_email = user.email
+    Notifier.deliver_client_assign_order_confirmation(order, notary, client_email)
+    Notifier.deliver_agent_assign_order_confirmation(order, order.agent.email)
+    #render :js => "window.location.href = '/notary/orders'"
+    redirect_to :action => 'index'
     flash[:notice] = "You have been assigned this Order. Details in Open Orders"
   end
 

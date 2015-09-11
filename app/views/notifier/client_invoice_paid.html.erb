@@ -1,9 +1,22 @@
-<script></script>
+<% @notary = Notary.find(@notary.id) %>
+<% @client = Client.find(@order.client_id) %>
+<% @user = User.find(@notary.user_id) %>
+<%
+   if @notary
+     full_name = [@notary.first_name, @notary.last_name].join(" ")
+     email = @notary.user.email
+     mobile_phone = @notary.mobile_phone
+   else
+     full_name = 'Not Provided'
+     email = 'Not Provided'
+     mobile_phone = 'Not Provided'
+   end
+%>
 <p style="margin-bottom:6px;"><strong>This message was sent from a notification-only email address that does not accept incoming email. Please do not reply to this message.</strong></p>
 
-<p>Dear <%= @agent.broker_name.capitalize %>, </p>
+<p>Dear <%= @client.client_name.capitalize %></p>
 
-<p style="margin-bottom:6px;">A Notary has been <strong>ASSIGNED</strong> for the following document signing:</p>
+<p style="margin-bottom:6px;">The invoice has been <strong>PAID</strong> for the following order:</p>
 
 
 <table width="60%" style="float:left;">
@@ -14,9 +27,12 @@
     <tr><td><div class="title1" style="font-weight:bold;">&nbsp; </div></td><td><div class="title2"> <%=@order.signing_location_city%>,&nbsp;&nbsp;<%=@order.signing_location_state%>&nbsp;&nbsp;<%=@order.signing_location_zip_code%></div></td></tr>
     <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signing Date:</div></td><td><div class="title2"> <%= @order.signing_date.strftime("%B %d, %Y") %></div></td></tr>
     <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signing Time:</div></td><td><div class="title2"> <%= @order.signing_time %></div></td></tr>
+<% total_fee = @order.notary.fee.to_i + @order.notary.other_fee.to_i %>
+  <tr> <td> <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div> <div class="title1" style="font-weight:bold;">Total Fee:</div> </td> <td> <div class="title2"><%= "$#{total_fee}" %></div> </td> </tr>
+  <tr> <td> <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div> <div class="title1" style="font-weight:bold;">Tracking #:</div> </td> <td> <div class="title2"><%= @order.tracking_number %></div> </td> </tr>
 </table>
 
 <div style="float:left; width:100%;">
-<p style="margin-bottom:6px;"><strong>Visit <a href="http://www.notaryfly.com">NotaryFly.com</a> for real time "Order Status" updates</strong></p>
-<p style="margin-bottom:6px;"><strong>Notaryfly</strong></p>
+<p style="margin-bottom:6px;"><strong>We appreciate working with you. If there is anything we can do better, please let us know: <a href="mailto:support@notaryfly.com">support@notaryfly.com</a> or call 1-800-470-7515</strong></p>
+<p style="margin-bottom:6px;">Notaryfly</p>
 </div>

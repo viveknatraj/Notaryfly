@@ -1,21 +1,20 @@
-
-
-
 <p><strong>This message was sent from a notification-only email address that does not accept incoming email. Please do not reply to this message.</strong></p>
-<br/>
-<p>Hi <%= Notary.find_by_id(@order.notary_id).nil? ? "" : Notary.find_by_id(@order.notary_id).first_name %> &nbsp; <%= Notary.find_by_id(@order.notary_id).nil? ? "" : Notary.find_by_id(@order.notary_id).last_name %>, </p>
-<br/>
-<p>We would like to inform that the following Order has been Cancelled!</p>
+<p>Dear <%= Notary.find_by_id(@order.notary_id).nil? ? "" : Notary.find_by_id(@order.notary_id).first_name %> &nbsp; <%= Notary.find_by_id(@order.notary_id).nil? ? "" : Notary.find_by_id(@order.notary_id).last_name %>, </p>
+<p>The following Notaryfly Order has been <strong>CANCELLED</strong></p>
+<table width="60%" style="float:left;">
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Order #:</div></td><td><div class="title2"><%= "NF ##{@order.id} Escrow ##{@order.loan_number}" %></div></td></tr>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signer/Client:</div></td><td><div class="title2"><%= @order.borrower_1_first_name.capitalize %> <%= @order.borrower_1_last_name.capitalize %></div></td></tr>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signing Location:</div></td><td><div class="title2"> <%=@order.signing_location_address%></div></td></tr>
+    <tr><td><div class="title1" style="font-weight:bold;">&nbsp; </div></td><td><div class="title2"> <%=@order.signing_location_city%>,&nbsp;&nbsp;<%=@order.signing_location_state%>&nbsp;&nbsp;<%=@order.signing_location_zip_code%></div></td></tr>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signing Date:</div></td><td><div class="title2"> <%= @order.signing_date.strftime("%B %d, %Y") %></div></td></tr>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signing Time:</div></td><td><div class="title2"> <%= @order.signing_time %></div></td></tr>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signing Type:</div></td><td><div class="title2"> <%=@order.loan_type%></div></td></tr>
+    <% total_fee = @order.notary.fee.to_i + @order.notary.other_fee.to_i %>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Total Notary Fee:</div></td><td><div class="title2">$ <%= number_with_precision(total_fee.to_f,:precision=>2) %></div></td></tr>
+</table>
 
-<ul>
-	<li><strong>Signer/Client:</strong> <%= @order.borrower_1_first_name %> <%= @order.borrower_1_last_name %></li>
-	<li><strong>NF Order #:</strong> <%= @order.id %></li>
-	<li><strong>Escrow/Transaction #:</strong> <%= @order.loan_number %></li>
-	<li><strong>Signing Date:</strong> <%= @order.signing_date.strftime("%B %d, %Y") %></li>
-	<li><strong>Signing Time:</strong> <%= @order.signing_time %></li>
-	<li><strong>Docs Returned Via:</strong> <%= @order.closed_carrier %></li>
-        <li><strong>Tracking #:</strong> <%= @order.closed_tracking_number %></li>
+<p style="margin-bottom:6px;"><strong>If you have any questions, contact <a href="mailto:support@notaryfly.com">support@notaryfly.com</a> or call 1-800-470-7515</strong></p>
 
-</ul>
-
-<p>This information was provided by NotaryFly.com</p>
+<div style="float:left; width:100%;">
+<p><strong>Notaryfly</strong></p>
+</div>

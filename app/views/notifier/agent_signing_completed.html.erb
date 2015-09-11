@@ -1,10 +1,8 @@
-<script></script>
-<p style="margin-bottom:6px;"><strong>This message was sent from a notification-only email address that does not accept incoming email. Please do not reply to this message.</strong></p>
-
-<p>Dear <%= @agent.broker_name.capitalize %>, </p>
-
-<p style="margin-bottom:6px;">A Notary has been <strong>ASSIGNED</strong> for the following document signing:</p>
-
+<p style="margin-bottom:6px;">
+  <strong>This message was sent from a notification-only email address that does not accept incoming email. Please do not reply to this message.</strong>
+</p>
+<p style="margin-bottom:6px;">Dear <%= @agent.broker_name.split.collect{|n|n.capitalize}.join(" "), "javascript:void(0)" %>,</p>
+<p style="margin-bottom:6px;">The signing has been <strong>CORMPLETED</strong> for the following Order:</p>
 
 <table width="60%" style="float:left;">
     <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Escrow Order #:</div></td><td><div class="title2"><%= @order.loan_number %></div></td></tr>

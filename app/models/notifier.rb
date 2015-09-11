@@ -36,10 +36,11 @@ include ActionView::Helpers::NumberHelper
     @order = order
     @agent = agent
 
-    @recipients = agent
+    @recipients = agent.email
     from  "noreply@notaryfly.com"
     #@subject = "NotaryFly Order ##{order.id}:  The TIME/DATE of this Signing has been CONFIRMED"
-    @subject = "NF Order# #{order.id}(#{@order.client.client_name}):  Date/Time CONFIRMED"
+    #@subject = "NF Order# #{order.id}(#{@order.client.client_name}):  Date/Time CONFIRMED"
+    @subject = "NF ##{order.id} (#{order.client.client_name}): APPT CONFIRMED"
     content_type 'text/html'   #    <== note this line
     # Email body substitutions go here
     @body = {:order => order, :agent => agent}
@@ -56,7 +57,7 @@ include ActionView::Helpers::NumberHelper
   end
 
   def mail_to_agent_for_documents_received_notary(order,agent)
-    @recipients = agent
+    @recipients = agent.email
     from  "noreply@notaryfly.com"
     @subject = "NotaryFly Order ##{order.id}:  Documents RECEIVED by Notary"
     content_type 'text/html'   #    <== note this line
@@ -79,10 +80,10 @@ include ActionView::Helpers::NumberHelper
     @order = order
     @agent = agent
 
-    @recipients = agent
+    @recipients = agent.email
     from "noreply@notaryfly.com"
     #@subject = "NotaryFly Order ##{order.id}:  The Signing has been COMPLETED for this Order "
-    @subject = "NF Order# #{order.id}(#{@order.client.client_name}): Signing COMPLETE"
+    @subject = "NF Order# #{order.id}(#{@order.client.client_name}): Signing COMPLETED"
     content_type 'text/html' #    <== note this line
     # Email body substitutions go here
     @body = {:order => order, :agent => agent}
@@ -99,10 +100,10 @@ include ActionView::Helpers::NumberHelper
   end
 
   def mail_to_agent_for_loan_fund(order,agent)
-    order = order
+    @order = order
     @agent = agent
 
-    @recipients = agent
+    @recipients = agent.email
     from  "noreply@notaryfly.com"
     #@subject = "NotaryFly Order ##{order.id}: Your Loan has FUNDED"
     @subject = "NF Order# #{order.id}(#{@order.client.client_name}): Your Loan has FUNDED"
@@ -122,7 +123,7 @@ include ActionView::Helpers::NumberHelper
  end
 
   def mail_to_agent_for_documents_received_title(order,agent)
-    @recipients = agent
+    @recipients = agent.email
     from  "noreply@notaryfly.com"
     @subject = "NotaryFly Order ##{order.id}: Loan Documents RECEIVED by Title/Escrow Dept"
     content_type 'text/html'   #    <== note this line
@@ -179,8 +180,10 @@ def mail_to_notary_for_documents_received_title(order,notary)
 
   def cancel_order_for_client(order,client_email)
     @recipients = client_email
+    @notary = order.notary
     from  "noreply@notaryfly.com"
-    @subject = "You have received a message about a Notary Fly order"
+    #@subject = "You have received a message about a Notary Fly order"
+    @subject = "(#{order.client.client_name})NF ##{order.id} ESC# #{order.loan_number}: Order CANCELLED"
     content_type 'text/html'   #    <== note this line
     # Email body substitutions go here
     @body = {:order => order}
@@ -198,14 +201,14 @@ def mail_to_notary_for_documents_received_title(order,notary)
    def cancel_order_for_notary(order,notary_email)
     @recipients = notary_email
     from  "noreply@notaryfly.com"
-    @subject = "You have received a message about a Notary Fly order"
+    @subject = "NF Order ##{order.id} (#{order.client.client_name}):  Order CANCELLED"
     content_type 'text/html'   #    <== note this line
     # Email body substitutions go here
     @body = {:order => order}
   end
 
-  def cancel_order_for_agent(order,agent)
-    @recipients = agent
+  def cancel_order_for_agent(order,agent_email)
+    @recipients = agent_email
     from  "noreply@notaryfly.com"
     @subject = "You have received a message about a Notary Fly order"
     content_type 'text/html'   #    <== note this line
@@ -216,19 +219,38 @@ def mail_to_notary_for_documents_received_title(order,notary)
   def approve_cancel_with_travel_fee(order,client_email)
   @recipients= client_email
   from  "noreply@notaryfly.com"
-  @subject = "You have received a message about a Notary Fly order"
-    content_type 'text/html'   #    <== note this line
+  #@subject = "You have received a message about a Notary Fly order"
+  @subject = "(#{order.client.client_name})NF ##{order.id} ESC# #{order.loan_number}: Order CANCELLED - Approved with penalty"
+    content_type 'multipart/mixed'   #    <== note this line
     # Email body substitutions go here
     @body = {:order => order}
+    #Create file
+    filename = create_pdf_file(order,order.agent,@notary)
+  
+    part :content_type => "text/html", :body => 
+    render_message('approve_cancel_with_travel_fee', :order => order)
+    
+    attachment :content_type => "application/pdf", :filename=> "NFWorkOrder.pdf",
+        :body => File.read(RAILS_ROOT + "/tmp/invoice-#{order.id}.pdf") 
   end
 
   def approve_cancel_without_travel_fee(order,client_email)
   @recipients= client_email
+  @notary = order.notary
   from  "noreply@notaryfly.com"
-  @subject = "You have received a message about a Notary Fly order"
-    content_type 'text/html'   #    <== note this line
+  #@subject = "You have received a message about a Notary Fly order"
+  @subject = "(#{order.client.client_name})NF ##{order.id} ESC# #{order.loan_number}: Order CANCELLED - Approved"
+    content_type 'multipart/mixed'   #    <== note this line
     # Email body substitutions go here
     @body = {:order => order}
+    #Create file
+    filename = create_pdf_file(order,order.agent,@notary)
+  
+    part :content_type => "text/html", :body => 
+    render_message('approve_cancel_with_travel_fee', :order => order)
+    
+    attachment :content_type => "application/pdf", :filename=> "NFWorkOrder.pdf",
+        :body => File.read(RAILS_ROOT + "/tmp/invoice-#{order.id}.pdf") 
   end
 
   def deny_cancel(order,client_email)
@@ -291,13 +313,34 @@ def mail_to_notary_for_documents_received_title(order,notary)
     end
     # @recipients = "dominic@19villages.com"
     from  "noreply@notaryfly.com"
-    @subject = "Your NotaryFly order has been COMPLETED"
+    @subject = "NF Order# #{order.id}(#{order.client.client_name}):  Order COMPLETED"
     content_type 'text/html'   #    <== note this line
 
     # Email body substitutions go here
     @body = {:order => order}
   end
 
+  def notary_paid(orders, notary_email)
+
+    order = orders.first
+    # Email header info MUST be added here
+    if order.broker_id
+      agent = Agent.find(order.broker_id)
+    end
+    
+    if agent
+      @recipients = notary_email, agent.email
+    else
+      @recipients = notary_email
+    end
+    # @recipients = "dominic@19villages.com"
+    from  "noreply@notaryfly.com"
+    @subject = "Notaryfly - Order(s) PAID"
+    content_type 'text/html'   #    <== note this line
+
+    # Email body substitutions go here
+    @body = {:orders => orders}
+  end
 
   def agent_order_completed(order, client_email)
 
@@ -418,7 +461,7 @@ def mail_to_notary_for_documents_received_title(order,notary)
     filename = create_pdf_file_for_agent(order, agent, notary)
 
     part :content_type => "text/html", :body =>
-        render_message('agent_order_confirmation', :order => order)
+        render_message('client_order_confirmation', :order => order)
 
     attachment :content_type => "application/pdf", :filename => "NFWorkOrder.pdf",
                :body => File.read(RAILS_ROOT + "/tmp/invoice-#{order.id}.pdf")
@@ -779,302 +822,302 @@ def notary_assign_order_confirmation(order, notary, notary_email)
   @notary = notary
   @recipients = notary_email
   from  "noreply@notaryfly.com"
-  @subject = "NotaryFly Order ##{order.id}:  Order ASSIGNED"
+  @subject = "NF Order ##{order.id}(#{order.client.client_name}):  Order ASSIGNED"
   content_type 'multipart/mixed'   #    <== note this line
 
   # Email body substitutions go here
    @body = {:order => order}
 
   #Create file
-  # filename = create_pdf_file_for_notary(order,agent,notary)
+  filename = create_pdf_file_for_notary(order,order.agent,notary)
   #
   part :content_type => "text/html", :body =>
       render_message('notary_assign_order_confirmation', :order => order)
 
-  # attachment :content_type => "application/pdf", :filename=> "NFWorkOrder.pdf",
-  #            :body => File.read(RAILS_ROOT + "/tmp/invoice-#{order.id}.pdf")
-  #
-  # if !order.special_instructions.blank?
-  #   sp_filename = create_pdf_file_for_spinstruction(order)
-  #   attachment :content_type => "application/pdf", :filename=> "special_instructions.pdf",
-  #              :body => File.read(RAILS_ROOT + "/tmp/specialinstructions-#{order.id}.pdf")
-  # end
-  # #Attachment 2#
-  # if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "image/jpeg"
-  #   attachment :content_type => "image/jpeg",:filename=> "#{order.order_attachment_2_file_name}",
-  #              :body => File.read(order.order_attachment_2.path)
-  # end
-  # if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "image/jpg"
-  #   attachment :content_type => "image/jpg",:filename=> "#{order.order_attachment_2_file_name}",
-  #              :body => File.read(order.order_attachment_2.path)
-  # end
-  # if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "image/png"
-  #   attachment :content_type => "image/png",:filename=> "#{order.order_attachment_2_file_name}",
-  #              :body => File.read(order.order_attachment_2.path)
-  # end
-  # if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "image/pjpeg"
-  #   attachment :content_type => "image/pjpeg",:filename=> "#{order.order_attachment_2_file_name}",
-  #              :body => File.read(order.order_attachment_2.path)
-  # end
-  # if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "image/x-png"
-  #   attachment :content_type => "image/x-png",:filename=> "#{order.order_attachment_2_file_name}",
-  #              :body => File.read(order.order_attachment_2.path)
-  # end
-  # if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "application/msword"
-  #   attachment :content_type => "application/msword",:filename=> "#{order.order_attachment_2_file_name}",
-  #              :body => File.read(order.order_attachment_2.path)
-  # end
-  # if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "application/octet-stream"
-  #   attachment :content_type => "application/octet-stream",:filename=> "#{order.order_attachment_2_file_name}",
-  #              :body => File.read(order.order_attachment_2.path)
-  # end
-  # if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-  #   attachment :content_type => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",:filename=> "#{order.order_attachment_1_file_name}",
-  #              :body => File.read(order.order_attachment_2.path)
-  # end
-  # if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "application/pdf"
-  #   attachment :content_type => "application/pdf",:filename=> "#{order.order_attachment_2_file_name}",
-  #              :body => File.read(order.order_attachment_2.path)
-  # end
-  # if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "application/word"
-  #   attachment :content_type => "application/word",:filename=> "#{order.order_attachment_2_file_name}",
-  #              :body => File.read(order.order_attachment_2.path)
-  # end
-  # if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-  #   attachment :content_type => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",:filename=> "#{order.order_attachment_2_file_name}",
-  #              :body => File.read(order.order_attachment_2.path)
-  # end
-  #
-  # if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "application/vnd.oasis.opendocument.text"
-  #   attachment :content_type => "application/vnd.oasis.opendocument.text",:filename=> "#{order.order_attachment_2_file_name}",
-  #              :body => File.read(order.order_attachment_2.path)
-  # end
-  #
-  # if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "application/vnd.ms-powerpoint"
-  #   attachment :content_type => "application/vnd.ms-powerpoint",:filename=> "#{order.order_attachment_2_file_name}",
-  #              :body => File.read(order.order_attachment_2.path)
-  # end
-  # #Attachment 3 #
-  # if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "image/jpeg"
-  #   attachment :content_type => "image/jpeg",:filename=> "#{order.order_attachment_3_file_name}",
-  #              :body => File.read(order.order_attachment_3.path)
-  # end
-  # if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "image/jpg"
-  #   attachment :content_type => "image/jpg",:filename=> "#{order.order_attachment_3_file_name}",
-  #              :body => File.read(order.order_attachment_3.path)
-  # end
-  # if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "image/png"
-  #   attachment :content_type => "image/png",:filename=> "#{order.order_attachment_3_file_name}",
-  #              :body => File.read(order.order_attachment_3.path)
-  # end
-  # if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "image/pjpeg"
-  #   attachment :content_type => "image/pjpeg",:filename=> "#{order.order_attachment_3_file_name}",
-  #              :body => File.read(order.order_attachment_3.path)
-  # end
-  # if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "image/x-png"
-  #   attachment :content_type => "image/x-png",:filename=> "#{order.order_attachment_3_file_name}",
-  #              :body => File.read(order.order_attachment_3.path)
-  # end
-  # if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "application/msword"
-  #   attachment :content_type => "application/msword",:filename=> "#{order.order_attachment_3_file_name}",
-  #              :body => File.read(order.order_attachment_3.path)
-  # end
-  # if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "application/octet-stream"
-  #   attachment :content_type => "application/octet-stream",:filename=> "#{order.order_attachment_3_file_name}",
-  #              :body => File.read(order.order_attachment_3.path)
-  # end
-  # if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-  #   attachment :content_type => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",:filename=> "#{order.order_attachment_3_file_name}",
-  #              :body => File.read(order.order_attachment_3.path)
-  # end
-  # if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "application/pdf"
-  #   attachment :content_type => "application/pdf",:filename=> "#{order.order_attachment_3_file_name}",
-  #              :body => File.read(order.order_attachment_3.path)
-  # end
-  # if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "application/word"
-  #   attachment :content_type => "application/word",:filename=> "#{order.order_attachment_3_file_name}",
-  #              :body => File.read(order.order_attachment_3.path)
-  # end
-  # if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-  #   attachment :content_type => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",:filename=> "#{order.order_attachment_3_file_name}",
-  #              :body => File.read(order.order_attachment_3.path)
-  # end
-  #
-  # if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "application/vnd.oasis.opendocument.text"
-  #   attachment :content_type => "application/vnd.oasis.opendocument.text",:filename=> "#{order.order_attachment_3_file_name}",
-  #              :body => File.read(order.order_attachment_3.path)
-  # end
-  #
-  # if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "application/vnd.ms-powerpoint"
-  #   attachment :content_type => "application/vnd.ms-powerpoint",:filename=> "#{order.order_attachment_3_file_name}",
-  #              :body => File.read(order.order_attachment_3.path)
-  # end
-  # #Attachment 4 #
-  # if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "image/jpeg"
-  #   attachment :content_type => "image/jpeg",:filename=> "#{order.order_attachment_4_file_name}",
-  #              :body => File.read(order.order_attachment_4.path)
-  # end
-  # if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "image/jpg"
-  #   attachment :content_type => "image/jpg",:filename=> "#{order.order_attachment_4_file_name}",
-  #              :body => File.read(order.order_attachment_4.path)
-  # end
-  # if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "image/png"
-  #   attachment :content_type => "image/png",:filename=> "#{order.order_attachment_4_file_name}",
-  #              :body => File.read(order.order_attachment_4.path)
-  # end
-  # if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "image/pjpeg"
-  #   attachment :content_type => "image/pjpeg",:filename=> "#{order.order_attachment_4_file_name}",
-  #              :body => File.read(order.order_attachment_4.path)
-  # end
-  # if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "image/x-png"
-  #   attachment :content_type => "image/x-png",:filename=> "#{order.order_attachment_4_file_name}",
-  #              :body => File.read(order.order_attachment_4.path)
-  # end
-  # if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "application/msword"
-  #   attachment :content_type => "application/msword",:filename=> "#{order.order_attachment_4_file_name}",
-  #              :body => File.read(order.order_attachment_4.path)
-  # end
-  # if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "application/octet-stream"
-  #   attachment :content_type => "application/octet-stream",:filename=> "#{order.order_attachment_4_file_name}",
-  #              :body => File.read(order.order_attachment_4.path)
-  # end
-  # if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-  #   attachment :content_type => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",:filename=> "#{order.order_attachment_4_file_name}",
-  #              :body => File.read(order.order_attachment_4.path)
-  # end
-  # if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "application/pdf"
-  #   attachment :content_type => "application/pdf",:filename=> "#{order.order_attachment_4_file_name}",
-  #              :body => File.read(order.order_attachment_4.path)
-  # end
-  # if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "application/word"
-  #   attachment :content_type => "application/word",:filename=> "#{order.order_attachment_4_file_name}",
-  #              :body => File.read(order.order_attachment_4.path)
-  # end
-  # if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-  #   attachment :content_type => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",:filename=> "#{order.order_attachment_4_file_name}",
-  #              :body => File.read(order.order_attachment_4.path)
-  # end
-  #
-  # if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "application/vnd.oasis.opendocument.text"
-  #   attachment :content_type => "application/vnd.oasis.opendocument.text",:filename=> "#{order.order_attachment_4_file_name}",
-  #              :body => File.read(order.order_attachment_4.path)
-  # end
-  #
-  # if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "application/vnd.ms-powerpoint"
-  #   attachment :content_type => "application/vnd.ms-powerpoint",:filename=> "#{order.order_attachment_4_file_name}",
-  #              :body => File.read(order.order_attachment_4.path)
-  # end
-  #
-  # #Attachment 5 #
-  # if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "image/jpeg"
-  #   attachment :content_type => "image/jpeg",:filename=> "#{order.order_attachment_5_file_name}",
-  #              :body => File.read(order.order_attachment_5.path)
-  # end
-  # if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "image/jpg"
-  #   attachment :content_type => "image/jpg",:filename=> "#{order.order_attachment_5_file_name}",
-  #              :body => File.read(order.order_attachment_5.path)
-  # end
-  # if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "image/png"
-  #   attachment :content_type => "image/png",:filename=> "#{order.order_attachment_5_file_name}",
-  #              :body => File.read(order.order_attachment_5.path)
-  # end
-  # if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "image/pjpeg"
-  #   attachment :content_type => "image/pjpeg",:filename=> "#{order.order_attachment_5_file_name}",
-  #              :body => File.read(order.order_attachment_5.path)
-  # end
-  # if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "image/x-png"
-  #   attachment :content_type => "image/x-png",:filename=> "#{order.order_attachment_5_file_name}",
-  #              :body => File.read(order.order_attachment_5.path)
-  # end
-  # if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "application/msword"
-  #   attachment :content_type => "application/msword",:filename=> "#{order.order_attachment_5_file_name}",
-  #              :body => File.read(order.order_attachment_5.path)
-  # end
-  # if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "application/octet-stream"
-  #   attachment :content_type => "application/octet-stream",:filename=> "#{order.order_attachment_5_file_name}",
-  #              :body => File.read(order.order_attachment_5.path)
-  # end
-  # if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-  #   attachment :content_type => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",:filename=> "#{order.order_attachment_5_file_name}",
-  #              :body => File.read(order.order_attachment_5.path)
-  # end
-  # if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "application/pdf"
-  #   attachment :content_type => "application/pdf",:filename=> "#{order.order_attachment_5_file_name}",
-  #              :body => File.read(order.order_attachment_5.path)
-  # end
-  # if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "application/word"
-  #   attachment :content_type => "application/word",:filename=> "#{order.order_attachment_5_file_name}",
-  #              :body => File.read(order.order_attachment_5.path)
-  # end
-  # if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-  #   attachment :content_type => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",:filename=> "#{order.order_attachment_5_file_name}",
-  #              :body => File.read(order.order_attachment_5.path)
-  # end
-  # if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "application/vnd.oasis.opendocument.text"
-  #   attachment :content_type => "application/vnd.oasis.opendocument.text",:filename=> "#{order.order_attachment_5_file_name}",
-  #              :body => File.read(order.order_attachment_5.path)
-  # end
-  #
-  # if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "application/vnd.ms-powerpoint"
-  #   attachment :content_type => "application/vnd.ms-powerpoint",:filename=> "#{order.order_attachment_5_file_name}",
-  #              :body => File.read(order.order_attachment_5.path)
-  # end
-  #
-  # #Attachment 6 #
-  # if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "image/jpeg"
-  #   attachment :content_type => "image/jpeg",:filename=> "#{order.order_attachment_6_file_name}",
-  #              :body => File.read(order.order_attachment_6.path)
-  # end
-  # if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "image/jpg"
-  #   attachment :content_type => "image/jpg",:filename=> "#{order.order_attachment_6_file_name}",
-  #              :body => File.read(order.order_attachment_6.path)
-  # end
-  # if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "image/png"
-  #   attachment :content_type => "image/png",:filename=> "#{order.order_attachment_6_file_name}",
-  #              :body => File.read(order.order_attachment_6.path)
-  # end
-  # if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "image/pjpeg"
-  #   attachment :content_type => "image/pjpeg",:filename=> "#{order.order_attachment_6_file_name}",
-  #              :body => File.read(order.order_attachment_6.path)
-  # end
-  # if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "image/x-png"
-  #   attachment :content_type => "image/x-png",:filename=> "#{order.order_attachment_6_file_name}",
-  #              :body => File.read(order.order_attachment_6.path)
-  # end
-  # if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "application/msword"
-  #   attachment :content_type => "application/msword",:filename=> "#{order.order_attachment_6_file_name}",
-  #              :body => File.read(order.order_attachment_6.path)
-  # end
-  # if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "application/octet-stream"
-  #   attachment :content_type => "application/octet-stream",:filename=> "#{order.order_attachment_6_file_name}",
-  #              :body => File.read(order.order_attachment_6.path)
-  # end
-  # if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-  #   attachment :content_type => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",:filename=> "#{order.order_attachment_6_file_name}",
-  #              :body => File.read(order.order_attachment_6.path)
-  # end
-  # if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "application/pdf"
-  #   attachment :content_type => "application/pdf",:filename=> "#{order.order_attachment_6_file_name}",
-  #              :body => File.read(order.order_attachment_6.path)
-  # end
-  # if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "application/word"
-  #   attachment :content_type => "application/word",:filename=> "#{order.order_attachment_6_file_name}",
-  #              :body => File.read(order.order_attachment_6.path)
-  # end
-  # if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-  #   attachment :content_type => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",:filename=> "#{order.order_attachment_6_file_name}",
-  #              :body => File.read(order.order_attachment_6.path)
-  # end
-  #
-  # if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "application/vnd.oasis.opendocument.text"
-  #   attachment :content_type => "application/vnd.oasis.opendocument.text",:filename=> "#{order.order_attachment_6_file_name}",
-  #              :body => File.read(order.order_attachment_6.path)
-  # end
-  #
-  # if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "application/vnd.ms-powerpoint"
-  #   attachment :content_type => "application/vnd.ms-powerpoint",:filename=> "#{order.order_attachment_6_file_name}",
-  #              :body => File.read(order.order_attachment_6.path)
-  # end
+  attachment :content_type => "application/pdf", :filename=> "NFWorkOrder.pdf",
+             :body => File.read(RAILS_ROOT + "/tmp/invoice-#{order.id}.pdf")
+  
+  if !order.special_instructions.blank?
+    sp_filename = create_pdf_file_for_spinstruction(order)
+    attachment :content_type => "application/pdf", :filename=> "special_instructions.pdf",
+               :body => File.read(RAILS_ROOT + "/tmp/specialinstructions-#{order.id}.pdf")
+  end
+  #Attachment 2#
+  if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "image/jpeg"
+    attachment :content_type => "image/jpeg",:filename=> "#{order.order_attachment_2_file_name}",
+               :body => File.read(order.order_attachment_2.path)
+  end
+  if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "image/jpg"
+    attachment :content_type => "image/jpg",:filename=> "#{order.order_attachment_2_file_name}",
+               :body => File.read(order.order_attachment_2.path)
+  end
+  if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "image/png"
+    attachment :content_type => "image/png",:filename=> "#{order.order_attachment_2_file_name}",
+               :body => File.read(order.order_attachment_2.path)
+  end
+  if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "image/pjpeg"
+    attachment :content_type => "image/pjpeg",:filename=> "#{order.order_attachment_2_file_name}",
+               :body => File.read(order.order_attachment_2.path)
+  end
+  if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "image/x-png"
+    attachment :content_type => "image/x-png",:filename=> "#{order.order_attachment_2_file_name}",
+               :body => File.read(order.order_attachment_2.path)
+  end
+  if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "application/msword"
+    attachment :content_type => "application/msword",:filename=> "#{order.order_attachment_2_file_name}",
+               :body => File.read(order.order_attachment_2.path)
+  end
+  if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "application/octet-stream"
+    attachment :content_type => "application/octet-stream",:filename=> "#{order.order_attachment_2_file_name}",
+               :body => File.read(order.order_attachment_2.path)
+  end
+  if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    attachment :content_type => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",:filename=> "#{order.order_attachment_1_file_name}",
+               :body => File.read(order.order_attachment_2.path)
+  end
+  if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "application/pdf"
+    attachment :content_type => "application/pdf",:filename=> "#{order.order_attachment_2_file_name}",
+               :body => File.read(order.order_attachment_2.path)
+  end
+  if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "application/word"
+    attachment :content_type => "application/word",:filename=> "#{order.order_attachment_2_file_name}",
+               :body => File.read(order.order_attachment_2.path)
+  end
+  if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    attachment :content_type => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",:filename=> "#{order.order_attachment_2_file_name}",
+               :body => File.read(order.order_attachment_2.path)
+  end
+  
+  if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "application/vnd.oasis.opendocument.text"
+    attachment :content_type => "application/vnd.oasis.opendocument.text",:filename=> "#{order.order_attachment_2_file_name}",
+               :body => File.read(order.order_attachment_2.path)
+  end
+  
+  if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "application/vnd.ms-powerpoint"
+    attachment :content_type => "application/vnd.ms-powerpoint",:filename=> "#{order.order_attachment_2_file_name}",
+               :body => File.read(order.order_attachment_2.path)
+  end
+  #Attachment 3 #
+  if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "image/jpeg"
+    attachment :content_type => "image/jpeg",:filename=> "#{order.order_attachment_3_file_name}",
+               :body => File.read(order.order_attachment_3.path)
+  end
+  if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "image/jpg"
+    attachment :content_type => "image/jpg",:filename=> "#{order.order_attachment_3_file_name}",
+               :body => File.read(order.order_attachment_3.path)
+  end
+  if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "image/png"
+    attachment :content_type => "image/png",:filename=> "#{order.order_attachment_3_file_name}",
+               :body => File.read(order.order_attachment_3.path)
+  end
+  if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "image/pjpeg"
+    attachment :content_type => "image/pjpeg",:filename=> "#{order.order_attachment_3_file_name}",
+               :body => File.read(order.order_attachment_3.path)
+  end
+  if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "image/x-png"
+    attachment :content_type => "image/x-png",:filename=> "#{order.order_attachment_3_file_name}",
+               :body => File.read(order.order_attachment_3.path)
+  end
+  if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "application/msword"
+    attachment :content_type => "application/msword",:filename=> "#{order.order_attachment_3_file_name}",
+               :body => File.read(order.order_attachment_3.path)
+  end
+  if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "application/octet-stream"
+    attachment :content_type => "application/octet-stream",:filename=> "#{order.order_attachment_3_file_name}",
+               :body => File.read(order.order_attachment_3.path)
+  end
+  if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    attachment :content_type => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",:filename=> "#{order.order_attachment_3_file_name}",
+               :body => File.read(order.order_attachment_3.path)
+  end
+  if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "application/pdf"
+    attachment :content_type => "application/pdf",:filename=> "#{order.order_attachment_3_file_name}",
+               :body => File.read(order.order_attachment_3.path)
+  end
+  if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "application/word"
+    attachment :content_type => "application/word",:filename=> "#{order.order_attachment_3_file_name}",
+               :body => File.read(order.order_attachment_3.path)
+  end
+  if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    attachment :content_type => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",:filename=> "#{order.order_attachment_3_file_name}",
+               :body => File.read(order.order_attachment_3.path)
+  end
+  
+  if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "application/vnd.oasis.opendocument.text"
+    attachment :content_type => "application/vnd.oasis.opendocument.text",:filename=> "#{order.order_attachment_3_file_name}",
+               :body => File.read(order.order_attachment_3.path)
+  end
+  
+  if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "application/vnd.ms-powerpoint"
+    attachment :content_type => "application/vnd.ms-powerpoint",:filename=> "#{order.order_attachment_3_file_name}",
+               :body => File.read(order.order_attachment_3.path)
+  end
+  #Attachment 4 #
+  if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "image/jpeg"
+    attachment :content_type => "image/jpeg",:filename=> "#{order.order_attachment_4_file_name}",
+               :body => File.read(order.order_attachment_4.path)
+  end
+  if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "image/jpg"
+    attachment :content_type => "image/jpg",:filename=> "#{order.order_attachment_4_file_name}",
+               :body => File.read(order.order_attachment_4.path)
+  end
+  if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "image/png"
+    attachment :content_type => "image/png",:filename=> "#{order.order_attachment_4_file_name}",
+               :body => File.read(order.order_attachment_4.path)
+  end
+  if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "image/pjpeg"
+    attachment :content_type => "image/pjpeg",:filename=> "#{order.order_attachment_4_file_name}",
+               :body => File.read(order.order_attachment_4.path)
+  end
+  if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "image/x-png"
+    attachment :content_type => "image/x-png",:filename=> "#{order.order_attachment_4_file_name}",
+               :body => File.read(order.order_attachment_4.path)
+  end
+  if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "application/msword"
+    attachment :content_type => "application/msword",:filename=> "#{order.order_attachment_4_file_name}",
+               :body => File.read(order.order_attachment_4.path)
+  end
+  if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "application/octet-stream"
+    attachment :content_type => "application/octet-stream",:filename=> "#{order.order_attachment_4_file_name}",
+               :body => File.read(order.order_attachment_4.path)
+  end
+  if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    attachment :content_type => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",:filename=> "#{order.order_attachment_4_file_name}",
+               :body => File.read(order.order_attachment_4.path)
+  end
+  if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "application/pdf"
+    attachment :content_type => "application/pdf",:filename=> "#{order.order_attachment_4_file_name}",
+               :body => File.read(order.order_attachment_4.path)
+  end
+  if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "application/word"
+    attachment :content_type => "application/word",:filename=> "#{order.order_attachment_4_file_name}",
+               :body => File.read(order.order_attachment_4.path)
+  end
+  if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    attachment :content_type => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",:filename=> "#{order.order_attachment_4_file_name}",
+               :body => File.read(order.order_attachment_4.path)
+  end
+  
+  if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "application/vnd.oasis.opendocument.text"
+    attachment :content_type => "application/vnd.oasis.opendocument.text",:filename=> "#{order.order_attachment_4_file_name}",
+               :body => File.read(order.order_attachment_4.path)
+  end
+  
+  if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "application/vnd.ms-powerpoint"
+    attachment :content_type => "application/vnd.ms-powerpoint",:filename=> "#{order.order_attachment_4_file_name}",
+               :body => File.read(order.order_attachment_4.path)
+  end
+  
+  #Attachment 5 #
+  if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "image/jpeg"
+    attachment :content_type => "image/jpeg",:filename=> "#{order.order_attachment_5_file_name}",
+               :body => File.read(order.order_attachment_5.path)
+  end
+  if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "image/jpg"
+    attachment :content_type => "image/jpg",:filename=> "#{order.order_attachment_5_file_name}",
+               :body => File.read(order.order_attachment_5.path)
+  end
+  if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "image/png"
+    attachment :content_type => "image/png",:filename=> "#{order.order_attachment_5_file_name}",
+               :body => File.read(order.order_attachment_5.path)
+  end
+  if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "image/pjpeg"
+    attachment :content_type => "image/pjpeg",:filename=> "#{order.order_attachment_5_file_name}",
+               :body => File.read(order.order_attachment_5.path)
+  end
+  if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "image/x-png"
+    attachment :content_type => "image/x-png",:filename=> "#{order.order_attachment_5_file_name}",
+               :body => File.read(order.order_attachment_5.path)
+  end
+  if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "application/msword"
+    attachment :content_type => "application/msword",:filename=> "#{order.order_attachment_5_file_name}",
+               :body => File.read(order.order_attachment_5.path)
+  end
+  if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "application/octet-stream"
+    attachment :content_type => "application/octet-stream",:filename=> "#{order.order_attachment_5_file_name}",
+               :body => File.read(order.order_attachment_5.path)
+  end
+  if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    attachment :content_type => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",:filename=> "#{order.order_attachment_5_file_name}",
+               :body => File.read(order.order_attachment_5.path)
+  end
+  if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "application/pdf"
+    attachment :content_type => "application/pdf",:filename=> "#{order.order_attachment_5_file_name}",
+               :body => File.read(order.order_attachment_5.path)
+  end
+  if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "application/word"
+    attachment :content_type => "application/word",:filename=> "#{order.order_attachment_5_file_name}",
+               :body => File.read(order.order_attachment_5.path)
+  end
+  if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    attachment :content_type => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",:filename=> "#{order.order_attachment_5_file_name}",
+               :body => File.read(order.order_attachment_5.path)
+  end
+  if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "application/vnd.oasis.opendocument.text"
+    attachment :content_type => "application/vnd.oasis.opendocument.text",:filename=> "#{order.order_attachment_5_file_name}",
+               :body => File.read(order.order_attachment_5.path)
+  end
+  
+  if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "application/vnd.ms-powerpoint"
+    attachment :content_type => "application/vnd.ms-powerpoint",:filename=> "#{order.order_attachment_5_file_name}",
+               :body => File.read(order.order_attachment_5.path)
+  end
+  
+  #Attachment 6 #
+  if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "image/jpeg"
+    attachment :content_type => "image/jpeg",:filename=> "#{order.order_attachment_6_file_name}",
+               :body => File.read(order.order_attachment_6.path)
+  end
+  if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "image/jpg"
+    attachment :content_type => "image/jpg",:filename=> "#{order.order_attachment_6_file_name}",
+               :body => File.read(order.order_attachment_6.path)
+  end
+  if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "image/png"
+    attachment :content_type => "image/png",:filename=> "#{order.order_attachment_6_file_name}",
+               :body => File.read(order.order_attachment_6.path)
+  end
+  if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "image/pjpeg"
+    attachment :content_type => "image/pjpeg",:filename=> "#{order.order_attachment_6_file_name}",
+               :body => File.read(order.order_attachment_6.path)
+  end
+  if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "image/x-png"
+    attachment :content_type => "image/x-png",:filename=> "#{order.order_attachment_6_file_name}",
+               :body => File.read(order.order_attachment_6.path)
+  end
+  if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "application/msword"
+    attachment :content_type => "application/msword",:filename=> "#{order.order_attachment_6_file_name}",
+               :body => File.read(order.order_attachment_6.path)
+  end
+  if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "application/octet-stream"
+    attachment :content_type => "application/octet-stream",:filename=> "#{order.order_attachment_6_file_name}",
+               :body => File.read(order.order_attachment_6.path)
+  end
+  if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    attachment :content_type => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",:filename=> "#{order.order_attachment_6_file_name}",
+               :body => File.read(order.order_attachment_6.path)
+  end
+  if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "application/pdf"
+    attachment :content_type => "application/pdf",:filename=> "#{order.order_attachment_6_file_name}",
+               :body => File.read(order.order_attachment_6.path)
+  end
+  if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "application/word"
+    attachment :content_type => "application/word",:filename=> "#{order.order_attachment_6_file_name}",
+               :body => File.read(order.order_attachment_6.path)
+  end
+  if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    attachment :content_type => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",:filename=> "#{order.order_attachment_6_file_name}",
+               :body => File.read(order.order_attachment_6.path)
+  end
+  
+  if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "application/vnd.oasis.opendocument.text"
+    attachment :content_type => "application/vnd.oasis.opendocument.text",:filename=> "#{order.order_attachment_6_file_name}",
+               :body => File.read(order.order_attachment_6.path)
+  end
+  
+  if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "application/vnd.ms-powerpoint"
+    attachment :content_type => "application/vnd.ms-powerpoint",:filename=> "#{order.order_attachment_6_file_name}",
+               :body => File.read(order.order_attachment_6.path)
+  end
 
 end
 
@@ -2708,4 +2751,419 @@ pdf.text "If so forward contact info to: referafriend@notaryfly.com", :at => [0,
     @body = {:name=> client_name,:username=> email,:pass=> password}
   end
 
+  def client_order_placed(order, client_email)
+
+    # Email header info MUST be added here
+    @recipients = client_email
+    # @recipients = "dominic@19villages.com"
+    from  "noreply@notaryfly.com"
+    @subject = "(#{order.client.client_name}) NF ##{order.id} - ESC ##{order.loan_number}: PLACED"
+    content_type 'text/html'   #    <== note this line
+
+    # Email body substitutions go here
+    @body = {:order => order}
+  end
+
+  def client_invoice_paid(order, client_email)
+
+    @notary = order.notary
+    # Email header info MUST be added here
+    @recipients = client_email
+    # @recipients = "dominic@19villages.com"
+    from  "noreply@notaryfly.com"
+    @subject = "(#{order.client.client_name}) NF ##{order.id} - ESC ##{order.loan_number}: Invoice PAID"
+    content_type 'text/html'   #    <== note this line
+
+    # Email body substitutions go here
+    @body = {:order => order}
+  end
+  def client_order_completed_by_admin(order, client_email)
+
+    # Email header info MUST be added here
+    @recipients = client_email
+    # @recipients = "dominic@19villages.com"
+    from  "noreply@notaryfly.com"
+    @subject = "(#{order.client.client_name}) NF ##{order.id} - ESC ##{order.loan_number}: COMPLETED"
+    content_type 'text/html'   #    <== note this line
+
+    # Email body substitutions go here
+    @body = {:order => order}
+  end
+  def client_assign_order_confirmation(order, notary, client_email)
+  
+    @notary = notary
+    @recipients = client_email
+    from  "noreply@notaryfly.com"
+    @subject = "(#{order.client.client_name}) NF ##{order.id} - ESC ##{order.loan_number}:  Notary ASSIGNED"
+    content_type 'multipart/mixed'   #    <== note this line
+  
+    # Email body substitutions go here
+     @body = {:order => order}
+  
+    #Create file
+    filename = create_pdf_file_for_notary(order,order.agent,notary)
+    
+    part :content_type => "text/html", :body =>
+        render_message('client_assign_order_confirmation', :order => order)
+  attachment :content_type => "application/pdf", :filename=> "NFWorkOrder.pdf",
+             :body => File.read(RAILS_ROOT + "/tmp/invoice-#{order.id}.pdf")
+  
+  if !order.special_instructions.blank?
+    sp_filename = create_pdf_file_for_spinstruction(order)
+    attachment :content_type => "application/pdf", :filename=> "special_instructions.pdf",
+               :body => File.read(RAILS_ROOT + "/tmp/specialinstructions-#{order.id}.pdf")
+  end
+  #Attachment 2#
+  if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "image/jpeg"
+    attachment :content_type => "image/jpeg",:filename=> "#{order.order_attachment_2_file_name}",
+               :body => File.read(order.order_attachment_2.path)
+  end
+  if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "image/jpg"
+    attachment :content_type => "image/jpg",:filename=> "#{order.order_attachment_2_file_name}",
+               :body => File.read(order.order_attachment_2.path)
+  end
+  if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "image/png"
+    attachment :content_type => "image/png",:filename=> "#{order.order_attachment_2_file_name}",
+               :body => File.read(order.order_attachment_2.path)
+  end
+  if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "image/pjpeg"
+    attachment :content_type => "image/pjpeg",:filename=> "#{order.order_attachment_2_file_name}",
+               :body => File.read(order.order_attachment_2.path)
+  end
+  if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "image/x-png"
+    attachment :content_type => "image/x-png",:filename=> "#{order.order_attachment_2_file_name}",
+               :body => File.read(order.order_attachment_2.path)
+  end
+  if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "application/msword"
+    attachment :content_type => "application/msword",:filename=> "#{order.order_attachment_2_file_name}",
+               :body => File.read(order.order_attachment_2.path)
+  end
+  if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "application/octet-stream"
+    attachment :content_type => "application/octet-stream",:filename=> "#{order.order_attachment_2_file_name}",
+               :body => File.read(order.order_attachment_2.path)
+  end
+  if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    attachment :content_type => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",:filename=> "#{order.order_attachment_1_file_name}",
+               :body => File.read(order.order_attachment_2.path)
+  end
+  if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "application/pdf"
+    attachment :content_type => "application/pdf",:filename=> "#{order.order_attachment_2_file_name}",
+               :body => File.read(order.order_attachment_2.path)
+  end
+  if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "application/word"
+    attachment :content_type => "application/word",:filename=> "#{order.order_attachment_2_file_name}",
+               :body => File.read(order.order_attachment_2.path)
+  end
+  if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    attachment :content_type => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",:filename=> "#{order.order_attachment_2_file_name}",
+               :body => File.read(order.order_attachment_2.path)
+  end
+  
+  if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "application/vnd.oasis.opendocument.text"
+    attachment :content_type => "application/vnd.oasis.opendocument.text",:filename=> "#{order.order_attachment_2_file_name}",
+               :body => File.read(order.order_attachment_2.path)
+  end
+  
+  if !order.order_attachment_2_file_name.nil? && order.order_attachment_2_content_type == "application/vnd.ms-powerpoint"
+    attachment :content_type => "application/vnd.ms-powerpoint",:filename=> "#{order.order_attachment_2_file_name}",
+               :body => File.read(order.order_attachment_2.path)
+  end
+  #Attachment 3 #
+  if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "image/jpeg"
+    attachment :content_type => "image/jpeg",:filename=> "#{order.order_attachment_3_file_name}",
+               :body => File.read(order.order_attachment_3.path)
+  end
+  if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "image/jpg"
+    attachment :content_type => "image/jpg",:filename=> "#{order.order_attachment_3_file_name}",
+               :body => File.read(order.order_attachment_3.path)
+  end
+  if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "image/png"
+    attachment :content_type => "image/png",:filename=> "#{order.order_attachment_3_file_name}",
+               :body => File.read(order.order_attachment_3.path)
+  end
+  if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "image/pjpeg"
+    attachment :content_type => "image/pjpeg",:filename=> "#{order.order_attachment_3_file_name}",
+               :body => File.read(order.order_attachment_3.path)
+  end
+  if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "image/x-png"
+    attachment :content_type => "image/x-png",:filename=> "#{order.order_attachment_3_file_name}",
+               :body => File.read(order.order_attachment_3.path)
+  end
+  if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "application/msword"
+    attachment :content_type => "application/msword",:filename=> "#{order.order_attachment_3_file_name}",
+               :body => File.read(order.order_attachment_3.path)
+  end
+  if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "application/octet-stream"
+    attachment :content_type => "application/octet-stream",:filename=> "#{order.order_attachment_3_file_name}",
+               :body => File.read(order.order_attachment_3.path)
+  end
+  if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    attachment :content_type => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",:filename=> "#{order.order_attachment_3_file_name}",
+               :body => File.read(order.order_attachment_3.path)
+  end
+  if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "application/pdf"
+    attachment :content_type => "application/pdf",:filename=> "#{order.order_attachment_3_file_name}",
+               :body => File.read(order.order_attachment_3.path)
+  end
+  if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "application/word"
+    attachment :content_type => "application/word",:filename=> "#{order.order_attachment_3_file_name}",
+               :body => File.read(order.order_attachment_3.path)
+  end
+  if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    attachment :content_type => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",:filename=> "#{order.order_attachment_3_file_name}",
+               :body => File.read(order.order_attachment_3.path)
+  end
+  
+  if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "application/vnd.oasis.opendocument.text"
+    attachment :content_type => "application/vnd.oasis.opendocument.text",:filename=> "#{order.order_attachment_3_file_name}",
+               :body => File.read(order.order_attachment_3.path)
+  end
+  
+  if !order.order_attachment_3_file_name.nil? && order.order_attachment_3_content_type == "application/vnd.ms-powerpoint"
+    attachment :content_type => "application/vnd.ms-powerpoint",:filename=> "#{order.order_attachment_3_file_name}",
+               :body => File.read(order.order_attachment_3.path)
+  end
+  #Attachment 4 #
+  if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "image/jpeg"
+    attachment :content_type => "image/jpeg",:filename=> "#{order.order_attachment_4_file_name}",
+               :body => File.read(order.order_attachment_4.path)
+  end
+  if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "image/jpg"
+    attachment :content_type => "image/jpg",:filename=> "#{order.order_attachment_4_file_name}",
+               :body => File.read(order.order_attachment_4.path)
+  end
+  if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "image/png"
+    attachment :content_type => "image/png",:filename=> "#{order.order_attachment_4_file_name}",
+               :body => File.read(order.order_attachment_4.path)
+  end
+  if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "image/pjpeg"
+    attachment :content_type => "image/pjpeg",:filename=> "#{order.order_attachment_4_file_name}",
+               :body => File.read(order.order_attachment_4.path)
+  end
+  if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "image/x-png"
+    attachment :content_type => "image/x-png",:filename=> "#{order.order_attachment_4_file_name}",
+               :body => File.read(order.order_attachment_4.path)
+  end
+  if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "application/msword"
+    attachment :content_type => "application/msword",:filename=> "#{order.order_attachment_4_file_name}",
+               :body => File.read(order.order_attachment_4.path)
+  end
+  if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "application/octet-stream"
+    attachment :content_type => "application/octet-stream",:filename=> "#{order.order_attachment_4_file_name}",
+               :body => File.read(order.order_attachment_4.path)
+  end
+  if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    attachment :content_type => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",:filename=> "#{order.order_attachment_4_file_name}",
+               :body => File.read(order.order_attachment_4.path)
+  end
+  if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "application/pdf"
+    attachment :content_type => "application/pdf",:filename=> "#{order.order_attachment_4_file_name}",
+               :body => File.read(order.order_attachment_4.path)
+  end
+  if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "application/word"
+    attachment :content_type => "application/word",:filename=> "#{order.order_attachment_4_file_name}",
+               :body => File.read(order.order_attachment_4.path)
+  end
+  if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    attachment :content_type => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",:filename=> "#{order.order_attachment_4_file_name}",
+               :body => File.read(order.order_attachment_4.path)
+  end
+  
+  if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "application/vnd.oasis.opendocument.text"
+    attachment :content_type => "application/vnd.oasis.opendocument.text",:filename=> "#{order.order_attachment_4_file_name}",
+               :body => File.read(order.order_attachment_4.path)
+  end
+  
+  if !order.order_attachment_4_file_name.nil? && order.order_attachment_4_content_type == "application/vnd.ms-powerpoint"
+    attachment :content_type => "application/vnd.ms-powerpoint",:filename=> "#{order.order_attachment_4_file_name}",
+               :body => File.read(order.order_attachment_4.path)
+  end
+  
+  #Attachment 5 #
+  if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "image/jpeg"
+    attachment :content_type => "image/jpeg",:filename=> "#{order.order_attachment_5_file_name}",
+               :body => File.read(order.order_attachment_5.path)
+  end
+  if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "image/jpg"
+    attachment :content_type => "image/jpg",:filename=> "#{order.order_attachment_5_file_name}",
+               :body => File.read(order.order_attachment_5.path)
+  end
+  if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "image/png"
+    attachment :content_type => "image/png",:filename=> "#{order.order_attachment_5_file_name}",
+               :body => File.read(order.order_attachment_5.path)
+  end
+  if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "image/pjpeg"
+    attachment :content_type => "image/pjpeg",:filename=> "#{order.order_attachment_5_file_name}",
+               :body => File.read(order.order_attachment_5.path)
+  end
+  if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "image/x-png"
+    attachment :content_type => "image/x-png",:filename=> "#{order.order_attachment_5_file_name}",
+               :body => File.read(order.order_attachment_5.path)
+  end
+  if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "application/msword"
+    attachment :content_type => "application/msword",:filename=> "#{order.order_attachment_5_file_name}",
+               :body => File.read(order.order_attachment_5.path)
+  end
+  if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "application/octet-stream"
+    attachment :content_type => "application/octet-stream",:filename=> "#{order.order_attachment_5_file_name}",
+               :body => File.read(order.order_attachment_5.path)
+  end
+  if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    attachment :content_type => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",:filename=> "#{order.order_attachment_5_file_name}",
+               :body => File.read(order.order_attachment_5.path)
+  end
+  if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "application/pdf"
+    attachment :content_type => "application/pdf",:filename=> "#{order.order_attachment_5_file_name}",
+               :body => File.read(order.order_attachment_5.path)
+  end
+  if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "application/word"
+    attachment :content_type => "application/word",:filename=> "#{order.order_attachment_5_file_name}",
+               :body => File.read(order.order_attachment_5.path)
+  end
+  if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    attachment :content_type => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",:filename=> "#{order.order_attachment_5_file_name}",
+               :body => File.read(order.order_attachment_5.path)
+  end
+  if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "application/vnd.oasis.opendocument.text"
+    attachment :content_type => "application/vnd.oasis.opendocument.text",:filename=> "#{order.order_attachment_5_file_name}",
+               :body => File.read(order.order_attachment_5.path)
+  end
+  
+  if !order.order_attachment_5_file_name.nil? && order.order_attachment_5_content_type == "application/vnd.ms-powerpoint"
+    attachment :content_type => "application/vnd.ms-powerpoint",:filename=> "#{order.order_attachment_5_file_name}",
+               :body => File.read(order.order_attachment_5.path)
+  end
+  
+  #Attachment 6 #
+  if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "image/jpeg"
+    attachment :content_type => "image/jpeg",:filename=> "#{order.order_attachment_6_file_name}",
+               :body => File.read(order.order_attachment_6.path)
+  end
+  if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "image/jpg"
+    attachment :content_type => "image/jpg",:filename=> "#{order.order_attachment_6_file_name}",
+               :body => File.read(order.order_attachment_6.path)
+  end
+  if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "image/png"
+    attachment :content_type => "image/png",:filename=> "#{order.order_attachment_6_file_name}",
+               :body => File.read(order.order_attachment_6.path)
+  end
+  if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "image/pjpeg"
+    attachment :content_type => "image/pjpeg",:filename=> "#{order.order_attachment_6_file_name}",
+               :body => File.read(order.order_attachment_6.path)
+  end
+  if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "image/x-png"
+    attachment :content_type => "image/x-png",:filename=> "#{order.order_attachment_6_file_name}",
+               :body => File.read(order.order_attachment_6.path)
+  end
+  if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "application/msword"
+    attachment :content_type => "application/msword",:filename=> "#{order.order_attachment_6_file_name}",
+               :body => File.read(order.order_attachment_6.path)
+  end
+  if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "application/octet-stream"
+    attachment :content_type => "application/octet-stream",:filename=> "#{order.order_attachment_6_file_name}",
+               :body => File.read(order.order_attachment_6.path)
+  end
+  if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    attachment :content_type => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",:filename=> "#{order.order_attachment_6_file_name}",
+               :body => File.read(order.order_attachment_6.path)
+  end
+  if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "application/pdf"
+    attachment :content_type => "application/pdf",:filename=> "#{order.order_attachment_6_file_name}",
+               :body => File.read(order.order_attachment_6.path)
+  end
+  if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "application/word"
+    attachment :content_type => "application/word",:filename=> "#{order.order_attachment_6_file_name}",
+               :body => File.read(order.order_attachment_6.path)
+  end
+  if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    attachment :content_type => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",:filename=> "#{order.order_attachment_6_file_name}",
+               :body => File.read(order.order_attachment_6.path)
+  end
+  
+  if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "application/vnd.oasis.opendocument.text"
+    attachment :content_type => "application/vnd.oasis.opendocument.text",:filename=> "#{order.order_attachment_6_file_name}",
+               :body => File.read(order.order_attachment_6.path)
+  end
+  
+  if !order.order_attachment_6_file_name.nil? && order.order_attachment_6_content_type == "application/vnd.ms-powerpoint"
+    attachment :content_type => "application/vnd.ms-powerpoint",:filename=> "#{order.order_attachment_6_file_name}",
+               :body => File.read(order.order_attachment_6.path)
+  end
+  end
+  def notary_order_completed_by_admin(order, notary_email)
+
+    # Email header info MUST be added here
+    @recipients = notary_email
+    # @recipients = "dominic@19villages.com"
+    from  "noreply@notaryfly.com"
+    @subject = "NF Order ##{order.id} (#{order.client.client_name}): Order COMPLETED"
+    content_type 'text/html'   #    <== note this line
+
+    # Email body substitutions go here
+    @body = {:order => order}
+  end
+  def agent_order_placed(order, agent_email)
+    @agent = order.agent
+    # Email header info MUST be added here
+    @recipients = agent_email
+    # @recipients = "dominic@19villages.com"
+    from  "noreply@notaryfly.com"
+    @subject = "(#{order.client.client_name}) NF ##{order.id} - ESC ##{order.loan_number}: PLACED"
+    content_type 'text/html'   #    <== note this line
+
+    # Email body substitutions go here
+    @body = {:order => order}
+  end
+  def agent_assign_order_confirmation(order, agent_email)
+    @agent = order.agent 
+    @recipients = agent_email
+    from  "noreply@notaryfly.com"
+    @subject = "NF ##{order.id} (#{order.client.client_name}):  Notary ASSIGNED"
+    content_type 'text/html'   #    <== note this line
+  
+    # Email body substitutions go here
+     @body = {:order => order}
+  end
+  def agent_appointment_confirmation(order, agent_email)
+    @agent = order.agent
+    @recipients = agent_email
+    from  "noreply@notaryfly.com"
+    @subject = "NF ##{order.id} (#{order.client.client_name}): APPT CONFIRMED"
+    content_type 'text/html'   #    <== note this line
+  
+    # Email body substitutions go here
+     @body = {:order => order}
+  end
+  def agent_signing_completed(order, agent_email)
+    @agent = order.agent 
+    @recipients = agent_email
+    from  "noreply@notaryfly.com"
+    @subject = "NF ##{order.id} (#{order.client.client_name}): Signing COMPLETED"
+    content_type 'text/html'   #    <== note this line
+  
+    # Email body substitutions go here
+     @body = {:order => order}
+  end
+  def agent_Loan_funded(order, agent_email)
+    @agent = order.agent 
+    @recipients = agent_email
+    from  "noreply@notaryfly.com"
+    @subject = "NF ##{order.id} (#{order.client.client_name}): Your Loan has FUNDED"
+    content_type 'text/html'   #    <== note this line
+  
+    # Email body substitutions go here
+     @body = {:order => order}
+  end
+  def agent_feedback_mail(order,agent)
+
+    @recipients = agent.email
+    # @recipients = "dominic@19villages.com"
+    from  "noreply@notaryfly.com"
+    content_type 'text/html'   #    <== note this line
+    @subject = "NF ##{order.id} (#{order.client.client_name}): FEEDBACK on NOTARY??"
+
+    # Email body substitutions go here
+    @body = {:order => order}
+
+  end
 end
