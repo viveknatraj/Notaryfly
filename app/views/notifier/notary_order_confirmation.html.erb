@@ -9,9 +9,10 @@
       <div class="title1" style="font-weight:bold;">Order #:</div>
     </td>
     <td>
-      <div class="title2"><strong>NF</strong># <%= @order.id %> <strong>Escrow</strong># <%= @order.loan_number %></div>
+      <div class="title2"><strong>NF</strong># <%= @order.id %> </div>
     </td>
   </tr>
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Escrow #:</div></td><td><div class="title2"><%= "#{@order.loan_number}" %></div></td></tr>
   <tr>
     <td>
       <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div>

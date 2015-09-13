@@ -26,7 +26,7 @@ include ActionView::Helpers::NumberHelper
     @recipients = client_mail
     from  "noreply@notaryfly.com"
     #@subject = "NotaryFly Order ##{order.id}:  The TIME/DATE of this Signing has been CONFIRMED"
-    @subject = "(#{@order.client.client_name})NF ##{order.id} ESC# #{order.loan_number}: Date/Time CONFIRMED"
+    @subject = "(#{@order.borrower_1_last_name.capitalize})NF ##{order.id} ESC# #{order.loan_number}: Date/Time CONFIRMED"
     content_type 'text/html'   #    <== note this line
     # Email body substitutions go here
     @body = {:order => order, :notary => notary}
@@ -39,8 +39,8 @@ include ActionView::Helpers::NumberHelper
     @recipients = agent.email
     from  "noreply@notaryfly.com"
     #@subject = "NotaryFly Order ##{order.id}:  The TIME/DATE of this Signing has been CONFIRMED"
-    #@subject = "NF Order# #{order.id}(#{@order.client.client_name}):  Date/Time CONFIRMED"
-    @subject = "NF ##{order.id} (#{order.client.client_name}): APPT CONFIRMED"
+    #@subject = "NF Order# #{order.id}(#{@order.borrower_1_last_name.capitalize}):  Date/Time CONFIRMED"
+    @subject = "NF ##{order.id} (#{order.borrower_1_last_name.capitalize}): APPT CONFIRMED"
     content_type 'text/html'   #    <== note this line
     # Email body substitutions go here
     @body = {:order => order, :agent => agent}
@@ -83,7 +83,7 @@ include ActionView::Helpers::NumberHelper
     @recipients = agent.email
     from "noreply@notaryfly.com"
     #@subject = "NotaryFly Order ##{order.id}:  The Signing has been COMPLETED for this Order "
-    @subject = "NF Order# #{order.id}(#{@order.client.client_name}): Signing COMPLETED"
+    @subject = "NF Order# #{order.id}(#{@order.borrower_1_last_name.capitalize}): Signing COMPLETED"
     content_type 'text/html' #    <== note this line
     # Email body substitutions go here
     @body = {:order => order, :agent => agent}
@@ -106,7 +106,7 @@ include ActionView::Helpers::NumberHelper
     @recipients = agent.email
     from  "noreply@notaryfly.com"
     #@subject = "NotaryFly Order ##{order.id}: Your Loan has FUNDED"
-    @subject = "NF Order# #{order.id}(#{@order.client.client_name}): Your Loan has FUNDED"
+    @subject = "NF Order# #{order.id}(#{@order.borrower_1_last_name.capitalize}): Your Loan has FUNDED"
     content_type 'text/html'   #    <== note this line
     # Email body substitutions go here
     @body = {:order => order}
@@ -158,7 +158,7 @@ def mail_to_notary_for_documents_received_title(order,notary)
     @recipients = notary
     from  "noreply@notaryfly.com"
     #@subject = "NotaryFly Order ##{order.id}:  You have been PAID in FULL on this Order "
-    @subject = "NF Order ##{order.id}(#{@order.client.client_name}):  Order PAID"
+    @subject = "NF Order ##{order.id}(#{@order.borrower_1_last_name.capitalize}):  Order PAID"
     content_type 'text/html'   #    <== note this line
     # Email body substitutions go here
     @body = {:order => order}
@@ -183,7 +183,7 @@ def mail_to_notary_for_documents_received_title(order,notary)
     @notary = order.notary
     from  "noreply@notaryfly.com"
     #@subject = "You have received a message about a Notary Fly order"
-    @subject = "(#{order.client.client_name})NF ##{order.id} ESC# #{order.loan_number}: Order CANCELLED"
+    @subject = "(#{order.borrower_1_last_name.capitalize})NF ##{order.id} ESC# #{order.loan_number}: Order CANCELLED"
     content_type 'text/html'   #    <== note this line
     # Email body substitutions go here
     @body = {:order => order}
@@ -201,7 +201,7 @@ def mail_to_notary_for_documents_received_title(order,notary)
    def cancel_order_for_notary(order,notary_email)
     @recipients = notary_email
     from  "noreply@notaryfly.com"
-    @subject = "NF Order ##{order.id} (#{order.client.client_name}):  Order CANCELLED"
+    @subject = "NF Order ##{order.id} (#{order.borrower_1_last_name.capitalize}):  Order CANCELLED"
     content_type 'text/html'   #    <== note this line
     # Email body substitutions go here
     @body = {:order => order}
@@ -220,7 +220,7 @@ def mail_to_notary_for_documents_received_title(order,notary)
   @recipients= client_email
   from  "noreply@notaryfly.com"
   #@subject = "You have received a message about a Notary Fly order"
-  @subject = "(#{order.client.client_name})NF ##{order.id} ESC# #{order.loan_number}: Order CANCELLED - Approved with penalty"
+  @subject = "(#{order.borrower_1_last_name.capitalize})NF ##{order.id} ESC# #{order.loan_number}: Order CANCELLED - Approved with penalty"
     content_type 'multipart/mixed'   #    <== note this line
     # Email body substitutions go here
     @body = {:order => order}
@@ -239,7 +239,7 @@ def mail_to_notary_for_documents_received_title(order,notary)
   @notary = order.notary
   from  "noreply@notaryfly.com"
   #@subject = "You have received a message about a Notary Fly order"
-  @subject = "(#{order.client.client_name})NF ##{order.id} ESC# #{order.loan_number}: Order CANCELLED - Approved"
+  @subject = "(#{order.borrower_1_last_name.capitalize})NF ##{order.id} ESC# #{order.loan_number}: Order CANCELLED - Approved"
     content_type 'multipart/mixed'   #    <== note this line
     # Email body substitutions go here
     @body = {:order => order}
@@ -313,7 +313,7 @@ def mail_to_notary_for_documents_received_title(order,notary)
     end
     # @recipients = "dominic@19villages.com"
     from  "noreply@notaryfly.com"
-    @subject = "NF Order# #{order.id}(#{order.client.client_name}):  Order COMPLETED"
+    @subject = "NF Order# #{order.id}(#{order.borrower_2_last_name.capitalize}):  Order COMPLETED"
     content_type 'text/html'   #    <== note this line
 
     # Email body substitutions go here
@@ -364,7 +364,7 @@ def mail_to_notary_for_documents_received_title(order,notary)
   
     from  "noreply@notaryfly.com"
     #@subject = "NotaryFly Order ##{order.id}:  A Notary has been ASSIGNED to this Order"
-    @subject = " (#{@order.client.client_name})NF ##{order.id} ESC# #{order.loan_number}: Notary ASSIGNED"
+    @subject = " (#{@order.borrower_1_last_name.capitalize})NF ##{order.id} ESC# #{order.loan_number}: Notary ASSIGNED"
     content_type 'multipart/mixed'   #    <== note this line
     
     # Email body substitutions go here
@@ -451,7 +451,7 @@ def mail_to_notary_for_documents_received_title(order,notary)
     # @recipients = "dominic@19villages.com"
     from "noreply@notaryfly.com"
     #@subject = "NotaryFly Order ##{order.id}:  A Notary has been ASSIGNED to this Order"
-    @subject = "NF Order# #{order.id}(#{@order.client.client_name}):  Notary ASSIGNED"
+    @subject = "NF Order# #{order.id}(#{@order.borrower_1_last_name.capitalize}):  Notary ASSIGNED"
     content_type 'multipart/mixed' #    <== note this line
 
     # Email body substitutions go here
@@ -518,7 +518,7 @@ def create_pdf_file_for_agent(order,agent,notary)
     # @recipients = "dominic@19villages.com"
     from  "noreply@notaryfly.com"
     #@subject = "NotaryFly Order ##{order.id}:  This Order has been ASSIGNED to You"
-    @subject = "NF Order ##{order.id}(#{@order.client.client_name}): Order ASSIGNED"
+    @subject = "NF Order ##{order.id}(#{@order.borrower_1_last_name.capitalize}): Order ASSIGNED"
     content_type 'multipart/mixed'   #    <== note this line
 
      # Email body substitutions go here
@@ -822,7 +822,7 @@ def notary_assign_order_confirmation(order, notary, notary_email)
   @notary = notary
   @recipients = notary_email
   from  "noreply@notaryfly.com"
-  @subject = "NF Order ##{order.id}(#{order.client.client_name}):  Order ASSIGNED"
+  @subject = "NF Order ##{order.id}(#{order.borrower_1_last_name.capitalize}):  Order ASSIGNED"
   content_type 'multipart/mixed'   #    <== note this line
 
   # Email body substitutions go here
@@ -2757,7 +2757,7 @@ pdf.text "If so forward contact info to: referafriend@notaryfly.com", :at => [0,
     @recipients = client_email
     # @recipients = "dominic@19villages.com"
     from  "noreply@notaryfly.com"
-    @subject = "(#{order.client.client_name}) NF ##{order.id} - ESC ##{order.loan_number}: PLACED"
+    @subject = "(#{order.borrower_1_last_name.capitalize}) NF ##{order.id} - ESC ##{order.loan_number}: PLACED"
     content_type 'text/html'   #    <== note this line
 
     # Email body substitutions go here
@@ -2771,7 +2771,7 @@ pdf.text "If so forward contact info to: referafriend@notaryfly.com", :at => [0,
     @recipients = client_email
     # @recipients = "dominic@19villages.com"
     from  "noreply@notaryfly.com"
-    @subject = "(#{order.client.client_name}) NF ##{order.id} - ESC ##{order.loan_number}: Invoice PAID"
+    @subject = "(#{order.borrower_1_last_name.capitalize}) NF ##{order.id} - ESC ##{order.loan_number}: Invoice PAID"
     content_type 'text/html'   #    <== note this line
 
     # Email body substitutions go here
@@ -2783,7 +2783,7 @@ pdf.text "If so forward contact info to: referafriend@notaryfly.com", :at => [0,
     @recipients = client_email
     # @recipients = "dominic@19villages.com"
     from  "noreply@notaryfly.com"
-    @subject = "(#{order.client.client_name}) NF ##{order.id} - ESC ##{order.loan_number}: COMPLETED"
+    @subject = "(#{order.borrower_1_last_name.capitalize}) NF ##{order.id} - ESC ##{order.loan_number}: COMPLETED"
     content_type 'text/html'   #    <== note this line
 
     # Email body substitutions go here
@@ -2794,7 +2794,7 @@ pdf.text "If so forward contact info to: referafriend@notaryfly.com", :at => [0,
     @notary = notary
     @recipients = client_email
     from  "noreply@notaryfly.com"
-    @subject = "(#{order.client.client_name}) NF ##{order.id} - ESC ##{order.loan_number}:  Notary ASSIGNED"
+    @subject = "(#{order.borrower_1_last_name.capitalize}) NF ##{order.id} - ESC ##{order.loan_number}:  Notary ASSIGNED"
     content_type 'multipart/mixed'   #    <== note this line
   
     # Email body substitutions go here
@@ -3096,7 +3096,7 @@ pdf.text "If so forward contact info to: referafriend@notaryfly.com", :at => [0,
     @recipients = notary_email
     # @recipients = "dominic@19villages.com"
     from  "noreply@notaryfly.com"
-    @subject = "NF Order ##{order.id} (#{order.client.client_name}): Order COMPLETED"
+    @subject = "NF Order ##{order.id} (#{order.borrower_1_last_name.capitalize}): Order COMPLETED"
     content_type 'text/html'   #    <== note this line
 
     # Email body substitutions go here
@@ -3108,7 +3108,7 @@ pdf.text "If so forward contact info to: referafriend@notaryfly.com", :at => [0,
     @recipients = agent_email
     # @recipients = "dominic@19villages.com"
     from  "noreply@notaryfly.com"
-    @subject = "(#{order.client.client_name}) NF ##{order.id} - ESC ##{order.loan_number}: PLACED"
+    @subject = "(#{order.borrower_1_last_name.capitalize}) NF ##{order.id} - ESC ##{order.loan_number}: PLACED"
     content_type 'text/html'   #    <== note this line
 
     # Email body substitutions go here
@@ -3118,7 +3118,7 @@ pdf.text "If so forward contact info to: referafriend@notaryfly.com", :at => [0,
     @agent = order.agent 
     @recipients = agent_email
     from  "noreply@notaryfly.com"
-    @subject = "NF ##{order.id} (#{order.client.client_name}):  Notary ASSIGNED"
+    @subject = "NF ##{order.id} (#{order.borrower_1_last_name.capitalize}):  Notary ASSIGNED"
     content_type 'text/html'   #    <== note this line
   
     # Email body substitutions go here
@@ -3128,7 +3128,7 @@ pdf.text "If so forward contact info to: referafriend@notaryfly.com", :at => [0,
     @agent = order.agent
     @recipients = agent_email
     from  "noreply@notaryfly.com"
-    @subject = "NF ##{order.id} (#{order.client.client_name}): APPT CONFIRMED"
+    @subject = "NF ##{order.id} (#{order.borrower_1_last_name.capitalize}): APPT CONFIRMED"
     content_type 'text/html'   #    <== note this line
   
     # Email body substitutions go here
@@ -3138,7 +3138,7 @@ pdf.text "If so forward contact info to: referafriend@notaryfly.com", :at => [0,
     @agent = order.agent 
     @recipients = agent_email
     from  "noreply@notaryfly.com"
-    @subject = "NF ##{order.id} (#{order.client.client_name}): Signing COMPLETED"
+    @subject = "NF ##{order.id} (#{order.borrower_1_last_name.capitalize}): Signing COMPLETED"
     content_type 'text/html'   #    <== note this line
   
     # Email body substitutions go here
@@ -3148,7 +3148,7 @@ pdf.text "If so forward contact info to: referafriend@notaryfly.com", :at => [0,
     @agent = order.agent 
     @recipients = agent_email
     from  "noreply@notaryfly.com"
-    @subject = "NF ##{order.id} (#{order.client.client_name}): Your Loan has FUNDED"
+    @subject = "NF ##{order.id} (#{order.borrower_1_last_name.capitalize}): Your Loan has FUNDED"
     content_type 'text/html'   #    <== note this line
   
     # Email body substitutions go here
@@ -3160,7 +3160,7 @@ pdf.text "If so forward contact info to: referafriend@notaryfly.com", :at => [0,
     # @recipients = "dominic@19villages.com"
     from  "noreply@notaryfly.com"
     content_type 'text/html'   #    <== note this line
-    @subject = "NF ##{order.id} (#{order.client.client_name}): FEEDBACK on NOTARY??"
+    @subject = "NF ##{order.id} (#{order.borrower_1_last_name.capitalize}): FEEDBACK on NOTARY??"
 
     # Email body substitutions go here
     @body = {:order => order}
