@@ -37,7 +37,7 @@
       <div class="title1" style="font-weight:bold;">Signing Location:</div>
     </td>
     <td>
-      <div class="title2"><%= "#{@order.signing_location_address.truncate(20, separator: /\s/, omission: '...(continued)')} #{@order.signing_location_city}, #{@order.signing_location_state} #{@order.signing_location_zip_code}" %></div>
+      <div class="title2"><%= "#{@order.signing_location_address.truncate(20)} #{@order.signing_location_city}, #{@order.signing_location_state} #{@order.signing_location_zip_code}" %></div>
     </td>
   </tr>
 
