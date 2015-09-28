@@ -26,7 +26,7 @@ include ActionView::Helpers::NumberHelper
     @recipients = client_mail
     from  "noreply@notaryfly.com"
     #@subject = "NotaryFly Order ##{order.id}:  The TIME/DATE of this Signing has been CONFIRMED"
-    @subject = "(#{@order.borrower_1_last_name.capitalize})NF ##{order.id} ESC# #{order.loan_number}: Date/Time CONFIRMED"
+    @subject = "(#{@order.borrower_1_last_name.capitalize})NF ##{order.id} ESC# #{order.loan_number}: APPT CONFIRMED"
     content_type 'text/html'   #    <== note this line
     # Email body substitutions go here
     @body = {:order => order, :notary => notary}

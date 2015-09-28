@@ -37,7 +37,7 @@
                 <strong>
                   <span>NF# <%= @order.id %></span>
                   <span style="padding-left:20px;">Escrow# <%= @order.loan_number %></span>
-                  <span style="padding-left:20px;"><%= @client.client_name%></span>
+                  <span style="padding-left:20px;"><%= @order.borrower_1_last_name%></span>
                 </strong>
               </p>
               <div id="tabs">
@@ -65,14 +65,14 @@
               <% if !@order.borrower_1_last_name.blank? and !@order.borrower_2_last_name.blank? %>
                 <div class="list-details">
                   <label>Signer #1:</label>
-                  <span><%= @order.borrower_1_last_name %>&nbsp;<%= @order.borrower_1_first_name %>(<%= link_to "details", {}, :href => "#", :onclick => "divwin=dhtmlwindow.open('divbox', 'div', 'customer_info_#{@client.id}', '', 'width=380px,height=480px,left=200px,top=150px,resize=0,scrolling=0'); return false" %>)/(<%= link_to "send message", {}, :href => "mailto: #{@client.user.email}?subject=Order Detail NF# #{@order.id}" %>)<br>
+                  <span><%= @order.borrower_1_last_name %>, <%= @order.borrower_1_first_name %>(<%= link_to "details", {}, :href => "#", :onclick => "divwin=dhtmlwindow.open('divbox', 'div', 'customer_info_#{@client.id}', '', 'width=380px,height=480px,left=200px,top=150px,resize=0,scrolling=0'); return false" %>)/(<%= link_to "send message", {}, :href => "mailto: #{@client.user.email}?subject=Order Detail NF# #{@order.id}" %>)<br>
                     <%if @order.borrower_1_work_phone.length!=0%><%= @order.borrower_1_work_phone %><%end%> <% if @order.borrower_1_extension.length!=0%>- Ext  <%= @order.borrower_1_extension %><br/><%end%>
                     <%if @order.borrower_1_home_phone.length!=0%><%= @order.borrower_1_home_phone %><br/><%end%>
                     <%if @order.borrower_1_mobile_phone.length!=0%><%= @order.borrower_1_mobile_phone %><br/><%end%></span>
                 </div>
                 <div class="list-details">
                   <label>Signer #2:</label>
-                  <span><%= @order.borrower_2_last_name %>&nbsp;<%= @order.borrower_2_first_name %>(<%= link_to "details", {}, :href => "#", :onclick => "divwin=dhtmlwindow.open('divbox', 'div', 'customer_info_#{@client.id}', '', 'width=380px,height=480px,left=200px,top=150px,resize=0,scrolling=0'); return false" %>)/(<%= link_to "send message", {}, :href => "mailto: #{@client.user.email}?subject=Order Detail NF# #{@order.id}" %>)<br>
+                  <span><%= @order.borrower_2_last_name %>, <%= @order.borrower_2_first_name %>(<%= link_to "details", {}, :href => "#", :onclick => "divwin=dhtmlwindow.open('divbox', 'div', 'customer_info_#{@client.id}', '', 'width=380px,height=480px,left=200px,top=150px,resize=0,scrolling=0'); return false" %>)/(<%= link_to "send message", {}, :href => "mailto: #{@client.user.email}?subject=Order Detail NF# #{@order.id}" %>)<br>
                     <%if @order.borrower_2_work_phone.length!=0%><%= @order.borrower_2_work_phone %><%end%> <% if @order.borrower_2_extension.length!=0%>- Ext  <%= @order.borrower_2_extension %><br/><%end%>
                     <%if @order.borrower_2_home_phone.length!=0%><%= @order.borrower_2_home_phone %><br/><%end%>
                     <%if @order.borrower_2_mobile_phone.length!=0%><%= @order.borrower_2_mobile_phone %><br/><%end%></span>
@@ -81,7 +81,7 @@
                 <div class="list-details">
                   <label>Signer:</label>
                   <span>
-                    <%= @order.borrower_1_last_name %> <%= @order.borrower_1_first_name %>
+                    <%= @order.borrower_1_last_name %>, <%= @order.borrower_1_first_name %>
                     (<%= link_to "details", {}, :href => "#", :onclick => "divwin=dhtmlwindow.open('divbox', 'div', 'customer_info_#{@client.id}', '', 'width=380px,height=480px,left=200px,top=150px,resize=0,scrolling=0'); return false" %>)/(<%= link_to "send message", {}, :href => "mailto: #{@client.user.email}?subject=Order Detail NF# #{@order.id}" %>)<br>
                     <%if @order.borrower_1_work_phone.present?%><%= @order.borrower_1_work_phone %><%end%> <% if @order.borrower_1_extension.present?%>- Ext  <%= @order.borrower_1_extension %><br/><%end%>
                     <%if @order.borrower_1_home_phone.present?%><%= @order.borrower_1_home_phone %><br/><%end%>
@@ -210,7 +210,7 @@
               </div><br/>
 
               <div class="list-details">
-                <label>Total Fee: </label><span>$<%= @order.client.customer_fee%> </span>
+                <label>Total Fee: </label><span>$<%= number_with_precision(@order.client.customer_fee.to_f, :precision => 2)%> </span>
               </div><br/><br/>
 
               <div class="list-details">

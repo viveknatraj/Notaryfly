@@ -15,20 +15,20 @@
 <p style="margin-bottom:6px;">The <strong>Date/Time</strong> of the following Signing has been <strong>CONFIRMED</strong>:</p>
 
 <table width="60%" style="float:left;">
+    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Escrow Order#:</div></td><td><div class="title2"><%= "#{@order.loan_number}" %></div></td></tr>
   <tr>
     <td>
       <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div>
-      <div class="title1" style="font-weight:bold;">Order #:</div>
+      <div class="title1" style="font-weight:bold;">NF Order #:</div>
     </td>
     <td>
-      <div class="title2"><strong>NF</strong># <%= @order.id %></div>
+      <div class="title2"><%= @order.id %></div>
     </td>
   </tr>
-    <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Escrow #:</div></td><td><div class="title2"><%= "#{@order.loan_number}" %></div></td></tr>
   <tr>
     <td>
       <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div>
-      <div class="title1" style="font-weight:bold;">Signer/Client:</div>
+      <div class="title1" style="font-weight:bold;">Signer:</div>
     </td>
     <td>
       <div class="title2"><%= link_to "#{@order.borrower_1_first_name.capitalize} #{@order.borrower_1_last_name.capitalize}", "javascript:void(0)" %></div>
@@ -95,6 +95,9 @@
   <strong>For “Order Status” updates, visit <a href="http://www.notaryfly.com/">NotaryFly.com</a></strong>
 </p>
 <p style="margin-bottom:6px;">
-  <strong>For questions or assistance, please email <a href="mailto:support@notaryfly.com/">support@notaryfly.com</a> or call 888-888-8888.</strong>
+  <strong>For questions or assistance, please email <a href="mailto:support@notaryfly.com/">support@notaryfly.com</a> or call 800-470-7515.</strong>
+</p>
+<p style="margin-bottom:6px;">
+<strong>Notary</strong>
 </p>
 </div>

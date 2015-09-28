@@ -27,7 +27,7 @@
     <tr><td><div class="title1" style="font-weight:bold;">&nbsp; </div></td><td><div class="title2"> <%=@order.signing_location_city%>,&nbsp;&nbsp;<%=@order.signing_location_state%>&nbsp;&nbsp;<%=@order.signing_location_zip_code%></div></td></tr>
     <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signing Date:</div></td><td><div class="title2"> <%= @order.signing_date.strftime("%B %d, %Y") %></div></td></tr>
     <tr><td><div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div><div class="title1" style="font-weight:bold;">Signing Time:</div></td><td><div class="title2"> <%= @order.signing_time %></div></td></tr>
-<% total_fee = @order.notary.fee.to_i + @order.notary.other_fee.to_i %>
+<% total_fee = @order.client.customer_fee.to_i %>
   <tr> <td> <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div> <div class="title1" style="font-weight:bold;">Total Fee:</div> </td> <td> <div class="title2"><%= "$#{total_fee}" %></div> </td> </tr>
   <tr> <td> <div class="squ" style="background:#000; height:5px; width:5px; float:left; margin-top: 5px; margin-right:5px; margin-bottom:6px;"></div> <div class="title1" style="font-weight:bold;">Tracking #:</div> </td> <td> <div class="title2"><%= @order.tracking_number %></div> </td> </tr>
 </table>

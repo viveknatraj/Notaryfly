@@ -63,20 +63,20 @@
         </div>
         <% if !@order.borrower_1_last_name.blank? and !@order.borrower_2_last_name.blank? %>
           <div class="list-details">
-            <label>Signer #1:</label><p><%= @order.borrower_1_last_name %>&nbsp;<%= @order.borrower_1_first_name %><br>
+            <label>Signer #1:</label><p><%= @order.borrower_1_last_name %>, <%= @order.borrower_1_first_name %><br>
               <%if @order.borrower_1_work_phone.length!=0%><%= @order.borrower_1_work_phone %><%end%> <% if @order.borrower_1_extension.length!=0%>- Ext  <%= @order.borrower_1_extension %><br/><%end%>
               <%if @order.borrower_1_home_phone.length!=0%><%= @order.borrower_1_home_phone %><br/><%end%>
               <%if @order.borrower_1_mobile_phone.length!=0%><%= @order.borrower_1_mobile_phone %><br/><%end%></p>
           </div>
           <div class="list-details">
-            <label>Signer #2:</label><p><%= @order.borrower_2_last_name %>&nbsp;<%= @order.borrower_2_first_name %><br>
+            <label>Signer #2:</label><p><%= @order.borrower_2_last_name %>, <%= @order.borrower_2_first_name %><br>
               <%if @order.borrower_2_work_phone.length!=0%><%= @order.borrower_2_work_phone %><%end%> <% if @order.borrower_2_extension.length!=0%>- Ext  <%= @order.borrower_2_extension %><br/><%end%>
               <%if @order.borrower_2_home_phone.length!=0%><%= @order.borrower_2_home_phone %><br/><%end%>
               <%if @order.borrower_2_mobile_phone.length!=0%><%= @order.borrower_2_mobile_phone %><br/><%end%></p>
           </div>
         <% else %>
           <div class="list-details">
-            <label>Signer :</label><p><%= @order.borrower_1_last_name %>&nbsp;<%= @order.borrower_1_first_name %><br>
+            <label>Signer :</label><p><%= @order.borrower_1_last_name %>, <%= @order.borrower_1_first_name %><br>
               <%if @order.borrower_1_work_phone.length!=0%><%= @order.borrower_1_work_phone %><%end%> <% if @order.borrower_1_extension.length!=0%>- Ext  <%= @order.borrower_1_extension %><br/><%end%>
               <%if @order.borrower_1_home_phone.length!=0%><%= @order.borrower_1_home_phone %><br/><%end%>
               <%if @order.borrower_1_mobile_phone.length!=0%><%= @order.borrower_1_mobile_phone %><br/><%end%></p>
